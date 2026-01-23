@@ -8,6 +8,12 @@
     
     <title>SteamHubCZ | Česká herní komunita</title>
     
+    <meta name="description" content="SteamHubCZ je česká komunita zaměřená na hry na Steam zdarma a společné eventy. Připoj se k nám!">
+    <meta property="og:title" content="SteamHubCZ | Česká herní komunita">
+    <meta property="og:description" content="Získej hry na Steam zdarma a přijď na naše eventy!">
+    <meta property="og:type" content="website">
+    <meta name="theme-color" content="#66c0f4">
+
     <style>
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow-x: hidden; font-family: 'Segoe UI', Tahoma, sans-serif; color: #c7d5e0; }
         
@@ -34,14 +40,18 @@
         .card:hover { transform: translateY(-5px); }
         .card h3 { color: #66c0f4; margin-top: 0; font-size: 1.2rem; }
         
-        .card-btn { background: #66c0f4; border: none; padding: 10px; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 15px; color: #171a21; }
-        .card-btn:hover { background: #54a5d4; }
-
+        /* SOCIÁLNÍ SÍTĚ SEKCE */
         .social-container { display: none; margin-top: 30px; gap: 20px; justify-content: center; flex-wrap: wrap; }
-        .social-link { color: white; padding: 15px 30px; border-radius: 8px; font-weight: bold; text-decoration: none; font-size: 1.4rem; display: inline-block; transition: transform 0.2s; }
+        
+        .social-link { 
+            color: white; padding: 15px 30px; border-radius: 8px;
+            font-weight: bold; text-decoration: none; font-size: 1.4rem; 
+            display: inline-block; transition: transform 0.2s, box-shadow 0.2s;
+        }
         .social-link:hover { transform: scale(1.05); }
-        .discord-btn { background: #5865F2; }
-        .instagram-btn { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
+
+        .discord-btn { background: #5865F2; box-shadow: 0 0 15px rgba(88, 101, 242, 0.4); }
+        .instagram-btn { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); box-shadow: 0 0 15px rgba(220, 39, 67, 0.4); }
 
         .main-action-btn { 
             display: inline-block; margin-top: 40px; padding: 18px 45px; 
@@ -66,24 +76,12 @@
         <h1>SteamHubCZ</h1>
         <p class="subtitle">Tvé centrum pro vše kolem her a komunity</p>
         <div class="features">
-            <div class="card">
-                <h3>🎮 Hry zdarma</h3>
-                <p>Hry ke stažení zcela zdarma pro tvůj Steam účet.</p>
-                <button class="card-btn" onclick="alert('Seznam her připravujeme!')">Zobrazit hry</button>
-            </div>
-            <div class="card">
-                <h3>👥 Komunita</h3>
-                <p>Zakladatel: <b>Štěpán Moravec</b>. Jsme server zaměřený na stahování her na server.</p>
-                <button class="card-btn" onclick="showSocials()">Více o nás</button>
-            </div>
-            <div class="card">
-                <h3>🚀 Eventy</h3>
-                <p>Pravidelné srazy, Cheat Engine triky a pokec.</p>
-                <button onclick="openNews()" class="card-btn">Zobrazit plán</button>
-            </div>
+            <div class="card"><h3>🎮 Hry zdarma</h3><p>Hry ke stažení zcela zdarma pro tvůj Steam.</p></div>
+            <div class="card"><h3>👥 Česká komunita</h3><p>Najdi si parťáka do hry.<br><a href="mailto:steamhubczvesmir636@gmail.com" style="color:#66c0f4; text-decoration:none; font-size:0.8rem;">steamhubczvesmir636@gmail.com</a></p></div>
+            <div class="card"><h3>🚀 Eventy</h3><p>Pravidelné srazy a Cheat Engine pokec.</p><button onclick="openNews()" style="background:#66c0f4; border:none; padding:10px; border-radius:5px; cursor:pointer; font-weight:bold; margin-top:10px;">Zobrazit plán</button></div>
         </div>
         
-        <button id="show-socials-main" class="main-action-btn" onclick="showSocials()">Sleduj nás na sítích</button>
+        <button id="show-socials" class="main-action-btn" onclick="showSocials()">Sleduj nás na sítích</button>
 
         <div id="social-section" class="social-container">
             <a href="https://discord.gg/DJJrpXkg8T" target="_blank" class="social-link discord-btn">DISCORD</a>
@@ -95,7 +93,7 @@
         <h1>🔥 Plánované Eventy</h1>
         <div class="features">
             <div class="card"><h3>Středa: Pokec</h3><p>Modování a volná debata. (15:00 - 17:00)</p><div style="border-top: 1px solid rgba(102,192,244,0.2); margin-top: 10px; padding-top: 10px;"><p id="wed-status" style="margin: 5px 0; font-size: 0.9rem;">Načítám...</p><span id="wed-timer" class="timer-display">-- : -- : --</span></div></div>
-            <div class="card" style="border-bottom-color: #2ecc71;"><h3>Pátek: Cheat Engine</h3><p>Tipy a triky. (17:00 - 19:00)</p><div style="border-top: 1px solid rgba(102,192,244,0.2); margin-top: 10px; padding-top: 10px;"><p id="fri-status" style="margin: 5px 0; font-size: 0.9rem;">Načítám...</p><span id="fri-timer" class="timer-display">-- : -- : --</span></div></div>
+            <div class="card" style="border-bottom-color: #2ecc71;"><h3>Pátek: Cheat Engine</h3><p>Tipy, triky a modování. (17:00 - 19:00)</p><div style="border-top: 1px solid rgba(102,192,244,0.2); margin-top: 10px; padding-top: 10px;"><p id="fri-status" style="margin: 5px 0; font-size: 0.9rem;">Načítám...</p><span id="fri-timer" class="timer-display">-- : -- : --</span></div></div>
             <div class="card"><h3>Sobota: Hlavní Event</h3><p>Společné hraní a CE triky. (17:00 - 19:00)</p><div style="border-top: 1px solid rgba(102,192,244,0.2); margin-top: 10px; padding-top: 10px;"><p id="sat-status" style="margin: 5px 0; font-size: 0.9rem;">Načítám...</p><span id="sat-timer" class="timer-display">-- : -- : --</span></div></div>
         </div>
         <button onclick="closeNews()" class="main-action-btn" style="background: #4e5d6a; margin-top: 30px;">Zpět domů</button>
@@ -109,11 +107,6 @@
             const now = new Date();
             const statusTxt = document.getElementById(statusId);
             const timerTxt = document.getElementById(timerId);
-            let next = new Date(now);
-            next.setDate(now.getDate() + (targetDay + 7 - now.getDay()) % 7);
-            next.setHours(startH, startM, 0, 0);
-            if (next < now && now.getDay() !== targetDay) next.setDate(next.getDate() + 7);
-
             let todayStart = new Date(now); todayStart.setHours(startH, startM, 0, 0);
             let todayEnd = new Date(now); todayEnd.setHours(endH, endM, 0, 0);
 
@@ -122,7 +115,11 @@
                 timerTxt.innerText = `Končí v ${endH}:00`;
                 timerTxt.style.color = "#2ecc71";
             } else {
-                const diff = (next < now ? new Date(next.getTime() + 7 * 864e5) : next) - now;
+                let next = new Date(now);
+                next.setDate(now.getDate() + (targetDay + 7 - now.getDay()) % 7);
+                next.setHours(startH, startM, 0, 0);
+                if (next < now) next.setDate(next.getDate() + 7);
+                const diff = next - now;
                 const d = Math.floor(diff / 864e5), h = Math.floor(diff % 864e5 / 36e5), m = Math.floor(diff % 36e5 / 6e4), s = Math.floor(diff % 6e4 / 1e3);
                 statusTxt.innerText = "Začíná za:";
                 timerTxt.innerText = `${d}d ${h}h ${m}m ${s}s`;
@@ -155,8 +152,7 @@
 
         function showSocials() { 
             document.getElementById('social-section').style.display = 'flex'; 
-            document.getElementById('show-socials-main').style.display = 'none'; 
-            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+            document.getElementById('show-socials').style.display = 'none'; 
         }
         function openNews() { document.getElementById('main-content').style.display = 'none'; document.getElementById('news-content').style.display = 'block'; }
         function closeNews() { document.getElementById('news-content').style.display = 'none'; document.getElementById('main-content').style.display = 'block'; }
