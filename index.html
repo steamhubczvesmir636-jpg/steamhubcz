@@ -40,25 +40,29 @@
         .card:hover { transform: translateY(-5px); }
         .card h3 { color: #66c0f4; margin-top: 0; font-size: 1.2rem; }
         
-        .btn { 
+        /* SOCIÁLNÍ SÍTĚ SEKCE */
+        .social-container { display: none; margin-top: 30px; gap: 20px; justify-content: center; flex-wrap: wrap; }
+        
+        .social-link { 
+            color: white; padding: 15px 30px; border-radius: 8px;
+            font-weight: bold; text-decoration: none; font-size: 1.4rem; 
+            display: inline-block; transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .social-link:hover { transform: scale(1.05); }
+
+        .discord-btn { background: #5865F2; box-shadow: 0 0 15px rgba(88, 101, 242, 0.4); }
+        .instagram-btn { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); box-shadow: 0 0 15px rgba(220, 39, 67, 0.4); }
+
+        .main-action-btn { 
             display: inline-block; margin-top: 40px; padding: 18px 45px; 
             background: linear-gradient(to bottom, #75b022 5%, #588a1b 95%);
             color: white; text-decoration: none; border-radius: 5px; 
             font-weight: bold; cursor: pointer; border: none; font-size: 1.3rem;
         }
 
-        #discord-section { display: none; margin-top: 30px; }
-        .discord-link { 
-            color: white; background: #5865F2; padding: 20px 40px; border-radius: 8px;
-            font-weight: bold; text-decoration: none; font-size: 1.8rem; display: inline-block; 
-            animation: blinker 0.8s linear infinite; 
-        }
-
         #mute-toggle { position: fixed; top: 20px; right: 20px; z-index: 100; background: rgba(0,0,0,0.6); color: white; border: 1px solid #66c0f4; padding: 10px; border-radius: 50%; cursor: pointer; width: 50px; height: 50px; font-size: 1.2rem; }
         #irl-clock { position: fixed; bottom: 20px; right: 20px; z-index: 100; background: rgba(0,0,0,0.7); color: #66c0f4; padding: 10px 20px; border-radius: 8px; font-weight: bold; font-size: 1.2rem; }
         .timer-display { font-size: 1.1rem; color: #f39c12; font-weight: bold; margin-top: 10px; display: block; }
-
-        @keyframes blinker { 50% { opacity: 0.4; background: #7289da; } }
     </style>
 </head>
 <body>
@@ -76,47 +80,29 @@
             <div class="card"><h3>👥 Česká komunita</h3><p>Najdi si parťáka do hry.<br><a href="mailto:steamhubczvesmir636@gmail.com" style="color:#66c0f4; text-decoration:none; font-size:0.8rem;">steamhubczvesmir636@gmail.com</a></p></div>
             <div class="card"><h3>🚀 Eventy</h3><p>Pravidelné srazy a Cheat Engine pokec.</p><button onclick="openNews()" style="background:#66c0f4; border:none; padding:10px; border-radius:5px; cursor:pointer; font-weight:bold; margin-top:10px;">Zobrazit plán</button></div>
         </div>
-        <button class="btn" onclick="showDiscord()">Sleduj nás na Discordu</button>
-        <div id="discord-section"><a href="https://discord.gg/DJJrpXkg8T" target="_blank" class="discord-link">VSTOUPIT NA DISCORD</a></div>
+        
+        <button id="show-socials" class="main-action-btn" onclick="showSocials()">Sleduj nás na sítích</button>
+
+        <div id="social-section" class="social-container">
+            <a href="https://discord.gg/DJJrpXkg8T" target="_blank" class="social-link discord-btn">DISCORD</a>
+            <a href="https://www.instagram.com/steamhubczvesmir636/" target="_blank" class="social-link instagram-btn">INSTAGRAM</a>
+        </div>
     </div>
 
     <div id="news-content" class="container" style="display: none;">
         <h1>🔥 Plánované Eventy</h1>
         <div class="features">
-            <div class="card">
-                <h3>Středa: Pokec</h3>
-                <p>Modování a volná debata. (15:00 - 17:00)</p>
-                <div style="border-top: 1px solid rgba(102,192,244,0.2); margin-top: 10px; padding-top: 10px;">
-                    <p id="wed-status" style="margin: 5px 0; font-size: 0.9rem;">Načítám...</p>
-                    <span id="wed-timer" class="timer-display">-- : -- : --</span>
-                </div>
-            </div>
-            <div class="card" style="border-bottom-color: #2ecc71;">
-                <h3>Pátek: Cheat Engine</h3>
-                <p>Tipy, triky a modování. (17:00 - 19:00)</p>
-                <div style="border-top: 1px solid rgba(102,192,244,0.2); margin-top: 10px; padding-top: 10px;">
-                    <p id="fri-status" style="margin: 5px 0; font-size: 0.9rem;">Načítám...</p>
-                    <span id="fri-timer" class="timer-display">-- : -- : --</span>
-                </div>
-            </div>
-            <div class="card">
-                <h3>Sobota: Hlavní Event</h3>
-                <p>Společné hraní a CE triky. (17:00 - 19:00)</p>
-                <div style="border-top: 1px solid rgba(102,192,244,0.2); margin-top: 10px; padding-top: 10px;">
-                    <p id="sat-status" style="margin: 5px 0; font-size: 0.9rem;">Načítám...</p>
-                    <span id="sat-timer" class="timer-display">-- : -- : --</span>
-                </div>
-            </div>
+            <div class="card"><h3>Středa: Pokec</h3><p>Modování a volná debata. (15:00 - 17:00)</p><div style="border-top: 1px solid rgba(102,192,244,0.2); margin-top: 10px; padding-top: 10px;"><p id="wed-status" style="margin: 5px 0; font-size: 0.9rem;">Načítám...</p><span id="wed-timer" class="timer-display">-- : -- : --</span></div></div>
+            <div class="card" style="border-bottom-color: #2ecc71;"><h3>Pátek: Cheat Engine</h3><p>Tipy, triky a modování. (17:00 - 19:00)</p><div style="border-top: 1px solid rgba(102,192,244,0.2); margin-top: 10px; padding-top: 10px;"><p id="fri-status" style="margin: 5px 0; font-size: 0.9rem;">Načítám...</p><span id="fri-timer" class="timer-display">-- : -- : --</span></div></div>
+            <div class="card"><h3>Sobota: Hlavní Event</h3><p>Společné hraní a CE triky. (17:00 - 19:00)</p><div style="border-top: 1px solid rgba(102,192,244,0.2); margin-top: 10px; padding-top: 10px;"><p id="sat-status" style="margin: 5px 0; font-size: 0.9rem;">Načítám...</p><span id="sat-timer" class="timer-display">-- : -- : --</span></div></div>
         </div>
-        <button onclick="closeNews()" class="btn" style="background: #4e5d6a; margin-top: 30px;">Zpět domů</button>
+        <button onclick="closeNews()" class="main-action-btn" style="background: #4e5d6a; margin-top: 30px;">Zpět domů</button>
     </div>
 
     <script>
-        // IRL HODINY
         function updateClock() { document.getElementById('irl-clock').innerText = new Date().toLocaleTimeString('cs-CZ'); }
         setInterval(updateClock, 1000); updateClock();
 
-        // ODPOČTY EVENTŮ
         function handleTimer(statusId, timerId, targetDay, startH, startM, endH, endM) {
             const now = new Date();
             const statusTxt = document.getElementById(statusId);
@@ -146,7 +132,6 @@
             handleTimer('sat-status', 'sat-timer', 6, 17, 0, 19, 0); 
         }, 1000);
 
-        // YOUTUBE PLAYLIST
         var tag = document.createElement('script'); tag.src = "https://www.youtube.com/iframe_api";
         var firstScriptTag = document.getElementsByTagName('script')[0]; firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
         var player;
@@ -165,7 +150,10 @@
             else { player.mute(); btn.innerHTML = '🔇'; }
         }
 
-        function showDiscord() { document.getElementById('discord-section').style.display = 'block'; document.querySelector('.btn').style.display = 'none'; }
+        function showSocials() { 
+            document.getElementById('social-section').style.display = 'flex'; 
+            document.getElementById('show-socials').style.display = 'none'; 
+        }
         function openNews() { document.getElementById('main-content').style.display = 'none'; document.getElementById('news-content').style.display = 'block'; }
         function closeNews() { document.getElementById('news-content').style.display = 'none'; document.getElementById('main-content').style.display = 'block'; }
     </script>
