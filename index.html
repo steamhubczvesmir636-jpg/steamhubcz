@@ -4,54 +4,51 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <meta name="google-site-verification" content="W0W8y1RsFdNXjbIIIn6eFU8LqCJbJQbAowfTZQjZRgk" />
-    
-    <title>SteamHubCZ | Česká herní komunita</title>
-    
-    <meta name="description" content="SteamHubCZ je česká komunita zaměřená na hry na Steam zdarma a společné eventy. Připoj se k nám!">
-    <meta property="og:title" content="SteamHubCZ | Česká herní komunita">
-    <meta property="og:description" content="Získej hry na Steam zdarma a přijď na naše eventy!">
-    <meta property="og:type" content="website">
-    <meta name="theme-color" content="#66c0f4">
+    <meta name="google-site-verification" content="PGIpFsNAytWHEjTKSQWUspS5oH3LBURR2GjDRsnhOQM" />
+
+    <title>SteamHubCZ | Štěpán Moravec - Hry na server</title>
+    <meta name="description" content="Oficiální stránka SteamHubCZ. Zakladatel Štěpán Moravec. Projekt zaměřený na herní komunitu, stahování her na server a společné eventy.">
+    <meta name="keywords" content="SteamHubCZ, Štěpán Moravec, hry na server, herní komunita, Steam hry zdarma, Cheat Engine">
 
     <style>
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow-x: hidden; font-family: 'Segoe UI', Tahoma, sans-serif; color: #c7d5e0; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow-x: hidden; font-family: 'Segoe UI', Tahoma, sans-serif; color: #c7d5e0; background-color: #0b0e14; }
         
         /* VIDEO POZADÍ */
         .video-background { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; overflow: hidden; }
         .video-background iframe { width: 100vw; height: 56.25vw; min-height: 100vh; min-width: 177.77vh; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 9, 15, 0.75); z-index: 0; }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 9, 15, 0.85); z-index: 0; }
 
         .container { 
-            position: relative; z-index: 1; background: rgba(42, 71, 94, 0.85); 
+            position: relative; z-index: 1; background: rgba(42, 71, 94, 0.8); 
             padding: 2.5rem; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.7); 
-            max-width: 950px; width: 90%; text-align: center; backdrop-filter: blur(5px);
-            margin: 50px auto; border: 1px solid rgba(102, 192, 244, 0.2);
+            max-width: 950px; width: 90%; text-align: center; backdrop-filter: blur(8px);
+            margin: 50px auto; border: 1px solid rgba(102, 192, 244, 0.3);
         }
 
         h1 { color: #66c0f4; font-size: 3.5rem; margin-bottom: 0; text-transform: uppercase; letter-spacing: 2px; text-shadow: 2px 2px 10px rgba(0,0,0,0.5); }
-        .subtitle { color: #c7d5e0; font-size: 1.1rem; margin-top: 5px; opacity: 0.8; margin-bottom: 30px; }
+        .founder { color: #ffffff; font-weight: bold; font-size: 1.3rem; margin-top: 5px; margin-bottom: 30px; display: block; }
         
-        .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 20px; }
+        .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 20px; }
         .card { 
-            background: #171a21; padding: 20px; border-radius: 10px; border-bottom: 4px solid #66c0f4; 
+            background: #171a21; padding: 25px; border-radius: 10px; border-bottom: 4px solid #66c0f4; 
             transition: transform 0.3s; display: flex; flex-direction: column; justify-content: space-between; 
         }
         .card:hover { transform: translateY(-5px); }
-        .card h3 { color: #66c0f4; margin-top: 0; font-size: 1.2rem; }
+        .card h3 { color: #66c0f4; margin-top: 0; font-size: 1.3rem; }
         
-        /* SOCIÁLNÍ SÍTĚ SEKCE */
+        .card-btn { background: #66c0f4; border: none; padding: 12px; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 15px; color: #171a21; transition: background 0.2s; }
+        .card-btn:hover { background: #54a5d4; }
+
+        /* SOCIÁLNÍ SÍTĚ */
         .social-container { display: none; margin-top: 30px; gap: 20px; justify-content: center; flex-wrap: wrap; }
-        
         .social-link { 
-            color: white; padding: 15px 30px; border-radius: 8px;
-            font-weight: bold; text-decoration: none; font-size: 1.4rem; 
-            display: inline-block; transition: transform 0.2s, box-shadow 0.2s;
+            color: white; padding: 15px 35px; border-radius: 8px;
+            font-weight: bold; text-decoration: none; font-size: 1.3rem; 
+            display: inline-block; transition: transform 0.2s;
         }
         .social-link:hover { transform: scale(1.05); }
-
-        .discord-btn { background: #5865F2; box-shadow: 0 0 15px rgba(88, 101, 242, 0.4); }
-        .instagram-btn { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); box-shadow: 0 0 15px rgba(220, 39, 67, 0.4); }
+        .discord-btn { background: #5865F2; }
+        .instagram-btn { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
 
         .main-action-btn { 
             display: inline-block; margin-top: 40px; padding: 18px 45px; 
@@ -60,8 +57,8 @@
             font-weight: bold; cursor: pointer; border: none; font-size: 1.3rem;
         }
 
-        #mute-toggle { position: fixed; top: 20px; right: 20px; z-index: 100; background: rgba(0,0,0,0.6); color: white; border: 1px solid #66c0f4; padding: 10px; border-radius: 50%; cursor: pointer; width: 50px; height: 50px; font-size: 1.2rem; }
-        #irl-clock { position: fixed; bottom: 20px; right: 20px; z-index: 100; background: rgba(0,0,0,0.7); color: #66c0f4; padding: 10px 20px; border-radius: 8px; font-weight: bold; font-size: 1.2rem; }
+        #irl-clock { position: fixed; bottom: 20px; right: 20px; z-index: 100; background: rgba(0,0,0,0.8); color: #66c0f4; padding: 10px 20px; border-radius: 8px; font-weight: bold; font-size: 1.2rem; border: 1px solid #66c0f4; }
+        #mute-toggle { position: fixed; top: 20px; right: 20px; z-index: 100; background: rgba(0,0,0,0.6); color: white; border: 1px solid #66c0f4; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; font-size: 1.2rem; }
         .timer-display { font-size: 1.1rem; color: #f39c12; font-weight: bold; margin-top: 10px; display: block; }
     </style>
 </head>
@@ -74,39 +71,80 @@
 
     <div id="main-content" class="container">
         <h1>SteamHubCZ</h1>
-        <p class="subtitle">Tvé centrum pro vše kolem her a komunity</p>
+        <span class="founder">Zakladatel: Štěpán Moravec</span>
+        
         <div class="features">
-            <div class="card"><h3>🎮 Hry zdarma</h3><p>Hry ke stažení zcela zdarma pro tvůj Steam.</p></div>
-            <div class="card"><h3>👥 Česká komunita</h3><p>Najdi si parťáka do hry.<br><a href="mailto:steamhubczvesmir636@gmail.com" style="color:#66c0f4; text-decoration:none; font-size:0.8rem;">steamhubczvesmir636@gmail.com</a></p></div>
-            <div class="card"><h3>🚀 Eventy</h3><p>Pravidelné srazy a Cheat Engine pokec.</p><button onclick="openNews()" style="background:#66c0f4; border:none; padding:10px; border-radius:5px; cursor:pointer; font-weight:bold; margin-top:10px;">Zobrazit plán</button></div>
+            <div class="card">
+                <h3>🎮 Hry na server</h3>
+                <p>Specializujeme se na stahování her a obsahu pro herní servery a Steam.</p>
+                <button class="card-btn" onclick="alert('Seznam her se připravuje!')">Zobrazit nabídku</button>
+            </div>
+            <div class="card">
+                <h3>👥 Komunita</h3>
+                <p>Připoj se k herní komunitě a buď u všeho jako první.</p>
+                <button class="card-btn" onclick="showSocials()">Více o nás</button>
+            </div>
+            <div class="card">
+                <h3>🚀 Plánované Eventy</h3>
+                <p>Středy, pátky a soboty plné hraní a Cheat Engine tipů.</p>
+                <button onclick="openNews()" class="card-btn">Zobrazit časy</button>
+            </div>
         </div>
         
-        <button id="show-socials" class="main-action-btn" onclick="showSocials()">Sleduj nás na sítích</button>
+        <button id="show-socials-main" class="main-action-btn" onclick="showSocials()">Sleduj nás na sítích</button>
 
         <div id="social-section" class="social-container">
-            <a href="https://discord.gg/DJJrpXkg8T" target="_blank" class="social-link discord-btn">DISCORD</a>
             <a href="https://www.instagram.com/steamhubczvesmir636/" target="_blank" class="social-link instagram-btn">INSTAGRAM</a>
+            <a href="https://discord.gg/DJJrpXkg8T" target="_blank" class="social-link discord-btn">DISCORD</a>
         </div>
     </div>
 
     <div id="news-content" class="container" style="display: none;">
         <h1>🔥 Plánované Eventy</h1>
         <div class="features">
-            <div class="card"><h3>Středa: Pokec</h3><p>Modování a volná debata. (15:00 - 17:00)</p><div style="border-top: 1px solid rgba(102,192,244,0.2); margin-top: 10px; padding-top: 10px;"><p id="wed-status" style="margin: 5px 0; font-size: 0.9rem;">Načítám...</p><span id="wed-timer" class="timer-display">-- : -- : --</span></div></div>
-            <div class="card" style="border-bottom-color: #2ecc71;"><h3>Pátek: Cheat Engine</h3><p>Tipy, triky a modování. (17:00 - 19:00)</p><div style="border-top: 1px solid rgba(102,192,244,0.2); margin-top: 10px; padding-top: 10px;"><p id="fri-status" style="margin: 5px 0; font-size: 0.9rem;">Načítám...</p><span id="fri-timer" class="timer-display">-- : -- : --</span></div></div>
-            <div class="card"><h3>Sobota: Hlavní Event</h3><p>Společné hraní a CE triky. (17:00 - 19:00)</p><div style="border-top: 1px solid rgba(102,192,244,0.2); margin-top: 10px; padding-top: 10px;"><p id="sat-status" style="margin: 5px 0; font-size: 0.9rem;">Načítám...</p><span id="sat-timer" class="timer-display">-- : -- : --</span></div></div>
+            <div class="card">
+                <h3>Středeční Pokec</h3>
+                <p>Modování a volná debata. (15:00 - 17:00)</p>
+                <div style="border-top: 1px solid rgba(102,192,244,0.2); margin-top: 10px; padding-top: 10px;">
+                    <p id="wed-status" style="margin: 5px 0; font-size: 0.9rem;">Načítám...</p>
+                    <span id="wed-timer" class="timer-display">-- : -- : --</span>
+                </div>
+            </div>
+            <div class="card" style="border-bottom-color: #2ecc71;">
+                <h3>Páteční Event</h3>
+                <p>Cheat Engine tipy a triky. (17:00 - 19:00)</p>
+                <div style="border-top: 1px solid rgba(102,192,244,0.2); margin-top: 10px; padding-top: 10px;">
+                    <p id="fri-status" style="margin: 5px 0; font-size: 0.9rem;">Načítám...</p>
+                    <span id="fri-timer" class="timer-display">-- : -- : --</span>
+                </div>
+            </div>
+            <div class="card">
+                <h3>Sobotní Hlavní Event</h3>
+                <p>Společné hraní a CE triky. (17:00 - 19:00)</p>
+                <div style="border-top: 1px solid rgba(102,192,244,0.2); margin-top: 10px; padding-top: 10px;">
+                    <p id="sat-status" style="margin: 5px 0; font-size: 0.9rem;">Načítám...</p>
+                    <span id="sat-timer" class="timer-display">-- : -- : --</span>
+                </div>
+            </div>
         </div>
         <button onclick="closeNews()" class="main-action-btn" style="background: #4e5d6a; margin-top: 30px;">Zpět domů</button>
     </div>
 
     <script>
+        // HODINY
         function updateClock() { document.getElementById('irl-clock').innerText = new Date().toLocaleTimeString('cs-CZ'); }
         setInterval(updateClock, 1000); updateClock();
 
+        // ODPOČTY
         function handleTimer(statusId, timerId, targetDay, startH, startM, endH, endM) {
             const now = new Date();
             const statusTxt = document.getElementById(statusId);
             const timerTxt = document.getElementById(timerId);
+            let next = new Date(now);
+            next.setDate(now.getDate() + (targetDay + 7 - now.getDay()) % 7);
+            next.setHours(startH, startM, 0, 0);
+            if (next < now && now.getDay() !== targetDay) next.setDate(next.getDate() + 7);
+
             let todayStart = new Date(now); todayStart.setHours(startH, startM, 0, 0);
             let todayEnd = new Date(now); todayEnd.setHours(endH, endM, 0, 0);
 
@@ -115,11 +153,7 @@
                 timerTxt.innerText = `Končí v ${endH}:00`;
                 timerTxt.style.color = "#2ecc71";
             } else {
-                let next = new Date(now);
-                next.setDate(now.getDate() + (targetDay + 7 - now.getDay()) % 7);
-                next.setHours(startH, startM, 0, 0);
-                if (next < now) next.setDate(next.getDate() + 7);
-                const diff = next - now;
+                const diff = (next < now ? new Date(next.getTime() + 7 * 864e5) : next) - now;
                 const d = Math.floor(diff / 864e5), h = Math.floor(diff % 864e5 / 36e5), m = Math.floor(diff % 36e5 / 6e4), s = Math.floor(diff % 6e4 / 1e3);
                 statusTxt.innerText = "Začíná za:";
                 timerTxt.innerText = `${d}d ${h}h ${m}m ${s}s`;
@@ -132,6 +166,7 @@
             handleTimer('sat-status', 'sat-timer', 6, 17, 0, 19, 0); 
         }, 1000);
 
+        // YOUTUBE POZADÍ
         var tag = document.createElement('script'); tag.src = "https://www.youtube.com/iframe_api";
         var firstScriptTag = document.getElementsByTagName('script')[0]; firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
         var player;
@@ -139,7 +174,7 @@
 
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('player', {
-                playerVars: { 'autoplay': 1, 'controls': 0, 'rel': 0, 'mute': 1, 'playlist': videoList.join(','), 'loop': 1 },
+                playerVars: { 'autoplay': 1, 'controls': 0, 'rel': 0, 'mute': 1, 'playlist': videoList.join(','), 'loop': 1, 'modestbranding': 1 },
                 events: { 'onReady': (e) => { e.target.setShuffle(true); e.target.playVideo(); } }
             });
         }
@@ -152,7 +187,8 @@
 
         function showSocials() { 
             document.getElementById('social-section').style.display = 'flex'; 
-            document.getElementById('show-socials').style.display = 'none'; 
+            document.getElementById('show-socials-main').style.display = 'none'; 
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
         }
         function openNews() { document.getElementById('main-content').style.display = 'none'; document.getElementById('news-content').style.display = 'block'; }
         function closeNews() { document.getElementById('news-content').style.display = 'none'; document.getElementById('main-content').style.display = 'block'; }
