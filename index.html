@@ -7,21 +7,21 @@
     <meta name="google-site-verification" content="PGIpFsNAytWHEjTKSQWUspS5oH3LBURR2GjDRsnhOQM" />
 
     <title>SteamHubCZ | Štěpán Moravec - Hry na server</title>
-    <meta name="description" content="Oficiální stránka SteamHubCZ. Zakladatel Štěpán Moravec. Projekt zaměřený na herní komunitu, stahování her na server a společné eventy.">
-    <meta name="keywords" content="SteamHubCZ, Štěpán Moravec, hry na server, herní komunita, Steam hry zdarma, Cheat Engine">
+    <meta name="description" content="Oficiální stránka projektu SteamHubCZ. Zakladatel Štěpán Moravec. Server zaměřený na herní komunitu, stahování her na server a společné eventy.">
+    <meta name="keywords" content="SteamHubCZ, Štěpán Moravec, hry na server, herní komunita, stahování her">
 
     <style>
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow-x: hidden; font-family: 'Segoe UI', Tahoma, sans-serif; color: #c7d5e0; background-color: #0b0e14; }
         
-        /* VIDEO POZADÍ */
+        /* VIDEO POZADÍ S KLIPY */
         .video-background { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; overflow: hidden; }
         .video-background iframe { width: 100vw; height: 56.25vw; min-height: 100vh; min-width: 177.77vh; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 9, 15, 0.85); z-index: 0; }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 9, 15, 0.75); z-index: 0; }
 
         .container { 
-            position: relative; z-index: 1; background: rgba(42, 71, 94, 0.8); 
+            position: relative; z-index: 1; background: rgba(42, 71, 94, 0.85); 
             padding: 2.5rem; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.7); 
-            max-width: 950px; width: 90%; text-align: center; backdrop-filter: blur(8px);
+            max-width: 950px; width: 90%; text-align: center; backdrop-filter: blur(10px);
             margin: 50px auto; border: 1px solid rgba(102, 192, 244, 0.3);
         }
 
@@ -36,16 +36,10 @@
         .card:hover { transform: translateY(-5px); }
         .card h3 { color: #66c0f4; margin-top: 0; font-size: 1.3rem; }
         
-        .card-btn { background: #66c0f4; border: none; padding: 12px; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 15px; color: #171a21; transition: background 0.2s; }
-        .card-btn:hover { background: #54a5d4; }
+        .card-btn { background: #66c0f4; border: none; padding: 12px; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 15px; color: #171a21; }
 
-        /* SOCIÁLNÍ SÍTĚ */
         .social-container { display: none; margin-top: 30px; gap: 20px; justify-content: center; flex-wrap: wrap; }
-        .social-link { 
-            color: white; padding: 15px 35px; border-radius: 8px;
-            font-weight: bold; text-decoration: none; font-size: 1.3rem; 
-            display: inline-block; transition: transform 0.2s;
-        }
+        .social-link { color: white; padding: 15px 35px; border-radius: 8px; font-weight: bold; text-decoration: none; font-size: 1.3rem; display: inline-block; transition: transform 0.2s; }
         .social-link:hover { transform: scale(1.05); }
         .discord-btn { background: #5865F2; }
         .instagram-btn { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
@@ -76,18 +70,18 @@
         <div class="features">
             <div class="card">
                 <h3>🎮 Hry na server</h3>
-                <p>Specializujeme se na stahování her a obsahu pro herní servery a Steam.</p>
-                <button class="card-btn" onclick="alert('Seznam her se připravuje!')">Zobrazit nabídku</button>
+                <p>Jsme server zaměřený na stahování her a obsahu pro herní servery a Steam.</p>
+                <button class="card-btn" onclick="alert('Seznam her se připravuje!')">Zobrazit hry</button>
             </div>
             <div class="card">
                 <h3>👥 Komunita</h3>
-                <p>Připoj se k herní komunitě a buď u všeho jako první.</p>
+                <p>Zakladatel: Štěpán Moravec. Přidej se k nám na sociální sítě a do naší komunity.</p>
                 <button class="card-btn" onclick="showSocials()">Více o nás</button>
             </div>
             <div class="card">
                 <h3>🚀 Plánované Eventy</h3>
-                <p>Středy, pátky a soboty plné hraní a Cheat Engine tipů.</p>
-                <button onclick="openNews()" class="card-btn">Zobrazit časy</button>
+                <p>Sleduj naše odpočty do středečních, pátečních a sobotních akcí a eventů.</p>
+                <button onclick="openNews()" class="card-btn">Zobrazit plán</button>
             </div>
         </div>
         
@@ -104,38 +98,30 @@
         <div class="features">
             <div class="card">
                 <h3>Středeční Pokec</h3>
-                <p>Modování a volná debata. (15:00 - 17:00)</p>
-                <div style="border-top: 1px solid rgba(102,192,244,0.2); margin-top: 10px; padding-top: 10px;">
-                    <p id="wed-status" style="margin: 5px 0; font-size: 0.9rem;">Načítám...</p>
-                    <span id="wed-timer" class="timer-display">-- : -- : --</span>
-                </div>
+                <p>Modování a volná debata o hrách. (15:00 - 17:00)</p>
+                <p id="wed-status">Načítám...</p>
+                <span id="wed-timer" class="timer-display">-- : -- : --</span>
             </div>
             <div class="card" style="border-bottom-color: #2ecc71;">
                 <h3>Páteční Event</h3>
                 <p>Cheat Engine tipy a triky. (17:00 - 19:00)</p>
-                <div style="border-top: 1px solid rgba(102,192,244,0.2); margin-top: 10px; padding-top: 10px;">
-                    <p id="fri-status" style="margin: 5px 0; font-size: 0.9rem;">Načítám...</p>
-                    <span id="fri-timer" class="timer-display">-- : -- : --</span>
-                </div>
+                <p id="fri-status">Načítám...</p>
+                <span id="fri-timer" class="timer-display">-- : -- : --</span>
             </div>
             <div class="card">
                 <h3>Sobotní Hlavní Event</h3>
-                <p>Společné hraní a CE triky. (17:00 - 19:00)</p>
-                <div style="border-top: 1px solid rgba(102,192,244,0.2); margin-top: 10px; padding-top: 10px;">
-                    <p id="sat-status" style="margin: 5px 0; font-size: 0.9rem;">Načítám...</p>
-                    <span id="sat-timer" class="timer-display">-- : -- : --</span>
-                </div>
+                <p>Společné hraní na serveru. (17:00 - 19:00)</p>
+                <p id="sat-status">Načítám...</p>
+                <span id="sat-timer" class="timer-display">-- : -- : --</span>
             </div>
         </div>
         <button onclick="closeNews()" class="main-action-btn" style="background: #4e5d6a; margin-top: 30px;">Zpět domů</button>
     </div>
 
     <script>
-        // HODINY
         function updateClock() { document.getElementById('irl-clock').innerText = new Date().toLocaleTimeString('cs-CZ'); }
         setInterval(updateClock, 1000); updateClock();
 
-        // ODPOČTY
         function handleTimer(statusId, timerId, targetDay, startH, startM, endH, endM) {
             const now = new Date();
             const statusTxt = document.getElementById(statusId);
@@ -144,12 +130,10 @@
             next.setDate(now.getDate() + (targetDay + 7 - now.getDay()) % 7);
             next.setHours(startH, startM, 0, 0);
             if (next < now && now.getDay() !== targetDay) next.setDate(next.getDate() + 7);
-
             let todayStart = new Date(now); todayStart.setHours(startH, startM, 0, 0);
             let todayEnd = new Date(now); todayEnd.setHours(endH, endM, 0, 0);
-
             if (now.getDay() === targetDay && now >= todayStart && now <= todayEnd) {
-                statusTxt.innerText = "EVENT PRÁVĚ PROBÍHÁ!";
+                statusTxt.innerText = "PRÁVĚ PROBÍHÁ!";
                 timerTxt.innerText = `Končí v ${endH}:00`;
                 timerTxt.style.color = "#2ecc71";
             } else {
@@ -166,30 +150,24 @@
             handleTimer('sat-status', 'sat-timer', 6, 17, 0, 19, 0); 
         }, 1000);
 
-        // YOUTUBE POZADÍ
         var tag = document.createElement('script'); tag.src = "https://www.youtube.com/iframe_api";
         var firstScriptTag = document.getElementsByTagName('script')[0]; firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
         var player;
-        var videoList = ['77hcTXXRgkE', 'scZCfPuqD_A'];
-
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('player', {
-                playerVars: { 'autoplay': 1, 'controls': 0, 'rel': 0, 'mute': 1, 'playlist': videoList.join(','), 'loop': 1, 'modestbranding': 1 },
+                playerVars: { 
+                    'autoplay': 1, 'controls': 0, 'rel': 0, 'mute': 1, 
+                    'playlist': '77hcTXXRgkE,scZCfPuqD_A', 'loop': 1, 'modestbranding': 1 
+                },
                 events: { 'onReady': (e) => { e.target.setShuffle(true); e.target.playVideo(); } }
             });
         }
-
         function toggleMute() {
             var btn = document.getElementById('mute-toggle');
             if (player.isMuted()) { player.unMute(); btn.innerHTML = '🔊'; } 
             else { player.mute(); btn.innerHTML = '🔇'; }
         }
-
-        function showSocials() { 
-            document.getElementById('social-section').style.display = 'flex'; 
-            document.getElementById('show-socials-main').style.display = 'none'; 
-            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-        }
+        function showSocials() { document.getElementById('social-section').style.display = 'flex'; document.getElementById('show-socials-main').style.display = 'none'; }
         function openNews() { document.getElementById('main-content').style.display = 'none'; document.getElementById('news-content').style.display = 'block'; }
         function closeNews() { document.getElementById('news-content').style.display = 'none'; document.getElementById('main-content').style.display = 'block'; }
     </script>
