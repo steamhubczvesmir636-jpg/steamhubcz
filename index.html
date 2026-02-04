@@ -7,16 +7,15 @@
     <meta name="google-site-verification" content="PGIpFsNAytWHEjTKSQWUspS5oH3LBURR2GjDRsnhOQM" />
 
     <title>SteamHubCZ | Štěpán Moravec - Hry na server</title>
-    <meta name="description" content="Oficiální stránka projektu SteamHubCZ. Zakladatel Štěpán Moravec. Server zaměřený na herní komunitu, stahování her na server a společné eventy.">
-    <meta name="keywords" content="SteamHubCZ, Štěpán Moravec, hry na server, herní komunita, stahování her">
+    <meta name="description" content="Oficiální stránka projektu SteamHubCZ. Zakladatel Štěpán Moravec. Server zaměřený na herní komunitu a stahování her na server.">
 
     <style>
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow-x: hidden; font-family: 'Segoe UI', Tahoma, sans-serif; color: #c7d5e0; background-color: #0b0e14; }
         
-        /* VIDEO POZADÍ S KLIPY */
+        /* VIDEO POZADÍ */
         .video-background { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; overflow: hidden; }
         .video-background iframe { width: 100vw; height: 56.25vw; min-height: 100vh; min-width: 177.77vh; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 9, 15, 0.75); z-index: 0; }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 9, 15, 0.7); z-index: 0; }
 
         .container { 
             position: relative; z-index: 1; background: rgba(42, 71, 94, 0.85); 
@@ -70,17 +69,17 @@
         <div class="features">
             <div class="card">
                 <h3>🎮 Hry na server</h3>
-                <p>Jsme server zaměřený na stahování her a obsahu pro herní servery a Steam.</p>
+                <p>Specializujeme se na stahování her a obsahu pro herní servery a Steam.</p>
                 <button class="card-btn" onclick="alert('Seznam her se připravuje!')">Zobrazit hry</button>
             </div>
             <div class="card">
                 <h3>👥 Komunita</h3>
-                <p>Zakladatel: Štěpán Moravec. Přidej se k nám na sociální sítě a do naší komunity.</p>
+                <p>Zakladatel: Štěpán Moravec. Přidej se k nám na sociální sítě.</p>
                 <button class="card-btn" onclick="showSocials()">Více o nás</button>
             </div>
             <div class="card">
                 <h3>🚀 Plánované Eventy</h3>
-                <p>Sleduj naše odpočty do středečních, pátečních a sobotních akcí a eventů.</p>
+                <p>Sleduj naše odpočty do středečních, pátečních a sobotních akcí.</p>
                 <button onclick="openNews()" class="card-btn">Zobrazit plán</button>
             </div>
         </div>
@@ -98,7 +97,7 @@
         <div class="features">
             <div class="card">
                 <h3>Středeční Pokec</h3>
-                <p>Modování a volná debata o hrách. (15:00 - 17:00)</p>
+                <p>Modování a volná debata. (15:00 - 17:00)</p>
                 <p id="wed-status">Načítám...</p>
                 <span id="wed-timer" class="timer-display">-- : -- : --</span>
             </div>
@@ -155,11 +154,12 @@
         var player;
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('player', {
+                videoId: 'zTK9DhM6OQc',
                 playerVars: { 
                     'autoplay': 1, 'controls': 0, 'rel': 0, 'mute': 1, 
-                    'playlist': '77hcTXXRgkE,scZCfPuqD_A', 'loop': 1, 'modestbranding': 1 
+                    'loop': 1, 'playlist': 'zTK9DhM6OQc', 'modestbranding': 1 
                 },
-                events: { 'onReady': (e) => { e.target.setShuffle(true); e.target.playVideo(); } }
+                events: { 'onReady': (e) => { e.target.playVideo(); } }
             });
         }
         function toggleMute() {
