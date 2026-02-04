@@ -7,7 +7,7 @@
     <meta name="google-site-verification" content="PGIpFsNAytWHEjTKSQWUspS5oH3LBURR2GjDRsnhOQM" />
 
     <title>SteamHubCZ | Štěpán Moravec - Hry na server</title>
-    <meta name="description" content="Oficiální stránka projektu SteamHubCZ. Zakladatel Štěpán Moravec. Server zaměřený na herní komunitu a stahování her na server.">
+    <meta name="description" content="Oficiální stránka SteamHubCZ. Zakladatel Štěpán Moravec. Projekt zaměřený na hry na server a herní komunitu.">
 
     <style>
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow-x: hidden; font-family: 'Segoe UI', Tahoma, sans-serif; color: #c7d5e0; background-color: #0b0e14; }
@@ -15,7 +15,7 @@
         /* VIDEO POZADÍ */
         .video-background { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; overflow: hidden; }
         .video-background iframe { width: 100vw; height: 56.25vw; min-height: 100vh; min-width: 177.77vh; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 9, 15, 0.7); z-index: 0; }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 9, 15, 0.75); z-index: 0; }
 
         .container { 
             position: relative; z-index: 1; background: rgba(42, 71, 94, 0.85); 
@@ -69,12 +69,12 @@
         <div class="features">
             <div class="card">
                 <h3>🎮 Hry na server</h3>
-                <p>Specializujeme se na stahování her a obsahu pro herní servery a Steam.</p>
+                <p>Obsah ke stažení pro herní servery a Steam hry zdarma.</p>
                 <button class="card-btn" onclick="alert('Seznam her se připravuje!')">Zobrazit hry</button>
             </div>
             <div class="card">
                 <h3>👥 Komunita</h3>
-                <p>Zakladatel: Štěpán Moravec. Přidej se k nám na sociální sítě.</p>
+                <p>Zakladatel: Štěpán Moravec. Připoj se k nám na sociální sítě.</p>
                 <button class="card-btn" onclick="showSocials()">Více o nás</button>
             </div>
             <div class="card">
@@ -118,9 +118,11 @@
     </div>
 
     <script>
+        // HODINY
         function updateClock() { document.getElementById('irl-clock').innerText = new Date().toLocaleTimeString('cs-CZ'); }
         setInterval(updateClock, 1000); updateClock();
 
+        // ODPOČTY
         function handleTimer(statusId, timerId, targetDay, startH, startM, endH, endM) {
             const now = new Date();
             const statusTxt = document.getElementById(statusId);
@@ -149,25 +151,43 @@
             handleTimer('sat-status', 'sat-timer', 6, 17, 0, 19, 0); 
         }, 1000);
 
+        // YOUTUBE API - CALIN DOPIS
         var tag = document.createElement('script'); tag.src = "https://www.youtube.com/iframe_api";
         var firstScriptTag = document.getElementsByTagName('script')[0]; firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
         var player;
+
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('player', {
-                videoId: 'zTK9DhM6OQc',
+                videoId: 'zTK9DhM6OQc', // ID tvého videa
                 playerVars: { 
-                    'autoplay': 1, 'controls': 0, 'rel': 0, 'mute': 1, 
-                    'loop': 1, 'playlist': 'zTK9DhM6OQc', 'modestbranding': 1 
+                    'autoplay': 1, 
+                    'controls': 0, 
+                    'rel': 0, 
+                    'mute': 1, 
+                    'loop': 1, 
+                    'playlist': 'zTK9DhM6OQc', 
+                    'modestbranding': 1,
+                    'iv_load_policy': 3
                 },
-                events: { 'onReady': (e) => { e.target.playVideo(); } }
+                events: {
+                    'onReady': function(e) {
+                        e.target.playVideo();
+                    }
+                }
             });
         }
+
         function toggleMute() {
             var btn = document.getElementById('mute-toggle');
             if (player.isMuted()) { player.unMute(); btn.innerHTML = '🔊'; } 
             else { player.mute(); btn.innerHTML = '🔇'; }
         }
-        function showSocials() { document.getElementById('social-section').style.display = 'flex'; document.getElementById('show-socials-main').style.display = 'none'; }
+
+        // NAVIGACE
+        function showSocials() { 
+            document.getElementById('social-section').style.display = 'flex'; 
+            document.getElementById('show-socials-main').style.display = 'none'; 
+        }
         function openNews() { document.getElementById('main-content').style.display = 'none'; document.getElementById('news-content').style.display = 'block'; }
         function closeNews() { document.getElementById('news-content').style.display = 'none'; document.getElementById('main-content').style.display = 'block'; }
     </script>
