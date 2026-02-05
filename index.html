@@ -7,14 +7,15 @@
     <meta name="google-site-verification" content="PGIpFsNAytWHEjTKSQWUspS5oH3LBURR2GjDRsnhOQM" />
 
     <title>SteamHubCZ | Štěpán Moravec - Hry na server</title>
-    <meta name="description" content="Oficiální stránka SteamHubCZ. Zakladatel Štěpán Moravec. Projekt zaměřený na herní komunitu, stahování her na server a společné eventy.">
+    <meta name="description" content="Oficiální stránka projektu SteamHubCZ. Zakladatel Štěpán Moravec. Server zaměřený na herní komunitu, stahování her na server a společné eventy.">
+    <meta name="keywords" content="SteamHubCZ, Štěpán Moravec, hry na server, herní komunita, stahování her">
 
     <style>
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow-x: hidden; font-family: 'Segoe UI', Tahoma, sans-serif; color: #c7d5e0; background-color: #0b0e14; }
         
         /* VIDEO POZADÍ S KLIPY */
         .video-background { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; overflow: hidden; }
-        .video-background iframe { width: 100vw; height: 56.25vw; min-height: 100vh; min-width: 177.77vh; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); border: none; }
+        .video-background iframe { width: 100vw; height: 56.25vw; min-height: 100vh; min-width: 177.77vh; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 9, 15, 0.75); z-index: 0; }
 
         .container { 
@@ -37,7 +38,6 @@
         
         .card-btn { background: #66c0f4; border: none; padding: 12px; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 15px; color: #171a21; }
 
-        /* SOCIÁLNÍ SÍTĚ */
         .social-container { display: none; margin-top: 30px; gap: 20px; justify-content: center; flex-wrap: wrap; }
         .social-link { color: white; padding: 15px 35px; border-radius: 8px; font-weight: bold; text-decoration: none; font-size: 1.3rem; display: inline-block; transition: transform 0.2s; }
         .social-link:hover { transform: scale(1.05); }
@@ -75,12 +75,12 @@
             </div>
             <div class="card">
                 <h3>👥 Komunita</h3>
-                <p>Zakladatel: Štěpán Moravec. Přidej se k nám na sociální sítě.</p>
+                <p>Zakladatel: Štěpán Moravec. Přidej se k nám na sociální sítě a do naší komunity.</p>
                 <button class="card-btn" onclick="showSocials()">Více o nás</button>
             </div>
             <div class="card">
                 <h3>🚀 Plánované Eventy</h3>
-                <p>Sleduj naše odpočty do středečních, pátečních a sobotních akcí.</p>
+                <p>Sleduj naše odpočty do středečních, pátečních a sobotních akcí a eventů.</p>
                 <button onclick="openNews()" class="card-btn">Zobrazit plán</button>
             </div>
         </div>
@@ -98,19 +98,19 @@
         <div class="features">
             <div class="card">
                 <h3>Středeční Pokec</h3>
-                <p>Volná debata. (15:00 - 17:00)</p>
+                <p>Modování a volná debata o hrách. (15:00 - 17:00)</p>
                 <p id="wed-status">Načítám...</p>
                 <span id="wed-timer" class="timer-display">-- : -- : --</span>
             </div>
             <div class="card" style="border-bottom-color: #2ecc71;">
                 <h3>Páteční Event</h3>
-                <p>Cheat Engine tipy. (17:00 - 19:00)</p>
+                <p>Cheat Engine tipy a triky. (17:00 - 19:00)</p>
                 <p id="fri-status">Načítám...</p>
                 <span id="fri-timer" class="timer-display">-- : -- : --</span>
             </div>
             <div class="card">
-                <h3>Sobotní Sraz</h3>
-                <p>Hlavní společné hraní. (17:00 - 19:00)</p>
+                <h3>Sobotní Hlavní Event</h3>
+                <p>Společné hraní na serveru. (17:00 - 19:00)</p>
                 <p id="sat-status">Načítám...</p>
                 <span id="sat-timer" class="timer-display">-- : -- : --</span>
             </div>
@@ -153,34 +153,15 @@
         var tag = document.createElement('script'); tag.src = "https://www.youtube.com/iframe_api";
         var firstScriptTag = document.getElementsByTagName('script')[0]; firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
         var player;
-        
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('player', {
                 playerVars: { 
-                    'autoplay': 1, 
-                    'controls': 0, 
-                    'rel': 0, 
-                    'mute': 1, 
-                    'playlist': 'zTK9DhM6OQc,77hcTXXRgkE,scZCfPuqD_A', // TADY JE PŘIDANÉ TO NOVÉ VIDEO
-                    'loop': 1, 
-                    'modestbranding': 1,
-                    'enablejsapi': 1
+                    'autoplay': 1, 'controls': 0, 'rel': 0, 'mute': 1, 
+                    'playlist': '77hcTXXRgkE,scZCfPuqD_A', 'loop': 1, 'modestbranding': 1 
                 },
-                events: { 
-                    'onReady': (e) => { 
-                        e.target.setShuffle(true); 
-                        e.target.playVideo(); 
-                    },
-                    'onStateChange': (e) => {
-                        // Pokud video skončí, playlist se postará o další, ale pojistka pro loop
-                        if (e.data === YT.PlayerState.ENDED) {
-                            player.playVideo();
-                        }
-                    }
-                }
+                events: { 'onReady': (e) => { e.target.setShuffle(true); e.target.playVideo(); } }
             });
         }
-        
         function toggleMute() {
             var btn = document.getElementById('mute-toggle');
             if (player.isMuted()) { player.unMute(); btn.innerHTML = '🔊'; } 
