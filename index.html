@@ -15,7 +15,7 @@
         
         /* VIDEO POZADÍ S KLIPY */
         .video-background { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; overflow: hidden; }
-        .video-background iframe { width: 100vw; height: 56.25vw; min-height: 100vh; min-width: 177.77vh; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+        .video-background iframe { width: 100vw; height: 56.25vw; min-height: 100vh; min-width: 177.77vh; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); border: none; }
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 9, 15, 0.75); z-index: 0; }
 
         .container { 
@@ -76,7 +76,7 @@
             <div class="card">
                 <h3>👥 Komunita</h3>
                 <p>Zakladatel: Štěpán Moravec. Přidej se k nám na sociální sítě a do naší komunity.</p>
-                <button class="card-btn" onclick="showSocials()">Více o nás</button>
+                <button class="card-btn" onclick="window.open('https://www.instagram.com/steamhubczvesmir636/', '_blank')">Více o nás</button>
             </div>
             <div class="card">
                 <h3>🚀 Plánované Eventy</h3>
@@ -157,9 +157,14 @@
             player = new YT.Player('player', {
                 playerVars: { 
                     'autoplay': 1, 'controls': 0, 'rel': 0, 'mute': 1, 
-                    'playlist': '77hcTXXRgkE,scZCfPuqD_A', 'loop': 1, 'modestbranding': 1 
+                    // TADY JE OPRAVA: Přidáno video z YouTube odkazu (zTK9DhM6OQc)
+                    'playlist': 'zTK9DhM6OQc,77hcTXXRgkE,scZCfPuqD_A', 
+                    'loop': 1, 'modestbranding': 1, 'enablejsapi': 1
                 },
-                events: { 'onReady': (e) => { e.target.setShuffle(true); e.target.playVideo(); } }
+                events: { 
+                    'onReady': (e) => { e.target.setShuffle(true); e.target.playVideo(); },
+                    'onStateChange': (e) => { if (e.data === YT.PlayerState.ENDED) { player.playVideo(); } }
+                }
             });
         }
         function toggleMute() {
