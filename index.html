@@ -159,6 +159,11 @@
                     'autoplay': 1, 'controls': 0, 'rel': 0, 'mute': 1, 
                     'playlist': '77hcTXXRgkE,scZCfPuqD_A', 'loop': 1, 'modestbranding': 1 
                 },
+                player = new YT.Player('player', {
+                playerVars: { 
+                    'autoplay': 1, 'controls': 0, 'rel': 0, 'mute': 1, 
+                    'playlist': '0BFw93N4ZJw?si=WBQdm3avowKAgypM', 'loop': 1, 'modestbranding': 1 
+                },
                 events: { 'onReady': (e) => { e.target.setShuffle(true); e.target.playVideo(); } }
             });
         }
