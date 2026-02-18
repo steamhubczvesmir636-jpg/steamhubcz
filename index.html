@@ -13,9 +13,8 @@
     <style>
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow-x: hidden; font-family: 'Segoe UI', Tahoma, sans-serif; color: #c7d5e0; background-color: #0b0e14; }
         
-        /* VIDEO POZADÍ S KLIPY */
         .video-background { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; overflow: hidden; }
-        .video-background iframe { width: 100vw; height: 56.25vw; min-height: 100vh; min-width: 177.77vh; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+        .video-background iframe { width: 100vw; height: 56.25vw; min-height: 100vh; min-width: 177.77vh; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); border: none; }
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 9, 15, 0.75); z-index: 0; }
 
         .container { 
@@ -36,7 +35,7 @@
         .card:hover { transform: translateY(-5px); }
         .card h3 { color: #66c0f4; margin-top: 0; font-size: 1.3rem; }
         
-        .card-btn { background: #66c0f4; border: none; padding: 12px; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 15px; color: #171a21; }
+        .card-btn { background: #66c0f4; border: none; padding: 12px; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 15px; color: #171a21; text-decoration: none; display: block; }
 
         .social-container { display: none; margin-top: 30px; gap: 20px; justify-content: center; flex-wrap: wrap; }
         .social-link { color: white; padding: 15px 35px; border-radius: 8px; font-weight: bold; text-decoration: none; font-size: 1.3rem; display: inline-block; transition: transform 0.2s; }
@@ -75,8 +74,8 @@
             </div>
             <div class="card">
                 <h3>👥 Komunita</h3>
-                <p>Zakladatel: Vesmír636. Přidej se k nám na sociální sítě a do naší komunity na  discordu.</p>
-                <button class="card-btn" onclick="showSocials()">Více o nás</button>
+                <p>Zakladatel: Vesmír636. Přidej se k nám na sociální sítě a do naší komunity na discordu.</p>
+                <button class="card-btn" onclick="window.open('https://www.instagram.com/steamhubczvesmir636/', '_blank')">Více o nás</button>
             </div>
             <div class="card">
                 <h3>🕛 Plánované Eventy</h3>
@@ -146,25 +145,33 @@
         }
         setInterval(() => { 
             handleTimer('wed-status', 'wed-timer', 3, 15, 0, 17, 0); 
-            handleTimer('fri-status', 'fri-timer', 5, 17, 0, 19, 0); 
+            handleTimer('fri-status', 'fri-timer', 5, 18, 30, 19, 0); 
             handleTimer('sat-status', 'sat-timer', 6, 17, 0, 19, 0); 
         }, 1000);
 
         var tag = document.createElement('script'); tag.src = "https://www.youtube.com/iframe_api";
         var firstScriptTag = document.getElementsByTagName('script')[0]; firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
         var player;
+
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('player', {
                 playerVars: { 
-                    'autoplay': 1, 'controls': 0, 'rel': 0, 'mute': 1, 
-                    'playlist': '77hcTXXRgkE,scZCfPuqD_A', 'loop': 1, 'modestbranding': 1 
+                    'autoplay': 1, 
+                    'controls': 0, 
+                    'rel': 0, 
+                    'mute': 1, 
+                    // TADY JSOU TVOJE SONGY (přidána nová 0BFw93N4ZJw)
+                    'playlist': '0BFw93N4ZJw,77hcTXXRgkE,scZCfPuqD_A', 
+                    'loop': 1, 
+                    'modestbranding': 1,
+                    'enablejsapi': 1
                 },
-                player = new YT.Player('player', {
-                playerVars: { 
-                    'autoplay': 1, 'controls': 0, 'rel': 0, 'mute': 1, 
-                    'playlist': '0BFw93N4ZJw?si=WBQdm3avowKAgypM', 'loop': 1, 'modestbranding': 1 
-                },
-                events: { 'onReady': (e) => { e.target.setShuffle(true); e.target.playVideo(); } }
+                events: { 
+                    'onReady': (e) => { 
+                        e.target.setShuffle(true); 
+                        e.target.playVideo(); 
+                    } 
+                }
             });
         }
         function toggleMute() {
