@@ -21,6 +21,11 @@
         .card:hover { transform: translateY(-5px); }
         .card h3 { color: #66c0f4; margin-top: 0; font-size: 1.3rem; }
         .card-btn { background: #66c0f4; border: none; padding: 12px; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 15px; color: #171a21; text-decoration: none; display: block; }
+        
+        /* Styl pro zrušené eventy */
+        .card.cancelled { border-bottom-color: #ff4d4d; opacity: 0.8; }
+        .cancelled-text { color: #ff4d4d; font-weight: bold; font-size: 1.2rem; display: block; margin: 10px 0; text-transform: uppercase; }
+
         .social-container { display: none; margin-top: 30px; gap: 20px; justify-content: center; flex-wrap: wrap; }
         .social-link { color: white; padding: 15px 35px; border-radius: 8px; font-weight: bold; text-decoration: none; font-size: 1.3rem; display: inline-block; transition: transform 0.2s; }
         .social-link:hover { transform: scale(1.05); }
@@ -29,7 +34,6 @@
         .main-action-btn { display: inline-block; margin-top: 40px; padding: 18px 45px; background: linear-gradient(to bottom, #75b022 5%, #588a1b 95%); color: white; text-decoration: none; border-radius: 5px; font-weight: bold; cursor: pointer; border: none; font-size: 1.3rem; }
         #irl-clock { position: fixed; bottom: 20px; right: 20px; z-index: 100; background: rgba(0,0,0,0.8); color: #66c0f4; padding: 10px 20px; border-radius: 8px; font-weight: bold; font-size: 1.2rem; border: 1px solid #66c0f4; }
         #mute-toggle { position: fixed; top: 20px; right: 20px; z-index: 100; background: rgba(0,0,0,0.6); color: white; border: 1px solid #66c0f4; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; font-size: 1.2rem; }
-        .timer-display { font-size: 1.1rem; color: #f39c12; font-weight: bold; margin-top: 10px; display: block; }
     </style>
 </head>
 <body>
@@ -54,7 +58,7 @@
             </div>
             <div class="card">
                 <h3>🕛 Plánované Eventy</h3>
-                <p>Sleduj naše odpočty do středečních, pátečních a sobotních akcí.</p>
+                <p>Sleduj stav našich pravidelných akcí a náborů.</p>
                 <button onclick="openNews()" class="card-btn">Zobrazit plán</button>
             </div>
         </div>
@@ -68,23 +72,20 @@
     <div id="news-content" class="container" style="display: none;">
         <h1>🔥 Plánované Eventy</h1>
         <div class="features">
-            <div class="card">
+            <div class="card cancelled">
                 <h3>Středeční Pokec</h3>
+                <span class="cancelled-text">❌ DOČASNĚ ZRUŠENO</span>
                 <p>Modování a volná debata. (15:00 - 17:00)</p>
-                <p id="wed-status">Načítám...</p>
-                <span id="wed-timer" class="timer-display">-- : -- : --</span>
             </div>
-            <div class="card" style="border-bottom-color: #2ecc71;">
+            <div class="card cancelled">
                 <h3>Páteční Event</h3>
+                <span class="cancelled-text">❌ DOČASNĚ ZRUŠENO</span>
                 <p>Nábor na Moderatora. (18:30 - 19:00)</p>
-                <p id="fri-status">Načítám...</p>
-                <span id="fri-timer" class="timer-display">-- : -- : --</span>
             </div>
-            <div class="card">
+            <div class="card cancelled">
                 <h3>Sobotní Hlavní Event</h3>
+                <span class="cancelled-text">❌ DOČASNĚ ZRUŠENO</span>
                 <p>Společné hraní na serveru. (17:00 - 19:00)</p>
-                <p id="sat-status">Načítám...</p>
-                <span id="sat-timer" class="timer-display">-- : -- : --</span>
             </div>
         </div>
         <button onclick="closeNews()" class="main-action-btn" style="background: #4e5d6a; margin-top: 30px;">Zpět domů</button>
@@ -94,34 +95,6 @@
         function updateClock() { document.getElementById('irl-clock').innerText = new Date().toLocaleTimeString('cs-CZ'); }
         setInterval(updateClock, 1000); updateClock();
 
-        function handleTimer(statusId, timerId, targetDay, startH, startM, endH, endM) {
-            const now = new Date();
-            const statusTxt = document.getElementById(statusId);
-            const timerTxt = document.getElementById(timerId);
-            let next = new Date(now);
-            next.setDate(now.getDate() + (targetDay + 7 - now.getDay()) % 7);
-            next.setHours(startH, startM, 0, 0);
-            if (next < now && now.getDay() !== targetDay) next.setDate(next.getDate() + 7);
-            let todayStart = new Date(now); todayStart.setHours(startH, startM, 0, 0);
-            let todayEnd = new Date(now); todayEnd.setHours(endH, endM, 0, 0);
-            if (now.getDay() === targetDay && now >= todayStart && now <= todayEnd) {
-                statusTxt.innerText = "PRÁVĚ PROBÍHÁ!";
-                timerTxt.innerText = `Končí v ${endH}:00`;
-                timerTxt.style.color = "#2ecc71";
-            } else {
-                const diff = (next < now ? new Date(next.getTime() + 7 * 864e5) : next) - now;
-                const d = Math.floor(diff / 864e5), h = Math.floor(diff % 864e5 / 36e5), m = Math.floor(diff % 36e5 / 6e4), s = Math.floor(diff % 6e4 / 1e3);
-                statusTxt.innerText = "Začíná za:";
-                timerTxt.innerText = `${d}d ${h}h ${m}m ${s}s`;
-                timerTxt.style.color = "#f39c12";
-            }
-        }
-        setInterval(() => { 
-            handleTimer('wed-status', 'wed-timer', 3, 15, 0, 17, 0); 
-            handleTimer('fri-status', 'fri-timer', 5, 18, 30, 19, 0); 
-            handleTimer('sat-status', 'sat-timer', 6, 17, 0, 19, 0); 
-        }, 1000);
-
         var tag = document.createElement('script'); tag.src = "https://www.youtube.com/iframe_api";
         var firstScriptTag = document.getElementsByTagName('script')[0]; firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
         var player;
@@ -129,21 +102,8 @@
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('player', {
                 videoId: '0BFw93N4ZJw',
-                playerVars: { 
-                    'autoplay': 1, 
-                    'controls': 0, 
-                    'rel': 0, 
-                    'mute': 1, 
-                    'loop': 1, 
-                    'playlist': '0BFw93N4ZJw',
-                    'modestbranding': 1,
-                    'enablejsapi': 1
-                },
-                events: { 
-                    'onReady': (e) => { 
-                        e.target.playVideo(); 
-                    } 
-                }
+                playerVars: { 'autoplay': 1, 'controls': 0, 'rel': 0, 'mute': 1, 'loop': 1, 'playlist': '0BFw93N4ZJw', 'modestbranding': 1, 'enablejsapi': 1 },
+                events: { 'onReady': (e) => { e.target.playVideo(); } }
             });
         }
         function toggleMute() {
