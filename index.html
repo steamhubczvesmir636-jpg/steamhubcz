@@ -4,26 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-site-verification" content="PGIpFsNAytWHEjTKSQWUspS5oH3LBURR2GjDRsnhOQM" />
-    <title>SteamHubCZ | Vesmír636 - Hry zdarma</title>
-    
+    <title>SteamHubCZ | Vesmír636 - Hry na steam zdarma</title>
+    <meta name="description" content="Oficiální stránka projektu SteamHubCZ. Zakladatel Štěpán Moravec. Server zaměřený na herní komunitu, stahování her na server a společné eventy.">
+    <meta name="keywords" content="SteamHubCZ, Štěpán Moravec, hry na server, herní komunita, stahování her">
+
     <style>
+        /* Zajištění skrolování na celém webu */
         body, html { 
             margin: 0; padding: 0; width: 100%; height: 100%; 
             font-family: 'Segoe UI', Tahoma, sans-serif; color: #c7d5e0; 
             background-color: #0b0e14; 
-            overflow-x: hidden; 
-            overflow-y: auto;   
+            overflow-x: hidden; /* Zakáže vodorovné posouvání */
+            overflow-y: auto;   /* Povolí svislé posouvání */
         }
         
         .video-background { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; overflow: hidden; }
         .video-background iframe { width: 100vw; height: 56.25vw; min-height: 100vh; min-width: 177.77vh; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); border: none; }
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 9, 15, 0.8); z-index: 0; }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 9, 15, 0.75); z-index: 0; }
 
         .container { 
             position: relative; z-index: 1; background: rgba(42, 71, 94, 0.85); 
             padding: 2.5rem; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.7); 
             max-width: 950px; width: 90%; text-align: center; backdrop-filter: blur(10px);
             margin: 50px auto; border: 1px solid rgba(102, 192, 244, 0.3);
+            /* Přidáno pro lepší zobrazení na mobilu */
             box-sizing: border-box;
         }
 
@@ -34,16 +38,15 @@
         .card { 
             background: #171a21; padding: 25px; border-radius: 10px; border-bottom: 4px solid #66c0f4; 
             transition: transform 0.3s; display: flex; flex-direction: column; justify-content: space-between; 
-            text-align: left;
         }
         .card:hover { transform: translateY(-5px); }
-        .card h3 { color: #66c0f4; margin-top: 0; font-size: 1.2rem; text-align: center; }
+        .card h3 { color: #66c0f4; margin-top: 0; font-size: 1.3rem; }
         
-        .card-btn { background: #66c0f4; border: none; padding: 12px; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 15px; color: #171a21; text-decoration: none; display: block; text-align: center; }
+        .card-btn { background: #66c0f4; border: none; padding: 12px; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 15px; color: #171a21; text-decoration: none; display: block; }
 
-        .preparing-text { color: #f39c12; font-weight: bold; font-style: italic; font-size: 0.9rem; display: block; margin-top: 10px; text-align: center; }
+        .game-img { width: 100%; border-radius: 8px; margin: 15px 0; border: 1px solid #66c0f4; }
         .card.cancelled { border-bottom-color: #ff4d4d; opacity: 0.8; }
-        .cancelled-text { color: #ff4d4d; font-weight: bold; font-size: 1.1rem; display: block; margin: 10px 0; text-transform: uppercase; text-align: center; }
+        .cancelled-text { color: #ff4d4d; font-weight: bold; font-size: 1.2rem; display: block; margin: 10px 0; text-transform: uppercase; }
 
         .social-container { display: none; margin-top: 30px; gap: 20px; justify-content: center; flex-wrap: wrap; }
         .social-link { color: white; padding: 15px 35px; border-radius: 8px; font-weight: bold; text-decoration: none; font-size: 1.3rem; display: inline-block; transition: transform 0.2s; }
@@ -60,10 +63,14 @@
 
         #irl-clock { position: fixed; bottom: 20px; right: 20px; z-index: 100; background: rgba(0,0,0,0.8); color: #66c0f4; padding: 10px 20px; border-radius: 8px; font-weight: bold; font-size: 1.2rem; border: 1px solid #66c0f4; }
         #mute-toggle { position: fixed; top: 20px; right: 20px; z-index: 100; background: rgba(0,0,0,0.6); color: white; border: 1px solid #66c0f4; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; font-size: 1.2rem; }
+        
+        .preparing-text { color: #f39c12; font-weight: bold; font-style: italic; }
 
+        /* Vylepšení pro mobily */
         @media (max-width: 600px) {
             h1 { font-size: 2.2rem; }
             .container { padding: 1.5rem; margin: 20px auto; }
+            #irl-clock { font-size: 1rem; padding: 5px 10px; }
         }
     </style>
 </head>
@@ -80,8 +87,8 @@
         
         <div class="features">
             <div class="card">
-                <h3>🎮 Knihovna her</h3>
-                <p>Prohlédni si seznam her z našeho archivu, které připravujeme pro server.</p>
+                <h3>🎮 Hry na server</h3>
+                <p>Aktuálně nabízené hry pro naši komunitu.</p>
                 <button class="card-btn" onclick="openGames()">Zobrazit hry</button>
             </div>
             <div class="card">
@@ -90,9 +97,9 @@
                 <button class="card-btn" onclick="openAbout()">Více o nás</button>
             </div>
             <div class="card">
-                <h3>🕛 Stav Projektu</h3>
-                <p>Sleduj aktuální stav našich eventů a náborů (momentálně pozastaveno).</p>
-                <button onclick="openNews()" class="card-btn">Plánované akce</button>
+                <h3>🕛 Plánované Eventy</h3>
+                <p>Sleduj stav našich pravidelných akcí a náborů.</p>
+                <button onclick="openNews()" class="card-btn">Zobrazit plán</button>
             </div>
         </div>
         
@@ -105,52 +112,15 @@
     </div>
 
     <div id="games-content" class="container" style="display: none;">
-        <h1>Knihovna her</h1>
+        <h1>Nabídka Her</h1>
         <div class="features">
             <div class="card">
-                <h3>Buckshot Roulette</h3>
-                <p>Hororová stolní hra z pohledu první osoby, která nahrazuje revolver brokovnicí.</p>
-                <span class="preparing-text">⚠️ PŘIPRAVUJE SE...</span>
-            </div>
-            <div class="card">
-                <h3>DrainSim</h3>
-                <p>Nezávislá simulační hra zaměřená na realistickou fyziku vody a řešení povodní.</p>
-                <span class="preparing-text">⚠️ PŘIPRAVUJE SE...</span>
-            </div>
-            <div class="card">
-                <h3>Poppy Playtime</h3>
-                <p>Populární epizodická hororová hra. Přežijte v opuštěné továrně na hračky.</p>
-                <span class="preparing-text">⚠️ PŘIPRAVUJE SE...</span>
-            </div>
-            <div class="card">
-                <h3>Shinkansen 0</h3>
-                <p>Hra zasazená do Japonska, kde musíte hledat anomálie v šinkansenu.</p>
-                <span class="preparing-text">⚠️ PŘIPRAVUJE SE...</span>
-            </div>
-            <div class="card">
-                <h3>Anomaly Exit</h3>
-                <p>Psychologický horor o hledání cesty domů vlakem a pozorování anomálií.</p>
-                <span class="preparing-text">⚠️ PŘIPRAVUJE SE...</span>
-            </div>
-            <div class="card">
-                <h3>Back in Service</h3>
-                <p>Hra od českého vývojáře Dominika Vojty z prostředí MHD.</p>
-                <span class="preparing-text">⚠️ PŘIPRAVUJE SE...</span>
-            </div>
-            <div class="card">
-                <h3>Age of History II</h3>
-                <p>Velkolepá strategická válečná hra, která je jednoduchá na naučení, ale těžká na ovládnutí.</p>
-                <span class="preparing-text">⚠️ PŘIPRAVUJE SE...</span>
-            </div>
-            <div class="card">
-                <h3>Winter Resort Simulator 2</h3>
-                <p>Simulátor správy zimního střediska a ovládání lanovek.</p>
-                <span class="preparing-text">⚠️ PŘIPRAVUJE SE...</span>
-            </div>
-            <div class="card">
-                <h3>OMSI 2</h3>
-                <p>Legendární simulátor berlínských autobusů s vysokou mírou realismu.</p>
-                <span class="preparing-text">⚠️ PŘIPRAVUJE SE...</span>
+                <h3>OMSI 2: The Bus Simulator</h3>
+                <div style="background: #2a475e; height: 200px; border-radius: 8px; margin: 15px 0; display: flex; align-items: center; justify-content: center; border: 1px solid #66c0f4;">
+                    <span style="color: #66c0f4;">[ OBRÁZEK OMSI 2 ]</span>
+                </div>
+                <p>OMSI 2 je realistický simulátor omnibusů. Zažijte atmosféru Berlína v 80. a 90. letech na legendární lince 92.</p>
+                <span class="preparing-text">⚠️ PŘIPRAVUJE SE KE STAŽENÍ...</span>
             </div>
         </div>
         <button onclick="closeGames()" class="main-action-btn" style="background: #4e5d6a; margin-top: 30px;">Zpět domů</button>
@@ -162,35 +132,35 @@
         <div class="features">
             <div class="card">
                 <h3>ℹ️ Informace</h3>
-                <p>Detailní historie a vize projektu SteamHubCZ se momentálně zpracovává.</p>
+                <p>Stránka s detailními informacemi o projektu SteamHubCZ se momentálně připravuje.</p>
                 <span class="preparing-text">⚠️ PŘIPRAVUJE SE...</span>
             </div>
             <div class="card">
-                <h3>🔗 Discord</h3>
-                <p>Aktuálně nejvíce informací a komunitu najdeš přímo u nás na serveru.</p>
-                <button class="card-btn" onclick="window.open('https://discord.gg/YTYzFQC6Ew', '_blank')">Vstoupit na Discord</button>
+                <h3>🔗 Rychlé odkazy</h3>
+                <p>Zatím nás můžeš najít na našem Discordu.</p>
+                <button class="card-btn" onclick="window.open('https://discord.gg/YTYzFQC6Ew', '_blank')">Discord Server</button>
             </div>
         </div>
         <button onclick="closeAbout()" class="main-action-btn" style="background: #4e5d6a; margin-top: 30px;">Zpět domů</button>
     </div>
 
     <div id="news-content" class="container" style="display: none;">
-        <h1>🔥 Stav Eventů</h1>
+        <h1>🔥 Plánované Eventy</h1>
         <div class="features">
             <div class="card cancelled">
                 <h3>Středeční Pokec</h3>
-                <span class="cancelled-text">❌ POZASTAVENO</span>
-                <p>Pravidelná debata o modování. (15:00 - 17:00)</p>
+                <span class="cancelled-text">❌ DOČASNĚ ZRUŠENO</span>
+                <p>Modování a volná debata. (15:00 - 17:00)</p>
             </div>
             <div class="card cancelled">
                 <h3>Páteční Event</h3>
-                <span class="cancelled-text">❌ POZASTAVENO</span>
-                <p>Nábory do týmu a moderace. (18:30 - 19:00)</p>
+                <span class="cancelled-text">❌ DOČASNĚ ZRUŠENO</span>
+                <p>Nábor na Moderatora. (18:30 - 19:00)</p>
             </div>
             <div class="card cancelled">
                 <h3>Sobotní Hlavní Event</h3>
-                <span class="cancelled-text">❌ POZASTAVENO</span>
-                <p>Velké společné hraní na serveru. (17:00 - 19:00)</p>
+                <span class="cancelled-text">❌ DOČASNĚ ZRUŠENO</span>
+                <p>Společné hraní na serveru. (17:00 - 19:00)</p>
             </div>
         </div>
         <button onclick="closeNews()" class="main-action-btn" style="background: #4e5d6a; margin-top: 30px;">Zpět domů</button>
@@ -207,7 +177,10 @@
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('player', {
                 videoId: '0BFw93N4ZJw',
-                playerVars: { 'autoplay': 1, 'controls': 0, 'rel': 0, 'mute': 1, 'loop': 1, 'playlist': '0BFw93N4ZJw', 'modestbranding': 1, 'enablejsapi': 1 },
+                playerVars: { 
+                    'autoplay': 1, 'controls': 0, 'rel': 0, 'mute': 1, 
+                    'loop': 1, 'playlist': '0BFw93N4ZJw', 'modestbranding': 1, 'enablejsapi': 1 
+                },
                 events: { 'onReady': (e) => { e.target.playVideo(); } }
             });
         }
@@ -217,6 +190,7 @@
             else { player.mute(); btn.innerHTML = '🔇'; }
         }
 
+        // Pomocná funkce pro plynulé skrolování nahoru
         function scrollToTop() { window.scrollTo({top: 0, behavior: 'smooth'}); }
 
         function showSocials() { 
@@ -224,14 +198,38 @@
             document.getElementById('show-socials-main').style.display = 'none'; 
         }
         
-        function openNews() { document.getElementById('main-content').style.display = 'none'; document.getElementById('news-content').style.display = 'block'; scrollToTop(); }
-        function closeNews() { document.getElementById('news-content').style.display = 'none'; document.getElementById('main-content').style.display = 'block'; scrollToTop(); }
+        function openNews() { 
+            document.getElementById('main-content').style.display = 'none'; 
+            document.getElementById('news-content').style.display = 'block'; 
+            scrollToTop();
+        }
+        function closeNews() { 
+            document.getElementById('news-content').style.display = 'none'; 
+            document.getElementById('main-content').style.display = 'block'; 
+            scrollToTop();
+        }
         
-        function openAbout() { document.getElementById('main-content').style.display = 'none'; document.getElementById('about-content').style.display = 'block'; scrollToTop(); }
-        function closeAbout() { document.getElementById('about-content').style.display = 'none'; document.getElementById('main-content').style.display = 'block'; scrollToTop(); }
+        function openAbout() { 
+            document.getElementById('main-content').style.display = 'none'; 
+            document.getElementById('about-content').style.display = 'block'; 
+            scrollToTop();
+        }
+        function closeAbout() { 
+            document.getElementById('about-content').style.display = 'none'; 
+            document.getElementById('main-content').style.display = 'block'; 
+            scrollToTop();
+        }
         
-        function openGames() { document.getElementById('main-content').style.display = 'none'; document.getElementById('games-content').style.display = 'block'; scrollToTop(); }
-        function closeGames() { document.getElementById('games-content').style.display = 'none'; document.getElementById('main-content').style.display = 'block'; scrollToTop(); }
+        function openGames() { 
+            document.getElementById('main-content').style.display = 'none'; 
+            document.getElementById('games-content').style.display = 'block'; 
+            scrollToTop();
+        }
+        function closeGames() { 
+            document.getElementById('games-content').style.display = 'none'; 
+            document.getElementById('main-content').style.display = 'block'; 
+            scrollToTop();
+        }
     </script>
 </body>
 </html>
