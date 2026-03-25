@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-site-verification" content="PGIpFsNAytWHEjTKSQWUspS5oH3LBURR2GjDRsnhOQM" />
-    <title>SteamHubCZ | Vesmír636 - Hry na steam zdarma</title>
+    <title>SteamHubCZ | Vesmír636 - Hry ke stažení</title>
     <meta name="description" content="Oficiální stránka projektu SteamHubCZ. Zakladatel Štěpán Moravec. Server zaměřený na herní komunitu, stahování her na server a společné eventy.">
     <meta name="keywords" content="SteamHubCZ, Štěpán Moravec, hry na server, herní komunita, stahování her">
 
@@ -34,10 +34,11 @@
         .card h3 { color: #66c0f4; margin-top: 0; font-size: 1.3rem; }
         
         .card-btn { background: #66c0f4; border: none; padding: 12px; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 15px; color: #171a21; text-decoration: none; display: block; }
+        .download-btn { background: #75b022; color: white; }
+        .download-btn:hover { background: #8ed629; }
 
         .game-img { width: 100%; border-radius: 8px; margin: 15px 0; border: 1px solid #66c0f4; }
-        .card.cancelled { border-bottom-color: #ff4d4d; opacity: 0.8; }
-        .cancelled-text { color: #ff4d4d; font-weight: bold; font-size: 1.2rem; display: block; margin: 10px 0; text-transform: uppercase; }
+        .available-text { color: #75b022; font-weight: bold; font-size: 1rem; margin-top: 10px; display: block; }
 
         .social-container { display: none; margin-top: 30px; gap: 20px; justify-content: center; flex-wrap: wrap; }
         .social-link { color: white; padding: 15px 35px; border-radius: 8px; font-weight: bold; text-decoration: none; font-size: 1.3rem; display: inline-block; transition: transform 0.2s; }
@@ -54,8 +55,6 @@
 
         #irl-clock { position: fixed; bottom: 20px; right: 20px; z-index: 100; background: rgba(0,0,0,0.8); color: #66c0f4; padding: 10px 20px; border-radius: 8px; font-weight: bold; font-size: 1.2rem; border: 1px solid #66c0f4; }
         #mute-toggle { position: fixed; top: 20px; right: 20px; z-index: 100; background: rgba(0,0,0,0.6); color: white; border: 1px solid #66c0f4; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; font-size: 1.2rem; }
-        
-        .preparing-text { color: #f39c12; font-weight: bold; font-style: italic; }
     </style>
 </head>
 <body>
@@ -72,17 +71,17 @@
         <div class="features">
             <div class="card">
                 <h3>🎮 Hry na server</h3>
-                <p>Aktuálně nabízené hry pro naši komunitu.</p>
-                <button class="card-btn" onclick="openGames()">Zobrazit hry</button>
+                <p>Prohlédni si seznam her, které jsou aktuálně k dispozici.</p>
+                <button class="card-btn" onclick="openGames()">Stáhnout hry</button>
             </div>
             <div class="card">
                 <h3>👥 Komunita</h3>
-                <p>Chceš vědět víc o SteamHubu? Tato sekce se momentálně aktualizuje.</p>
+                <p>Sekce se aktualizuje. Připravujeme pro vás více info.</p>
                 <button class="card-btn" onclick="openAbout()">Více o nás</button>
             </div>
             <div class="card">
                 <h3>🕛 Plánované Eventy</h3>
-                <p>Sleduj stav našich pravidelných akcí a náborů.</p>
+                <p>Sleduj stav našich akcí (momentálně pozastaveno).</p>
                 <button onclick="openNews()" class="card-btn">Zobrazit plán</button>
             </div>
         </div>
@@ -96,48 +95,55 @@
     </div>
 
     <div id="games-content" class="container" style="display: none;">
-        <h1>Nabídka Her</h1>
+        <h1>Hry k dispozici</h1>
         <div class="features">
             <div class="card">
                 <h3>OMSI 2: The Bus Simulator</h3>
-                <img src="http://googleusercontent.com/image_collection/image_retrieval/7152162331346842237_0" alt="OMSI 2" class="game-img">
-                <p>Realistický simulátor omnibusů v Berlíně.</p>
-                <span class="preparing-text">⚠️ PŘIPRAVUJE SE...</span>
+                <p>Realistický simulátor autobusů.</p>
+                <span class="available-text">✅ K DISPOZICI</span>
+                <a href="https://discord.gg/YTYzFQC6Ew" target="_blank" class="card-btn download-btn">STÁHNOUT NA DISCORDU</a>
             </div>
             <div class="card">
                 <h3>Buckshot Roulette</h3>
-                <p>Napínavá hra s brokovnicí a sázkou o život.</p>
-                <span class="preparing-text">⚠️ PŘIPRAVUJE SE...</span>
+                <p>Sázka o život s brokovnicí.</p>
+                <span class="available-text">✅ K DISPOZICI</span>
+                <a href="https://discord.gg/YTYzFQC6Ew" target="_blank" class="card-btn download-btn">STÁHNOUT NA DISCORDU</a>
             </div>
             <div class="card">
                 <h3>DrainSim</h3>
-                <p>Simulátor čištění a správy odtokových systémů.</p>
-                <span class="preparing-text">⚠️ PŘIPRAVUJE SE...</span>
+                <p>Simulátor čištění odtoků.</p>
+                <span class="available-text">✅ K DISPOZICI</span>
+                <a href="https://discord.gg/YTYzFQC6Ew" target="_blank" class="card-btn download-btn">STÁHNOUT NA DISCORDU</a>
             </div>
             <div class="card">
                 <h3>Poppy Playtime</h3>
-                <p>Hororové dobrodružství v opuštěné továrně na hračky.</p>
-                <span class="preparing-text">⚠️ PŘIPRAVUJE SE...</span>
+                <p>Horor v továrně na hračky.</p>
+                <span class="available-text">✅ K DISPOZICI</span>
+                <a href="https://discord.gg/YTYzFQC6Ew" target="_blank" class="card-btn download-btn">STÁHNOUT NA DISCORDU</a>
             </div>
             <div class="card">
-                <h3>[Chilla's Art] Shinkansen 0 | 新幹線 0号</h3>
-                <p>Psychologický horor odehrávající se v japonském rychlovlaku.</p>
-                <span class="preparing-text">⚠️ PŘIPRAVUJE SE...</span>
+                <h3>Shinkansen 0</h3>
+                <p>Anomálie v japonském vlaku.</p>
+                <span class="available-text">✅ K DISPOZICI</span>
+                <a href="https://discord.gg/YTYzFQC6Ew" target="_blank" class="card-btn download-btn">STÁHNOUT NA DISCORDU</a>
             </div>
             <div class="card">
                 <h3>Anomaly Exit</h3>
-                <p>Hledejte anomálie a najděte cestu ven v tomto hororu.</p>
-                <span class="preparing-text">⚠️ PŘIPRAVUJE SE...</span>
+                <p>Najděte cestu ven z vlaku.</p>
+                <span class="available-text">✅ K DISPOZICI</span>
+                <a href="https://discord.gg/YTYzFQC6Ew" target="_blank" class="card-btn download-btn">STÁHNOUT NA DISCORDU</a>
             </div>
             <div class="card">
                 <h3>Back in Service</h3>
-                <p>Simulátor českého prostředí dopravy a služeb.</p>
-                <span class="preparing-text">⚠️ PŘIPRAVUJE SE...</span>
+                <p>Simulátor českého prostředí.</p>
+                <span class="available-text">✅ K DISPOZICI</span>
+                <a href="https://discord.gg/YTYzFQC6Ew" target="_blank" class="card-btn download-btn">STÁHNOUT NA DISCORDU</a>
             </div>
             <div class="card">
                 <h3>Age of History II</h3>
-                <p>Strategická hra o ovládnutí světa napříč historií.</p>
-                <span class="preparing-text">⚠️ PŘIPRAVUJE SE...</span>
+                <p>Strategie o ovládnutí světa.</p>
+                <span class="available-text">✅ K DISPOZICI</span>
+                <a href="https://discord.gg/YTYzFQC6Ew" target="_blank" class="card-btn download-btn">STÁHNOUT NA DISCORDU</a>
             </div>
         </div>
         <button onclick="closeGames()" class="main-action-btn" style="background: #4e5d6a; margin-top: 30px;">Zpět domů</button>
@@ -149,12 +155,10 @@
         <div class="features">
             <div class="card">
                 <h3>ℹ️ Informace</h3>
-                <p>Stránka s detailními informacemi o projektu SteamHubCZ se momentálně připravuje.</p>
-                <span class="preparing-text">⚠️ PŘIPRAVUJE SE...</span>
+                <p>Stránka se připravuje.</p>
             </div>
             <div class="card">
                 <h3>🔗 Rychlé odkazy</h3>
-                <p>Zatím nás můžeš najít na našem Discordu.</p>
                 <button class="card-btn" onclick="window.open('https://discord.gg/YTYzFQC6Ew', '_blank')">Discord Server</button>
             </div>
         </div>
@@ -163,23 +167,7 @@
 
     <div id="news-content" class="container" style="display: none;">
         <h1>🔥 Plánované Eventy</h1>
-        <div class="features">
-            <div class="card cancelled">
-                <h3>Středeční Pokec</h3>
-                <span class="cancelled-text">❌ DOČASNĚ ZRUŠENO</span>
-                <p>Modování a volná debata. (15:00 - 17:00)</p>
-            </div>
-            <div class="card cancelled">
-                <h3>Páteční Event</h3>
-                <span class="cancelled-text">❌ DOČASNĚ ZRUŠENO</span>
-                <p>Nábor na Moderatora. (18:30 - 19:00)</p>
-            </div>
-            <div class="card cancelled">
-                <h3>Sobotní Hlavní Event</h3>
-                <span class="cancelled-text">❌ DOČASNĚ ZRUŠENO</span>
-                <p>Společné hraní na serveru. (17:00 - 19:00)</p>
-            </div>
-        </div>
+        <p>Momentálně jsou všechny akce pozastaveny.</p>
         <button onclick="closeNews()" class="main-action-btn" style="background: #4e5d6a; margin-top: 30px;">Zpět domů</button>
     </div>
 
@@ -194,10 +182,7 @@
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('player', {
                 videoId: '0BFw93N4ZJw',
-                playerVars: { 
-                    'autoplay': 1, 'controls': 0, 'rel': 0, 'mute': 1, 
-                    'loop': 1, 'playlist': '0BFw93N4ZJw', 'modestbranding': 1, 'enablejsapi': 1 
-                },
+                playerVars: { 'autoplay': 1, 'controls': 0, 'rel': 0, 'mute': 1, 'loop': 1, 'playlist': '0BFw93N4ZJw', 'modestbranding': 1, 'enablejsapi': 1 },
                 events: { 'onReady': (e) => { e.target.playVideo(); } }
             });
         }
@@ -208,13 +193,10 @@
         }
 
         function showSocials() { document.getElementById('social-section').style.display = 'flex'; document.getElementById('show-socials-main').style.display = 'none'; }
-        
         function openNews() { document.getElementById('main-content').style.display = 'none'; document.getElementById('news-content').style.display = 'block'; }
         function closeNews() { document.getElementById('news-content').style.display = 'none'; document.getElementById('main-content').style.display = 'block'; }
-        
         function openAbout() { document.getElementById('main-content').style.display = 'none'; document.getElementById('about-content').style.display = 'block'; }
         function closeAbout() { document.getElementById('about-content').style.display = 'none'; document.getElementById('main-content').style.display = 'block'; }
-        
         function openGames() { document.getElementById('main-content').style.display = 'none'; document.getElementById('games-content').style.display = 'block'; }
         function closeGames() { document.getElementById('games-content').style.display = 'none'; document.getElementById('main-content').style.display = 'block'; }
     </script>
