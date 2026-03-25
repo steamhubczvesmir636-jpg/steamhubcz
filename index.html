@@ -11,7 +11,6 @@
     <style>
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow-x: hidden; font-family: 'Segoe UI', Tahoma, sans-serif; color: #c7d5e0; background-color: #0b0e14; }
         
-        /* VIDEO POZADÍ */
         .video-background { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; overflow: hidden; }
         .video-background iframe { width: 100vw; height: 56.25vw; min-height: 100vh; min-width: 177.77vh; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); border: none; }
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 9, 15, 0.75); z-index: 0; }
@@ -36,7 +35,7 @@
         
         .card-btn { background: #66c0f4; border: none; padding: 12px; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 15px; color: #171a21; text-decoration: none; display: block; }
 
-        /* ZRUŠENÉ EVENTY */
+        .game-img { width: 100%; border-radius: 8px; margin: 15px 0; border: 1px solid #66c0f4; }
         .card.cancelled { border-bottom-color: #ff4d4d; opacity: 0.8; }
         .cancelled-text { color: #ff4d4d; font-weight: bold; font-size: 1.2rem; display: block; margin: 10px 0; text-transform: uppercase; }
 
@@ -73,8 +72,8 @@
         <div class="features">
             <div class="card">
                 <h3>🎮 Hry na server</h3>
-                <p>Jsme server zaměřený na stahování her a obsahu pro herní servery a Steam.</p>
-                <button class="card-btn" onclick="window.open('https://store.steampowered.com/', '_blank')">Zobrazit hry</button>
+                <p>Aktuálně nabízené hry pro naši komunitu.</p>
+                <button class="card-btn" onclick="openGames()">Zobrazit hry</button>
             </div>
             <div class="card">
                 <h3>👥 Komunita</h3>
@@ -94,6 +93,19 @@
             <a href="https://www.instagram.com/steamhubczvesmir636/" target="_blank" class="social-link instagram-btn">INSTAGRAM</a>
             <a href="https://discord.gg/YTYzFQC6Ew" target="_blank" class="social-link discord-btn">DISCORD</a>
         </div>
+    </div>
+
+    <div id="games-content" class="container" style="display: none;">
+        <h1>Nabídka Her</h1>
+        <div class="features">
+            <div class="card">
+                <h3>OMSI 2: The Bus Simulator</h3>
+                <img src="http://googleusercontent.com/image_collection/image_retrieval/7152162331346842237_0" alt="OMSI 2" class="game-img">
+                <p>OMSI 2 je realistický simulátor omnibusů (autobusů). Zažijte atmosféru Berlína v 80. a 90. letech na legendární lince 92.</p>
+                <span class="preparing-text">⚠️ PŘIPRAVUJE SE KE STAŽENÍ...</span>
+            </div>
+        </div>
+        <button onclick="closeGames()" class="main-action-btn" style="background: #4e5d6a; margin-top: 30px;">Zpět domů</button>
     </div>
 
     <div id="about-content" class="container" style="display: none;">
@@ -137,11 +149,9 @@
     </div>
 
     <script>
-        // Hodiny
         function updateClock() { document.getElementById('irl-clock').innerText = new Date().toLocaleTimeString('cs-CZ'); }
         setInterval(updateClock, 1000); updateClock();
 
-        // Youtube Player
         var tag = document.createElement('script'); tag.src = "https://www.youtube.com/iframe_api";
         var firstScriptTag = document.getElementsByTagName('script')[0]; firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
         var player;
@@ -162,12 +172,16 @@
             else { player.mute(); btn.innerHTML = '🔇'; }
         }
 
-        // Navigace
         function showSocials() { document.getElementById('social-section').style.display = 'flex'; document.getElementById('show-socials-main').style.display = 'none'; }
+        
         function openNews() { document.getElementById('main-content').style.display = 'none'; document.getElementById('news-content').style.display = 'block'; }
         function closeNews() { document.getElementById('news-content').style.display = 'none'; document.getElementById('main-content').style.display = 'block'; }
+        
         function openAbout() { document.getElementById('main-content').style.display = 'none'; document.getElementById('about-content').style.display = 'block'; }
         function closeAbout() { document.getElementById('about-content').style.display = 'none'; document.getElementById('main-content').style.display = 'block'; }
+        
+        function openGames() { document.getElementById('main-content').style.display = 'none'; document.getElementById('games-content').style.display = 'block'; }
+        function closeGames() { document.getElementById('games-content').style.display = 'none'; document.getElementById('main-content').style.display = 'block'; }
     </script>
 </body>
 </html>
