@@ -9,14 +9,7 @@
     <meta name="keywords" content="SteamHubCZ, Štěpán Moravec, hry na server, herní komunita, stahování her">
 
     <style>
-        /* Zajištění skrolování na celém webu */
-        body, html { 
-            margin: 0; padding: 0; width: 100%; height: 100%; 
-            font-family: 'Segoe UI', Tahoma, sans-serif; color: #c7d5e0; 
-            background-color: #0b0e14; 
-            overflow-x: hidden; /* Zakáže vodorovné posouvání */
-            overflow-y: auto;   /* Povolí svislé posouvání */
-        }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow-x: hidden; font-family: 'Segoe UI', Tahoma, sans-serif; color: #c7d5e0; background-color: #0b0e14; }
         
         .video-background { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; overflow: hidden; }
         .video-background iframe { width: 100vw; height: 56.25vw; min-height: 100vh; min-width: 177.77vh; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); border: none; }
@@ -27,8 +20,6 @@
             padding: 2.5rem; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.7); 
             max-width: 950px; width: 90%; text-align: center; backdrop-filter: blur(10px);
             margin: 50px auto; border: 1px solid rgba(102, 192, 244, 0.3);
-            /* Přidáno pro lepší zobrazení na mobilu */
-            box-sizing: border-box;
         }
 
         h1 { color: #66c0f4; font-size: 3.5rem; margin-bottom: 0; text-transform: uppercase; letter-spacing: 2px; text-shadow: 2px 2px 10px rgba(0,0,0,0.5); }
@@ -65,13 +56,6 @@
         #mute-toggle { position: fixed; top: 20px; right: 20px; z-index: 100; background: rgba(0,0,0,0.6); color: white; border: 1px solid #66c0f4; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; font-size: 1.2rem; }
         
         .preparing-text { color: #f39c12; font-weight: bold; font-style: italic; }
-
-        /* Vylepšení pro mobily */
-        @media (max-width: 600px) {
-            h1 { font-size: 2.2rem; }
-            .container { padding: 1.5rem; margin: 20px auto; }
-            #irl-clock { font-size: 1rem; padding: 5px 10px; }
-        }
     </style>
 </head>
 <body>
@@ -116,10 +100,8 @@
         <div class="features">
             <div class="card">
                 <h3>OMSI 2: The Bus Simulator</h3>
-                <div style="background: #2a475e; height: 200px; border-radius: 8px; margin: 15px 0; display: flex; align-items: center; justify-content: center; border: 1px solid #66c0f4;">
-                    <span style="color: #66c0f4;">[ OBRÁZEK OMSI 2 ]</span>
-                </div>
-                <p>OMSI 2 je realistický simulátor omnibusů. Zažijte atmosféru Berlína v 80. a 90. letech na legendární lince 92.</p>
+                <img src="http://googleusercontent.com/image_collection/image_retrieval/7152162331346842237_0" alt="OMSI 2" class="game-img">
+                <p>OMSI 2 je realistický simulátor omnibusů (autobusů). Zažijte atmosféru Berlína v 80. a 90. letech na legendární lince 92.</p>
                 <span class="preparing-text">⚠️ PŘIPRAVUJE SE KE STAŽENÍ...</span>
             </div>
         </div>
@@ -190,46 +172,16 @@
             else { player.mute(); btn.innerHTML = '🔇'; }
         }
 
-        // Pomocná funkce pro plynulé skrolování nahoru
-        function scrollToTop() { window.scrollTo({top: 0, behavior: 'smooth'}); }
-
-        function showSocials() { 
-            document.getElementById('social-section').style.display = 'flex'; 
-            document.getElementById('show-socials-main').style.display = 'none'; 
-        }
+        function showSocials() { document.getElementById('social-section').style.display = 'flex'; document.getElementById('show-socials-main').style.display = 'none'; }
         
-        function openNews() { 
-            document.getElementById('main-content').style.display = 'none'; 
-            document.getElementById('news-content').style.display = 'block'; 
-            scrollToTop();
-        }
-        function closeNews() { 
-            document.getElementById('news-content').style.display = 'none'; 
-            document.getElementById('main-content').style.display = 'block'; 
-            scrollToTop();
-        }
+        function openNews() { document.getElementById('main-content').style.display = 'none'; document.getElementById('news-content').style.display = 'block'; }
+        function closeNews() { document.getElementById('news-content').style.display = 'none'; document.getElementById('main-content').style.display = 'block'; }
         
-        function openAbout() { 
-            document.getElementById('main-content').style.display = 'none'; 
-            document.getElementById('about-content').style.display = 'block'; 
-            scrollToTop();
-        }
-        function closeAbout() { 
-            document.getElementById('about-content').style.display = 'none'; 
-            document.getElementById('main-content').style.display = 'block'; 
-            scrollToTop();
-        }
+        function openAbout() { document.getElementById('main-content').style.display = 'none'; document.getElementById('about-content').style.display = 'block'; }
+        function closeAbout() { document.getElementById('about-content').style.display = 'none'; document.getElementById('main-content').style.display = 'block'; }
         
-        function openGames() { 
-            document.getElementById('main-content').style.display = 'none'; 
-            document.getElementById('games-content').style.display = 'block'; 
-            scrollToTop();
-        }
-        function closeGames() { 
-            document.getElementById('games-content').style.display = 'none'; 
-            document.getElementById('main-content').style.display = 'block'; 
-            scrollToTop();
-        }
+        function openGames() { document.getElementById('main-content').style.display = 'none'; document.getElementById('games-content').style.display = 'block'; }
+        function closeGames() { document.getElementById('games-content').style.display = 'none'; document.getElementById('main-content').style.display = 'block'; }
     </script>
 </body>
 </html>
