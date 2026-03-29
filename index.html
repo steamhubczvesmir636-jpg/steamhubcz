@@ -5,11 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-site-verification" content="PGIpFsNAytWHEjTKSQWUspS5oH3LBURR2GjDRsnhOQM" />
     <title>SteamHubCZ | Vesmír636 - Hry a Eventy</title>
-    <meta name="description" content="Oficiální stránka projektu SteamHubCZ. Zakladatel Štěpán Moravec. Server zaměřený na herní komunitu, stahování her na server a společné eventy.">
-    <meta name="keywords" content="SteamHubCZ, Štěpán Moravec, hry na server, herní komunita, stahování her">
-
+    
     <style>
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow-x: hidden; font-family: 'Segoe UI', Tahoma, sans-serif; color: #c7d5e0; background-color: #0b0e14; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow-x: hidden; font-family: 'Segoe UI', Tahoma, sans-serif; color: #c7d5e0; background-color: #0b0e14; scroll-behavior: smooth; }
         
         .video-background { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; overflow: hidden; }
         .video-background iframe { width: 100vw; height: 56.25vw; min-height: 100vh; min-width: 177.77vh; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); border: none; }
@@ -34,14 +32,24 @@
         .card h3 { color: #66c0f4; margin-top: 0; font-size: 1.3rem; }
         
         .card-btn { background: #66c0f4; border: none; padding: 12px; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 15px; color: #171a21; text-decoration: none; display: block; }
-        .download-btn, .event-btn { background: #75b022; color: white; }
-        .download-btn:hover, .event-btn:hover { background: #8ed629; }
+        .event-btn { background: #75b022; color: white; }
+
+        /* Styl pro odpočet */
+        .countdown {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 10px;
+            border-radius: 5px;
+            margin: 15px 0;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.2rem;
+            color: #ffcc00;
+            border: 1px solid #ffcc00;
+        }
 
         .status-text { color: #75b022; font-weight: bold; font-size: 1.1rem; margin-top: 10px; display: block; text-transform: uppercase; }
 
         .social-container { display: none; margin-top: 30px; gap: 20px; justify-content: center; flex-wrap: wrap; }
         .social-link { color: white; padding: 15px 35px; border-radius: 8px; font-weight: bold; text-decoration: none; font-size: 1.3rem; display: inline-block; transition: transform 0.2s; }
-        .social-link:hover { transform: scale(1.05); }
         .discord-btn { background: #5865F2; }
         .instagram-btn { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
 
@@ -66,62 +74,28 @@
     <div id="main-content" class="container">
         <h1>SteamHubCZ</h1>
         <span class="founder">Zakladatel: Vesmír636</span>
-        
         <div class="features">
             <div class="card">
                 <h3>🎮 Hry na server</h3>
-                <p>Všechny hry jsou nyní připraveny ke stažení.</p>
-                <button class="card-btn" onclick="openGames()">Zobrazit knihovnu</button>
+                <p>Knihovna her k dispozici.</p>
+                <button class="card-btn" onclick="openGames()">Zobrazit hry</button>
             </div>
             <div class="card">
                 <h3>👥 Komunita</h3>
-                <p>Více o našem projektu a týmu SteamHubCZ.</p>
+                <p>Více o našem projektu.</p>
                 <button class="card-btn" onclick="openAbout()">O nás</button>
             </div>
             <div class="card">
-                <h3>🕛 Plánované Eventy</h3>
-                <p>Všechny pravidelné akce jsou opět AKTIVNÍ!</p>
-                <button onclick="openNews()" class="card-btn">Kalendář akcí</button>
+                <h3>🕛 Eventy</h3>
+                <p>Sleduj odpočet do akcí!</p>
+                <button onclick="openNews()" class="card-btn">Zobrazit kalendář</button>
             </div>
         </div>
-        
         <button id="show-socials-main" class="main-action-btn" onclick="showSocials()">Sleduj nás na sítích</button>
-
         <div id="social-section" class="social-container">
             <a href="https://www.instagram.com/steamhubczvesmir636/" target="_blank" class="social-link instagram-btn">INSTAGRAM</a>
             <a href="https://discord.gg/YTYzFQC6Ew" target="_blank" class="social-link discord-btn">DISCORD</a>
         </div>
-    </div>
-
-    <div id="games-content" class="container" style="display: none;">
-        <h1>Hry k dispozici</h1>
-        <div class="features">
-            <div class="card"><h3>OMSI 2: Bus Sim</h3><span class="status-text">✅ ONLINE</span><a href="https://discord.gg/YTYzFQC6Ew" target="_blank" class="card-btn download-btn">STÁHNOUT</a></div>
-            <div class="card"><h3>Buckshot Roulette</h3><span class="status-text">✅ ONLINE</span><a href="https://discord.gg/YTYzFQC6Ew" target="_blank" class="card-btn download-btn">STÁHNOUT</a></div>
-            <div class="card"><h3>DrainSim</h3><span class="status-text">✅ ONLINE</span><a href="https://discord.gg/YTYzFQC6Ew" target="_blank" class="card-btn download-btn">STÁHNOUT</a></div>
-            <div class="card"><h3>Poppy Playtime</h3><span class="status-text">✅ ONLINE</span><a href="https://discord.gg/YTYzFQC6Ew" target="_blank" class="card-btn download-btn">STÁHNOUT</a></div>
-            <div class="card"><h3>Shinkansen 0</h3><span class="status-text">✅ ONLINE</span><a href="https://discord.gg/YTYzFQC6Ew" target="_blank" class="card-btn download-btn">STÁHNOUT</a></div>
-            <div class="card"><h3>Anomaly Exit</h3><span class="status-text">✅ ONLINE</span><a href="https://discord.gg/YTYzFQC6Ew" target="_blank" class="card-btn download-btn">STÁHNOUT</a></div>
-            <div class="card"><h3>Back in Service</h3><span class="status-text">✅ ONLINE</span><a href="https://discord.gg/YTYzFQC6Ew" target="_blank" class="card-btn download-btn">STÁHNOUT</a></div>
-            <div class="card"><h3>Age of History II</h3><span class="status-text">✅ ONLINE</span><a href="https://discord.gg/YTYzFQC6Ew" target="_blank" class="card-btn download-btn">STÁHNOUT</a></div>
-        </div>
-        <button onclick="closeGames()" class="main-action-btn" style="background: #4e5d6a; margin-top: 30px;">Zpět domů</button>
-    </div>
-
-    <div id="about-content" class="container" style="display: none;">
-        <h1>O projektu</h1>
-        <p class="founder">Zakladatel: Vesmír636</p>
-        <div class="features">
-            <div class="card">
-                <h3>ℹ️ Informace</h3>
-                <p>SteamHubCZ je komunita zaměřená na hraní simulátorů a hororovek.</p>
-            </div>
-            <div class="card">
-                <h3>🔗 Discord</h3>
-                <button class="card-btn" onclick="window.open('https://discord.gg/YTYzFQC6Ew', '_blank')">Vstoupit</button>
-            </div>
-        </div>
-        <button onclick="closeAbout()" class="main-action-btn" style="background: #4e5d6a; margin-top: 30px;">Zpět domů</button>
     </div>
 
     <div id="news-content" class="container" style="display: none;">
@@ -129,38 +103,55 @@
         <div class="features">
             <div class="card">
                 <h3>Středeční Pokec</h3>
-                <span class="status-text">✅ ONLINE / AKTIVNÍ</span>
-                <p>Modování a volná debata. (15:00 - 17:00)</p>
+                <p>15:00 - 17:00</p>
+                <div class="countdown" id="timer-wed">Načítání...</div>
                 <a href="https://discord.gg/YTYzFQC6Ew" target="_blank" class="card-btn event-btn">PŘIPOJIT SE</a>
             </div>
             <div class="card">
                 <h3>Páteční Event</h3>
-                <span class="status-text">✅ ONLINE / AKTIVNÍ</span>
-                <p>Nábor na Moderátora. (18:30 - 19:00)</p>
+                <p>18:30 - 19:00</p>
+                <div class="countdown" id="timer-fri">Načítání...</div>
                 <a href="https://discord.gg/YTYzFQC6Ew" target="_blank" class="card-btn event-btn">PŘIPOJIT SE</a>
             </div>
             <div class="card">
-                <h3>Sobotní Hlavní Event</h3>
-                <span class="status-text">✅ ONLINE / AKTIVNÍ</span>
-                <p>Společné hraní na serveru. (17:00 - 19:00)</p>
+                <h3>Sobotní Event</h3>
+                <p>17:00 - 19:00</p>
+                <div class="countdown" id="timer-sat">Načítání...</div>
                 <a href="https://discord.gg/YTYzFQC6Ew" target="_blank" class="card-btn event-btn">PŘIPOJIT SE</a>
             </div>
         </div>
         <button onclick="closeNews()" class="main-action-btn" style="background: #4e5d6a; margin-top: 30px;">Zpět domů</button>
     </div>
 
+    <div id="games-content" class="container" style="display: none;">
+        <h1>Knihovna her</h1>
+        <div class="features">
+            <div class="card"><h3>OMSI 2</h3><span class="status-text">✅ ONLINE</span><a href="https://discord.gg/YTYzFQC6Ew" class="card-btn event-btn">STÁHNOUT</a></div>
+            <div class="card"><h3>Buckshot Roulette</h3><span class="status-text">✅ ONLINE</span><a href="https://discord.gg/YTYzFQC6Ew" class="card-btn event-btn">STÁHNOUT</a></div>
+            <div class="card"><h3>Poppy Playtime</h3><span class="status-text">✅ ONLINE</span><a href="https://discord.gg/YTYzFQC6Ew" class="card-btn event-btn">STÁHNOUT</a></div>
+        </div>
+        <button onclick="closeGames()" class="main-action-btn" style="background: #4e5d6a; margin-top: 30px;">Zpět domů</button>
+    </div>
+
+    <div id="about-content" class="container" style="display: none;">
+        <h1>O projektu</h1>
+        <p>SteamHubCZ je komunita pro všechny milovníky her.</p>
+        <button onclick="closeAbout()" class="main-action-btn" style="background: #4e5d6a; margin-top: 30px;">Zpět domů</button>
+    </div>
+
     <script>
+        // Hodiny v rohu
         function updateClock() { document.getElementById('irl-clock').innerText = new Date().toLocaleTimeString('cs-CZ'); }
         setInterval(updateClock, 1000); updateClock();
 
+        // YouTube API
         var tag = document.createElement('script'); tag.src = "https://www.youtube.com/iframe_api";
         var firstScriptTag = document.getElementsByTagName('script')[0]; firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
         var player;
-
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('player', {
                 videoId: '0BFw93N4ZJw',
-                playerVars: { 'autoplay': 1, 'controls': 0, 'rel': 0, 'mute': 1, 'loop': 1, 'playlist': '0BFw93N4ZJw', 'modestbranding': 1, 'enablejsapi': 1 },
+                playerVars: { 'autoplay': 1, 'controls': 0, 'rel': 0, 'mute': 1, 'loop': 1, 'playlist': '0BFw93N4ZJw', 'enablejsapi': 1 },
                 events: { 'onReady': (e) => { e.target.playVideo(); } }
             });
         }
@@ -170,6 +161,32 @@
             else { player.mute(); btn.innerHTML = '🔇'; }
         }
 
+        // Funkce pro odpočet
+        function startCountdown(elementId, dayOfWeek, hour, minute) {
+            setInterval(function() {
+                var now = new Date();
+                var resultDate = new Date();
+                resultDate.setDate(now.getDate() + (dayOfWeek + 7 - now.getDay()) % 7);
+                resultDate.setHours(hour, minute, 0, 0);
+
+                if (now > resultDate) { resultDate.setDate(resultDate.getDate() + 7); }
+
+                var diff = resultDate - now;
+                var days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                var hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                var mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                var secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+                document.getElementById(elementId).innerHTML = days + "d " + hours + "h " + mins + "m " + secs + "s";
+            }, 1000);
+        }
+
+        // Spuštění odpočtů (3=Středa, 5=Pátek, 6=Sobota)
+        startCountdown("timer-wed", 3, 15, 0);
+        startCountdown("timer-fri", 5, 18, 30);
+        startCountdown("timer-sat", 6, 17, 0);
+
+        // Navigace
         function showSocials() { document.getElementById('social-section').style.display = 'flex'; document.getElementById('show-socials-main').style.display = 'none'; }
         function openNews() { document.getElementById('main-content').style.display = 'none'; document.getElementById('news-content').style.display = 'block'; }
         function closeNews() { document.getElementById('news-content').style.display = 'none'; document.getElementById('main-content').style.display = 'block'; }
