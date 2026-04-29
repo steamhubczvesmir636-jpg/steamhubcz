@@ -18,7 +18,7 @@
         .video-background iframe { width: 100vw; height: 56.25vw; min-height: 100vh; min-width: 177.77vh; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); border: none; }
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 9, 15, 0.75); z-index: 0; }
         
-        #global-alert { position: fixed; top: 0; left: 0; width: 100%; background: #e74c3c; color: white; padding: 10px; text-align: center; font-weight: bold; z-index: 1000; display: none; box-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+        #global-alert { position: fixed; top: 0; left: 0; width: 100%; background: #e74c3c; color: white; padding: 10px; text-align: center; font-weight: bold; z-index: 1000; display: none; }
 
         .container { position: relative; z-index: 1; background: rgba(42, 71, 94, 0.85); padding: 2.5rem; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.7); max-width: 950px; width: 90%; text-align: center; backdrop-filter: blur(10px); margin: 60px auto; border: 1px solid rgba(102, 192, 244, 0.3); display: none; }
         .container.active { display: block; }
@@ -39,8 +39,9 @@
         .mod-section { grid-column: span 2; border: 1px solid #f39c12; }
         .log-area { background: #000; color: #00ff00; padding: 10px; font-family: monospace; font-size: 0.8rem; height: 120px; overflow-y: auto; border-radius: 5px; margin-top: 10px; }
 
-        #settings-trigger { position: fixed; top: 20px; right: 20px; z-index: 100; background: rgba(0,0,0,0.6); color: white; border: 1px solid #66c0f4; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; font-size: 1.5rem; display: none; align-items: center; justify-content: center; }
+        #countdown-timer { font-size: 1.5rem; color: #66c0f4; font-weight: bold; margin: 10px 0; }
         #irl-clock { position: fixed; bottom: 20px; right: 20px; z-index: 100; background: rgba(0,0,0,0.8); color: #66c0f4; padding: 10px 20px; border-radius: 8px; font-weight: bold; border: 1px solid #66c0f4; }
+        #settings-trigger { position: fixed; top: 20px; right: 20px; z-index: 100; background: rgba(0,0,0,0.6); color: white; border: 1px solid #66c0f4; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; font-size: 1.5rem; display: none; align-items: center; justify-content: center; }
         #lock-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0b0e14; z-index: 2000; display: none; align-items: center; justify-content: center; flex-direction: column; text-align: center; }
     </style>
 </head>
@@ -69,22 +70,25 @@
             <p onclick="toggleAuth('login')" style="cursor:pointer; text-decoration:underline; font-size:0.8rem; margin-top:10px;">Už mám účet? Přihlášení</p>
         </div>
         <div id="verify-box" class="auth-card" style="display:none;">
-            <input type="text" id="otp_code" class="auth-input" placeholder="000000">
+            <input type="text" id="otp_code" class="auth-input" placeholder="Zadej 6místný kód">
             <button class="auth-btn" onclick="verifyOTP()">VSTOUPIT</button>
         </div>
     </div>
 
     <div id="main-content" class="container">
-        <div style="display:flex; align-items:center; justify-content:center; gap:15px; margin-bottom:20px;">
+        <div style="display:flex; align-items:center; justify-content:center; gap:15px; margin-bottom:10px;">
             <img id="main-avatar" src="" style="width:60px; height:60px; border-radius:50%; border:2px solid #66c0f4;">
             <h2 id="welcome-text">Vítej!</h2>
         </div>
         <h1>SteamHubCZ</h1>
         <span class="founder">Zakladatel: Vesmír636</span>
+        
+        <div id="countdown-timer">Načítání eventu...</div>
+
         <div class="features">
-            <div class="card"><h3>🎮 Hry</h3><p>Knihovna her a simulátorů.</p><button class="card-btn" onclick="openSection('games-content')">VSTOUPIT</button></div>
-            <div class="card"><h3>🕛 Eventy</h3><p>Plánované akce komunity.</p><button class="card-btn" onclick="openSection('news-content')">VSTOUPIT</button></div>
-            <div class="card"><h3>❓ FAQ</h3><p>Často kladené otázky.</p><button class="card-btn" onclick="openSection('faq-content')">VSTOUPIT</button></div>
+            <div class="card"><h3>🎮 Hry</h3><p>OMSI 2, Buckshot a další.</p><button class="card-btn" onclick="openSection('games-content')">VSTOUPIT</button></div>
+            <div class="card"><h3>🕛 Eventy</h3><p>Středa, Pátek, Sobota, Neděle.</p><button class="card-btn" onclick="openSection('news-content')">VSTOUPIT</button></div>
+            <div class="card"><h3>❓ FAQ</h3><p>Otázky a odpovědi.</p><button class="card-btn" onclick="openSection('faq-content')">VSTOUPIT</button></div>
         </div>
         <button class="auth-btn" style="width:250px; margin-top:30px; background:#5865F2; color:white;" onclick="window.open('https://discord.gg/DJJrpXkg8T')">DISCORD SERVER</button>
     </div>
@@ -93,26 +97,23 @@
         <h1>🎮 Herní Sekce</h1>
         <div class="features">
             <div class="card"><h3>OMSI 2</h3><p>Městský simulátor.</p><button class="card-btn">STÁHNOUT</button></div>
-            <div class="card"><h3>Buckshot Roulette</h3><p>Adrenalinová hra.</p><button class="card-btn">STÁHNOUT</button></div>
-            <div class="card"><h3>Roblox Mods</h3><p>Speciální doplňky.</p><button class="card-btn">STÁHNOUT</button></div>
+            <div class="card"><h3>Buckshot Roulette</h3><p>Hororová sázka.</p><button class="card-btn">STÁHNOUT</button></div>
         </div>
         <button onclick="closeSection('games-content')" class="auth-btn" style="width:150px; margin-top:20px;">ZPĚT</button>
     </div>
 
     <div id="news-content" class="container">
-        <h1>🕛 Plánované Eventy</h1>
+        <h1>🕛 Harmonogram Eventů</h1>
         <div class="features">
-            <div class="card"><h3>Sraz OMSI 2</h3><p>Sobota 18:00</p></div>
-            <div class="card"><h3>Turnaj Buckshot</h3><p>Neděle 20:00</p></div>
+            <div class="card"><h3>Středa, Pátek, Sobota</h3><p>Hlavní Eventy<br><b>17:30 - 21:00</b></p></div>
+            <div class="card" style="border-color:#f39c12;"><h3>Neděle</h3><p>Nábor na Moderátora<br><b>Začátek v 16:40</b></p></div>
         </div>
         <button onclick="closeSection('news-content')" class="auth-btn" style="width:150px; margin-top:20px;">ZPĚT</button>
     </div>
 
     <div id="faq-content" class="container">
         <h1>❓ FAQ</h1>
-        <div id="faq-list" style="text-align:left;">
-            <div class="card" style="margin-bottom:10px;"><b>Jak získám přístup?</b><p>Musíš se zaregistrovat pomocí e-mailu.</p></div>
-        </div>
+        <div id="faq-list" style="text-align:left;"></div>
         <button onclick="closeSection('faq-content')" class="auth-btn" style="width:150px; margin-top:20px;">ZPĚT</button>
     </div>
 
@@ -126,36 +127,35 @@
                 <button class="auth-btn" onclick="saveProfile()" style="background:#75b022; color:white;">ULOŽIT</button>
             </div>
             <div class="settings-section">
-                <h3>🎵 Účet</h3>
+                <h3>🎵 Možnosti</h3>
                 <button id="mute-btn" class="auth-btn" onclick="toggleMute()" style="background:#2a475e; color:white;">HUDBA 🔊</button>
                 <button class="auth-btn" onclick="logout()" style="background:#e74c3c; color:white; margin-top:15px;">ODHLÁSIT SE</button>
             </div>
             <div class="settings-section mod-section">
                 <h3 style="color:#f39c12;">🛡️ MOD PANEL</h3>
                 <div id="mod-auth">
-                    <input type="password" id="mod-pass" class="auth-input" placeholder="Heslo (4869)">
+                    <input type="password" id="mod-pass" class="auth-input" placeholder="Heslo moderátora">
                     <button class="auth-btn" onclick="unlockMod()" style="background:#f39c12; color:white;">VSTOUPIT</button>
                 </div>
                 <div id="mod-tools" style="display:none;">
                     <h4 style="color:#66c0f4;">📢 Globální Alert</h4>
-                    <input type="text" id="ann-input" class="auth-input" placeholder="Text zprávy...">
+                    <input type="text" id="ann-input" class="auth-input" placeholder="Zpráva pro všechny...">
                     <button class="auth-btn" onclick="setAnn()" style="background:#e67e22; color:white;">ZVEŘEJNIT</button>
                     
-                    <h4 style="color:#66c0f4; margin-top:20px;">🔒 Zámek</h4>
+                    <h4 style="color:#66c0f4; margin-top:20px;">🔒 Zámek Serveru</h4>
                     <select id="lock-reason-sel" class="auth-input">
                         <option value="Probíhá Update.">Update</option>
-                        <option value="Server v údržbě.">Údržba</option>
+                        <option value="Údržba systému.">Údržba</option>
                     </select>
                     <button class="auth-btn" id="lock-btn" onclick="toggleLock()">ZAMKNOUT</button>
 
-                    <h4 style="color:#66c0f4; margin-top:20px;">❓ Správce FAQ</h4>
+                    <h4 style="color:#66c0f4; margin-top:20px;">❓ Přidat FAQ</h4>
                     <input type="text" id="faq-q" class="auth-input" placeholder="Otázka">
                     <input type="text" id="faq-a" class="auth-input" placeholder="Odpověď">
-                    <button class="auth-btn" onclick="addFAQ()" style="background:#66c0f4; color:#171a21;">PŘIDAT OTÁZKU</button>
+                    <button class="auth-btn" onclick="addFAQ()">PŘIDAT</button>
 
-                    <h4 style="color:#66c0f4; margin-top:20px;">📜 Logy & Uživatelé</h4>
+                    <h4 style="color:#66c0f4; margin-top:20px;">📜 Logy Přihlášení</h4>
                     <div class="log-area" id="mod-logs"></div>
-                    <div id="user-list-mod" style="font-size:0.8rem; margin-top:10px;"></div>
                 </div>
             </div>
         </div>
@@ -164,6 +164,7 @@
 
     <script>
         let otp = ""; let curMail = "";
+        
         window.onload = function() {
             const ann = localStorage.getItem("sh_ann");
             if(ann) { document.getElementById('global-alert').innerText = ann; document.getElementById('global-alert').style.display = 'block'; }
@@ -172,20 +173,51 @@
                 document.getElementById('lock-reason-text').innerText = "Důvod: " + localStorage.getItem("sh_lock_msg");
             }
             renderFAQ();
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
             if(localStorage.getItem("sh_logged") === "true") showMain();
         };
+
+        // ODPOČET EVENTŮ
+        function updateCountdown() {
+            const now = new Date();
+            const days = [0, 1, 2, 3, 4, 5, 6]; // Ne, Po, Út, St, Čt, Pá, So
+            const events = [
+                { day: 3, h: 17, m: 30, name: "Event (Středa)" },
+                { day: 5, h: 17, m: 30, name: "Event (Pátek)" },
+                { day: 6, h: 17, m: 30, name: "Event (Sobota)" },
+                { day: 0, h: 16, m: 40, name: "Nábor Moderátorů (Neděle)" }
+            ];
+
+            let closest = null;
+            let minDiff = Infinity;
+
+            events.forEach(e => {
+                let target = new Date();
+                target.setDate(now.getDate() + (e.day + 7 - now.getDay()) % 7);
+                target.setHours(e.h, e.m, 0, 0);
+                if (target < now) target.setDate(target.getDate() + 7);
+                
+                let diff = target - now;
+                if (diff < minDiff) { minDiff = diff; closest = { ...e, time: target }; }
+            });
+
+            const d = Math.floor(minDiff / (1000 * 60 * 60 * 24));
+            const h = Math.floor((minDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const m = Math.floor((minDiff % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((minDiff % (1000 * 60)) / 1000);
+
+            document.getElementById('countdown-timer').innerHTML = 
+                `<span style="color:white; font-size:0.9rem;">Příští akce: ${closest.name}</span><br>` +
+                `${d}d ${h}h ${m}m ${s}s`;
+        }
 
         function toggleAuth(m) { document.getElementById('login-box').style.display = m === 'login' ? 'block' : 'none'; document.getElementById('reg-box').style.display = m === 'reg' ? 'block' : 'none'; }
         
         function sendAuthCode(m) {
             const email = document.getElementById(m + '_email').value;
             if(!email.includes('@')) return alert("Chybný email!");
-            if(m === 'reg') {
-                localStorage.setItem("sh_name", document.getElementById('reg_name').value || "Uživatel");
-                let users = JSON.parse(localStorage.getItem("sh_users") || "[]");
-                users.push({name: document.getElementById('reg_name').value, email: email});
-                localStorage.setItem("sh_users", JSON.stringify(users));
-            }
+            if(m === 'reg') localStorage.setItem("sh_name", document.getElementById('reg_name').value || "Uživatel");
             curMail = email; otp = Math.floor(100000 + Math.random() * 900000).toString();
             emailjs.send("service_0jeaxzq", "template_6jc2oeh", { to_email: email, otp_code: otp }).then(() => {
                 document.getElementById('login-box').style.display = 'none'; document.getElementById('reg-box').style.display = 'none';
@@ -200,7 +232,7 @@
                 l.push(`${new Date().toLocaleTimeString()}: ${curMail}`);
                 localStorage.setItem("sh_logs", JSON.stringify(l));
                 showMain();
-            } else alert("Chybný kód!");
+            } else alert("Chyba!");
         }
 
         function showMain() {
@@ -211,12 +243,8 @@
         }
 
         function loadProfile() {
-            const name = localStorage.getItem("sh_name") || "Uživatel";
-            const img = localStorage.getItem("sh_img") || "https://cdn-icons-png.flaticon.com/512/149/149071.png";
-            document.getElementById('welcome-text').innerText = "Vítej, " + name + "!";
-            document.getElementById('main-avatar').src = img;
-            document.getElementById('edit-name').value = name;
-            document.getElementById('edit-avatar').value = img;
+            document.getElementById('welcome-text').innerText = "Vítej, " + (localStorage.getItem("sh_name") || "Uživatel") + "!";
+            document.getElementById('main-avatar').src = localStorage.getItem("sh_img") || "https://cdn-icons-png.flaticon.com/512/149/149071.png";
         }
 
         function saveProfile() {
@@ -229,16 +257,12 @@
             if(document.getElementById('mod-pass').value === "4869") {
                 document.getElementById('mod-auth').style.display = 'none';
                 document.getElementById('mod-tools').style.display = 'block';
-                const logs = JSON.parse(localStorage.getItem("sh_logs") || "[]");
-                document.getElementById('mod-logs').innerHTML = logs.reverse().join("<br>");
-                const users = JSON.parse(localStorage.getItem("sh_users") || "[]");
-                document.getElementById('user-list-mod').innerHTML = "<b>Uživatelé:</b><br>" + users.map(u => u.name + " (" + u.email + ")").join("<br>");
-            } else alert("Chyba!");
+                document.getElementById('mod-logs').innerHTML = JSON.parse(localStorage.getItem("sh_logs") || "[]").reverse().join("<br>");
+            } else alert("Heslo je 4869!");
         }
 
         function toggleLock() {
-            const l = localStorage.getItem("sh_locked") === "true";
-            localStorage.setItem("sh_locked", !l);
+            localStorage.setItem("sh_locked", localStorage.getItem("sh_locked") !== "true");
             localStorage.setItem("sh_lock_msg", document.getElementById('lock-reason-sel').value);
             location.reload();
         }
@@ -249,13 +273,12 @@
             let faqs = JSON.parse(localStorage.getItem("sh_faqs") || "[]");
             faqs.push({q: document.getElementById('faq-q').value, a: document.getElementById('faq-a').value});
             localStorage.setItem("sh_faqs", JSON.stringify(faqs));
-            renderFAQ(); alert("Otázka přidána!");
+            renderFAQ();
         }
 
         function renderFAQ() {
             let faqs = JSON.parse(localStorage.getItem("sh_faqs") || "[]");
-            let base = `<div class="card" style="margin-bottom:10px;"><b>Jak získám přístup?</b><p>Musíš se zaregistrovat pomocí e-mailu.</p></div>`;
-            document.getElementById('faq-list').innerHTML = base + faqs.map(f => `<div class="card" style="margin-bottom:10px;"><b>${f.q}</b><p>${f.a}</p></div>`).join("");
+            document.getElementById('faq-list').innerHTML = faqs.map(f => `<div class="card" style="margin-bottom:10px;"><b>${f.q}</b><p>${f.a}</p></div>`).join("");
         }
 
         function logout() { localStorage.removeItem("sh_logged"); location.reload(); }
@@ -267,10 +290,7 @@
         var firstScriptTag = document.getElementsByTagName('script')[0]; firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
         var player;
         function onYouTubeIframeAPIReady() {
-            player = new YT.Player('player', {
-                videoId: '0BFw93N4ZJw',
-                playerVars: { 'autoplay': 1, 'controls': 0, 'mute': 1, 'loop': 1, 'playlist': '0BFw93N4ZJw' }
-            });
+            player = new YT.Player('player', { videoId: '0BFw93N4ZJw', playerVars: { 'autoplay': 1, 'controls': 0, 'mute': 1, 'loop': 1, 'playlist': '0BFw93N4ZJw' } });
         }
         function toggleMute() {
             const btn = document.getElementById('mute-btn');
