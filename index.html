@@ -6,44 +6,43 @@
     <title>SteamHubCZ | Vesmír636</title>
     
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
     <script type="text/javascript">
         (function() { emailjs.init("yw3YNXC58nL3Bh4fl"); })();
     </script>
 
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-
     <style>
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow-x: hidden; font-family: 'Segoe UI', Tahoma, sans-serif; color: #c7d5e0; background-color: #0b0e14; }
         
-        /* POZADÍ */
         .video-background { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; overflow: hidden; }
         .video-background iframe { width: 100vw; height: 56.25vw; min-height: 100vh; min-width: 177.77vh; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); border: none; }
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 9, 15, 0.8); z-index: 0; }
         
-        /* KONTEJNERY */
         .container { position: relative; z-index: 1; background: rgba(42, 71, 94, 0.85); padding: 2.5rem; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.7); max-width: 950px; width: 90%; text-align: center; backdrop-filter: blur(10px); margin: 50px auto; border: 1px solid rgba(102, 192, 244, 0.3); display: none; }
         .container.active { display: block; animation: fadeIn 0.4s ease; }
         
         h1 { color: #66c0f4; font-size: 3.5rem; margin-bottom: 0; text-transform: uppercase; letter-spacing: 2px; }
+        .auth-input { width: 100%; padding: 12px; margin: 10px 0; background: #2a475e; border: 1px solid #66c0f4; border-radius: 5px; color: white; box-sizing: border-box; }
+        
         .card-btn { background: #66c0f4; border: none; padding: 12px; border-radius: 5px; cursor: pointer; font-weight: bold; color: #171a21; width: 100%; display: block; text-decoration: none; margin-top: 10px; transition: 0.2s; }
         .card-btn:hover { background: white; }
 
-        #irl-clock { position: fixed; bottom: 20px; right: 20px; z-index: 100; background: rgba(0,0,0,0.8); color: #66c0f4; padding: 10px 20px; border-radius: 8px; font-weight: bold; border: 1px solid #66c0f4; }
+        #irl-clock { position: fixed; bottom: 20px; right: 20px; z-index: 100; background: rgba(0,0,0,0.8); color: #66c0f4; padding: 10px 20px; border-radius: 8px; font-weight: bold; border: 1px solid #66c0f4; pointer-events: none; }
         #settings-trigger { position: fixed; top: 20px; left: 20px; z-index: 100; background: rgba(0,0,0,0.6); color: white; border: 1px solid #f39c12; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; display: none; align-items: center; justify-content: center; }
 
-        /* GLOBÁLNÍ ZÁMEK (PŘEKRYJE VŠE) */
+        /* GLOBÁLNÍ ZÁMEK */
         #lock-screen { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: #0b0e14; z-index: 9999; 
+            background: rgba(11, 14, 20, 0.98); z-index: 9999; 
             display: none; align-items: center; justify-content: center; 
             flex-direction: column; text-align: center; 
         }
-        #unlock-corner-trigger { position: fixed; bottom: 20px; left: 20px; z-index: 10000; color: #e74c3c; border: 1px solid #e74c3c; padding: 10px; border-radius: 5px; cursor: pointer; font-size: 0.7rem; opacity: 0.1; transition: 0.3s; }
-        #unlock-corner-trigger:hover { opacity: 1; }
+        #unlock-corner-trigger { position: fixed; bottom: 20px; left: 20px; z-index: 10000; color: #e74c3c; border: 1px solid #e74c3c; padding: 10px; border-radius: 5px; cursor: pointer; font-size: 0.7rem; opacity: 0.1; }
         #unlock-modal { display: none; position: fixed; bottom: 70px; left: 20px; background: #171a21; border: 2px solid #e74c3c; padding: 20px; border-radius: 10px; width: 250px; z-index: 10001; }
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body oncontextmenu="return false;">
@@ -51,13 +50,12 @@
     <div id="lock-screen">
         <h1 style="color:#e74c3c; font-size: 4rem; text-shadow: 0 0 20px rgba(231,76,60,0.5);">⚠️ SYSTÉM UZAMČEN</h1>
         <p id="lock-reason-text" style="font-size: 1.8rem; color: white; margin: 20px 0;"></p>
-        <p style="color: #4e5d6a;">Omlouváme se, SteamHubCZ je momentálně mimo provoz.</p>
+        <p style="color: #4e5d6a;">Obsah webu je momentálně nedostupný.</p>
         
         <div id="unlock-corner-trigger" onclick="toggleUnlockModal()">ADMIN BYPASS</div>
         <div id="unlock-modal">
-            <p style="color:white; font-size: 0.8rem;">Zadej heslo (6976):</p>
-            <input type="password" id="unlock-pass" style="width:100%; padding:10px; background:#2a475e; border:none; color:white; margin-bottom:10px;" placeholder="****">
-            <button onclick="requestUnlock()" class="card-btn" style="background:#e74c3c; color:white;">ODEMKNOUT WEB</button>
+            <input type="password" id="unlock-pass" class="auth-input" placeholder="Zadej heslo">
+            <button onclick="requestUnlock()" class="card-btn" style="background:#e74c3c; color:white;">ODEMKNOUT</button>
         </div>
     </div>
 
@@ -68,57 +66,59 @@
 
     <div id="auth-wrapper">
         <div id="login-box" class="container active" style="max-width: 400px; margin-top: 100px;">
-            <h2 style="color:#66c0f4">SteamHub Login</h2>
-            <input type="email" id="login_email" style="width:100%; padding:12px; margin:10px 0; background:#2a475e; border:none; color:white;" placeholder="Email">
-            <button class="card-btn" onclick="sendAuthCode()">ODESLAT KÓD</button>
-        </div>
-        <div id="verify-box" class="container" style="max-width: 400px; margin-top: 100px;">
-            <p>Zadej kód z emailu:</p>
-            <input type="text" id="otp_code" style="width:100%; padding:12px; margin:10px 0; background:#2a475e; border:none; color:white; text-align:center; font-size:1.5rem;" placeholder="000000">
-            <button class="card-btn" onclick="verifyOTP()">POTVRDIT</button>
+            <h2 style="color:#66c0f4">SteamHub Vstup</h2>
+            <p style="font-size: 0.9rem; opacity: 0.8;">Zadejte e-mail pro zaslání kódu.</p>
+            <input type="email" id="login_email" class="auth-input" placeholder="Tvůj e-mail">
+            <button id="send-btn" class="card-btn" onclick="sendAuthCode()">ODESLAT KÓD</button>
+            
+            <div id="otp-area" style="display:none; margin-top: 20px; border-top: 1px solid #66c0f4; padding-top: 20px;">
+                <input type="text" id="otp_code" class="auth-input" placeholder="Zadej 6místný kód">
+                <button class="card-btn" style="background:#75b022; color:white;" onclick="verifyOTP()">VSTOUPIT</button>
+            </div>
         </div>
     </div>
 
     <div id="main-content" class="container">
         <h1>SteamHubCZ</h1>
-        <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:15px; margin-top:30px;">
-            <button class="card-btn" onclick="openSection('faq-content')">FAQ (OTÁZKY)</button>
-            <button class="card-btn">HRY</button>
-            <button class="card-btn">EVENTY</button>
+        <span style="color:white; font-weight: bold; display: block; margin-top: 5px;">Zakladatel: Vesmír636</span>
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap:15px; margin-top:30px;">
+            <button class="card-btn" onclick="openSection('faq-content')">❓ FAQ</button>
+            <button class="card-btn" onclick="alert('Sekce Hry se připravuje!')">🎮 HRY</button>
+            <button class="card-btn" onclick="alert('Žádné aktivní eventy.')">📅 EVENTY</button>
         </div>
+        <button class="card-btn" onclick="logout()" style="background:#e74c3c; color:white; width: 120px; margin: 30px auto;">ODHLÁSIT</button>
     </div>
 
     <div id="faq-content" class="container">
         <h1>Časté Dotazy</h1>
-        <div style="text-align:left; margin-top:20px;">
-            <p><b>Jak se připojit?</b> Přihlas se a stahuj v sekci hry.</p>
-            <p><b>Kdo je majitel?</b> Vesmír636.</p>
+        <div style="text-align: left; margin: 20px 0;">
+            <p><b style="color:#66c0f4;">Kdo je admin?</b><br>Hlavním správcem je Vesmír636.</p>
+            <p><b style="color:#66c0f4;">Jak získám přístup ke hrám?</b><br>Musíš být registrovaný a přihlášený člen komunity.</p>
         </div>
-        <button class="card-btn" style="width:120px; margin:20px auto;" onclick="closeSection('faq-content')">ZPĚT</button>
+        <button class="card-btn" onclick="closeSection('faq-content')" style="width: 150px; margin: 0 auto;">ZPĚT</button>
     </div>
 
     <div id="profile-content" class="container">
-        <h1>Moderátor Panel</h1>
+        <h1>Moderátor Panel 🛡️</h1>
         <div id="mod-auth">
-            <input type="password" id="mod-pass" style="width:100%; padding:10px; background:#171a21; border:1px solid #66c0f4; color:white;" placeholder="Heslo (6976)">
+            <input type="password" id="mod-pass" class="auth-input" placeholder="Admin heslo">
             <button class="card-btn" onclick="unlockMod()">VSTOUPIT</button>
         </div>
         <div id="mod-tools" style="display:none;">
-            <h3>Globální Ovládání</h3>
-            <select id="lock-reason-select" style="width:100%; padding:10px; background:#2a475e; color:white; border:none; margin-bottom:10px;">
-                <option value="Probíhá plánovaná údržba.">Údržba</option>
-                <option value="Aktualizujeme systémové soubory.">Aktualizace</option>
-                <option value="Server je přetížen, zkuste to později.">Přetížení</option>
+            <label style="display:block; margin-bottom:10px;">Důvod uzamčení:</label>
+            <select id="lock-reason-select" class="auth-input">
+                <option value="Probíhá plánovaná údržba systému.">🔧 Údržba</option>
+                <option value="Aktualizujeme knihovnu her.">🆙 Aktualizace</option>
+                <option value="Server je dočasně přetížen.">⚠️ Přetížení</option>
             </select>
-            <button class="card-btn" onclick="setGlobalLock(true)" style="background:#e74c3c; color:white;">!!! ZAMKNOUT CELÝ WEB !!!</button>
-            <button class="card-btn" onclick="setGlobalLock(false)" style="background:#75b022; color:white; margin-top:20px;">ODEMKNOUT WEB</button>
-            <button class="card-btn" onclick="logout()" style="background:#4e5d6a; color:white; margin-top:30px;">ODHLÁSIT SE</button>
+            <button class="card-btn" onclick="setGlobalLock(true)" style="background:#e74c3c; color:white;">ZAMKNOUT WEB</button>
+            <button class="card-btn" onclick="setGlobalLock(false)" style="background:#75b022; color:white;">ODEMKNOUT WEB</button>
         </div>
-        <button class="card-btn" style="width:120px; margin:20px auto;" onclick="closeSection('profile-content')">ZAVŘÍT</button>
+        <button class="card-btn" onclick="closeSection('profile-content')" style="width: 150px; margin: 20px auto 0;">ZAVŘÍT</button>
     </div>
 
     <script>
-        // --- FIREBASE KONFIGURACE ---
+        // --- CONFIGURATION ---
         const firebaseConfig = {
             databaseURL: "https://steamhubcz-default-rtdb.europe-west1.firebasedatabase.app/" 
         };
@@ -126,50 +126,62 @@
         const db = firebase.database();
 
         const MASTER_PASSWORD = "6976";
-        let generatedOtp = "";
+        let generatedOTP = "";
 
-        // --- REAL-TIME POSLOUCHAČ ZÁMKU ---
+        // --- FIREBASE REALTIME LOCK ---
         db.ref('siteSettings/lock').on('value', (snapshot) => {
             const status = snapshot.val();
             const lockScreen = document.getElementById('lock-screen');
-            const settingsBtn = document.getElementById('settings-trigger');
-            const clock = document.getElementById('irl-clock');
-
             if (status && status.isLocked) {
-                // ÚPLNÉ ZAMKNUTÍ
                 lockScreen.style.display = 'flex';
                 document.getElementById('lock-reason-text').innerText = status.reason;
-                settingsBtn.style.display = 'none';
-                clock.style.display = 'none';
-                // Skryje všechny otevřené sekce
-                document.querySelectorAll('.container').forEach(c => c.classList.remove('active'));
             } else {
-                // ODEMKNUTO
                 lockScreen.style.display = 'none';
-                clock.style.display = 'block';
-                if(localStorage.getItem("sh_logged") === "true") {
-                    settingsBtn.style.display = 'flex';
-                    document.getElementById('main-content').classList.add('active');
-                } else {
-                    document.getElementById('login-box').classList.add('active');
-                }
             }
         });
 
-        // --- FUNKCE ZÁMKU ---
-        function setGlobalLock(isLocked) {
-            const reason = document.getElementById('lock-reason-select').value;
-            db.ref('siteSettings/lock').set({
-                isLocked: isLocked,
-                reason: isLocked ? reason : ""
+        // --- AUTHENTICATION (EMAILJS) ---
+        function sendAuthCode() {
+            const email = document.getElementById('login_email').value;
+            if(!email.includes('@')) return alert("Zadej platný e-mail!");
+            
+            generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
+            
+            const btn = document.getElementById('send-btn');
+            btn.innerText = "ODESÍLÁM...";
+            btn.disabled = true;
+
+            emailjs.send("service_0jeaxzq", "template_6jc2oeh", {
+                to_email: email,
+                otp_code: generatedOTP
+            }).then(() => {
+                alert("Kód byl odeslán na váš e-mail!");
+                document.getElementById('otp-area').style.display = 'block';
+                btn.innerText = "KÓD ODESLÁN";
+            }).catch((err) => {
+                alert("Chyba při odesílání: " + err);
+                btn.disabled = false;
+                btn.innerText = "Zkusit znovu";
             });
         }
 
-        function requestUnlock() {
-            if(document.getElementById('unlock-pass').value === MASTER_PASSWORD) {
-                setGlobalLock(false);
-                document.getElementById('unlock-modal').style.display = 'none';
-            } else alert("Chybné heslo!");
+        function verifyOTP() {
+            const inputOTP = document.getElementById('otp_code').value;
+            if(inputOTP === generatedOTP && generatedOTP !== "") {
+                localStorage.setItem("sh_logged", "true");
+                showMain();
+            } else {
+                alert("Nesprávný kód!");
+            }
+        }
+
+        // --- ADMIN FUNCTIONS ---
+        function setGlobalLock(isLocked) {
+            const reason = document.getElementById('lock-reason-select').value;
+            db.ref('siteSettings/lock').set({ 
+                isLocked: isLocked, 
+                reason: isLocked ? reason : "" 
+            });
         }
 
         function unlockMod() {
@@ -179,28 +191,30 @@
             } else alert("Přístup zamítnut!");
         }
 
-        // --- OSTATNÍ LOGIKA ---
+        function requestUnlock() {
+            if(document.getElementById('unlock-pass').value === MASTER_PASSWORD) {
+                setGlobalLock(false);
+                document.getElementById('unlock-modal').style.display = 'none';
+            } else alert("Špatné heslo!");
+        }
+
+        // --- UI LOGIC ---
         window.onload = function() {
+            if(localStorage.getItem("sh_logged") === "true") showMain();
             setInterval(() => { 
                 document.getElementById('irl-clock').innerText = new Date().toLocaleTimeString('cs-CZ'); 
             }, 1000);
         };
 
-        function sendAuthCode() {
-            const email = document.getElementById('login_email').value;
-            if(!email.includes('@')) return alert("Zadej platný email!");
-            generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
-            emailjs.send("service_0jeaxzq", "template_6jc2oeh", { to_email: email, otp_code: generatedOtp }).then(() => {
-                document.getElementById('login-box').classList.remove('active');
-                document.getElementById('verify-box').classList.add('active');
-            });
+        function showMain() {
+            document.getElementById('auth-wrapper').style.display = 'none';
+            document.getElementById('main-content').classList.add('active');
+            document.getElementById('settings-trigger').style.display = 'flex';
         }
 
-        function verifyOTP() {
-            if(document.getElementById('otp_code').value === generatedOtp) {
-                localStorage.setItem("sh_logged", "true");
-                location.reload();
-            } else alert("Nesprávný kód!");
+        function logout() {
+            localStorage.removeItem("sh_logged");
+            location.reload();
         }
 
         function openSection(id) {
@@ -218,14 +232,11 @@
             m.style.display = (m.style.display === 'block') ? 'none' : 'block';
         }
 
-        function logout() {
-            localStorage.removeItem("sh_logged");
-            location.reload();
-        }
-
-        // YouTube Player
-        var tag = document.createElement('script'); tag.src = "https://www.youtube.com/iframe_api";
-        var firstScriptTag = document.getElementsByTagName('script')[0]; firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        // --- YOUTUBE API ---
+        var tag = document.createElement('script'); 
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0]; 
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
         var player;
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('player', { 
