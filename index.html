@@ -18,27 +18,27 @@
         .video-background iframe { width: 100vw; height: 56.25vw; min-height: 100vh; min-width: 177.77vh; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); border: none; }
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 9, 15, 0.75); z-index: 0; }
         
-        /* AUTH */
+        /* AUTH OVERLAY */
         #auth-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0b0e14; z-index: 1000; display: flex; align-items: center; justify-content: center; }
         .auth-card { background: #171a21; padding: 40px; border-radius: 15px; border: 1px solid #66c0f4; width: 350px; text-align: center; }
         .auth-input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 5px; border: 1px solid #2a475e; background: #2a475e; color: white; box-sizing: border-box; outline: none; }
         .auth-btn { width: 100%; padding: 12px; background: #66c0f4; border: none; color: #171a21; font-weight: bold; border-radius: 5px; cursor: pointer; margin-top: 10px; }
+        .auth-link { color: #66c0f4; cursor: pointer; display: block; margin-top: 15px; font-size: 0.9rem; text-decoration: underline; }
+
+        /* ZÁMEK SERVERU */
+        #lock-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0b0e14; z-index: 2000; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: #ff4d4d; }
 
         /* CONTAINER */
-        .container { position: relative; z-index: 1; background: rgba(42, 71, 94, 0.85); padding: 2.5rem; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.7); max-width: 950px; width: 90%; text-align: center; backdrop-filter: blur(10px); margin: 50px auto; border: 1px solid rgba(102, 192, 244, 0.3); }
-        h1 { color: #66c0f4; font-size: 3.5rem; margin-bottom: 0; text-transform: uppercase; letter-spacing: 2px; }
-        .founder { color: #ffffff; font-weight: bold; font-size: 1.3rem; margin-top: 5px; margin-bottom: 30px; display: block; }
-        
-        /* CARDS */
-        .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 20px; }
-        .card { background: #171a21; padding: 25px; border-radius: 10px; border-bottom: 4px solid #66c0f4; display: flex; flex-direction: column; justify-content: space-between; }
-        .card-btn { background: #66c0f4; border: none; padding: 12px; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 15px; color: #171a21; text-decoration: none; }
+        .container { position: relative; z-index: 1; background: rgba(42, 71, 94, 0.85); padding: 2.5rem; border-radius: 15px; max-width: 950px; width: 90%; text-align: center; backdrop-filter: blur(10px); margin: 50px auto; border: 1px solid rgba(102, 192, 244, 0.3); }
+        h1 { color: #66c0f4; font-size: 3.5rem; margin-bottom: 0; }
 
         /* SETTINGS GRID */
         .settings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; text-align: left; margin-top: 20px; }
         .settings-section { background: rgba(0,0,0,0.3); padding: 20px; border-radius: 10px; border: 1px solid rgba(102, 192, 244, 0.2); }
-        .settings-section h3 { color: #66c0f4; margin-top: 0; border-bottom: 1px solid #2a475e; padding-bottom: 10px; }
         .mod-section { grid-column: span 2; border: 1px solid #f39c12; }
+
+        /* LOGY */
+        #log-container { background: #000; padding: 10px; border-radius: 5px; height: 100px; overflow-y: auto; font-family: monospace; font-size: 0.8rem; color: #00ff00; margin-top: 10px; }
 
         #settings-trigger { position: fixed; top: 20px; right: 20px; z-index: 100; background: rgba(0,0,0,0.6); color: white; border: 1px solid #66c0f4; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; font-size: 1.5rem; display: flex; align-items: center; justify-content: center; }
         .profile-display { display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 20px; }
@@ -48,15 +48,29 @@
 </head>
 <body>
 
+    <div id="lock-screen">
+        <h1 style="color: #ff4d4d;">⚠️ SERVER JE UZAMČEN ⚠️</h1>
+        <p id="lock-reason" style="font-size: 1.5rem; color: white;">Důvod: Údržba systému</p>
+        <button class="auth-btn" style="width: 200px;" onclick="checkServerLock()">Zkusit znovu</button>
+    </div>
+
     <div id="auth-overlay">
-        <div id="reg-box" class="auth-card">
-            <h2 style="color:#66c0f4">SteamHub Login</h2>
-            <input type="email" id="user_email" class="auth-input" placeholder="Tvůj e-mail">
-            <button id="send-btn" class="auth-btn" onclick="sendCode()">ODESLAT KÓD</button>
+        <div id="login-box" class="auth-card">
+            <h2 style="color:#66c0f4">Přihlášení</h2>
+            <input type="email" id="login_email" class="auth-input" placeholder="Tvůj e-mail">
+            <button class="auth-btn" onclick="sendCode('login')">ODESLAT KÓD</button>
+            <span class="auth-link" onclick="toggleAuth('reg')">Nemám účet? Registrace</span>
+        </div>
+        <div id="reg-box" class="auth-card" style="display:none;">
+            <h2 style="color:#66c0f4">Registrace</h2>
+            <input type="text" id="reg_name" class="auth-input" placeholder="Jméno / Přezdívka">
+            <input type="email" id="reg_email" class="auth-input" placeholder="Tvůj e-mail">
+            <button class="auth-btn" onclick="sendCode('reg')">REGISTROVAT</button>
+            <span class="auth-link" onclick="toggleAuth('login')">Už mám účet? Přihlášení</span>
         </div>
         <div id="verify-box" class="auth-card" style="display: none;">
-            <h2 style="color:#66c0f4">Ověření</h2>
-            <input type="text" id="entered_code" class="auth-input" placeholder="Zadej kód">
+            <h2 style="color:#66c0f4">Zadej kód</h2>
+            <input type="text" id="entered_code" class="auth-input" placeholder="000000">
             <button class="auth-btn" onclick="verifyCode()">VSTOUPIT</button>
         </div>
     </div>
@@ -73,13 +87,11 @@
             <h2 id="welcome-text">Vítej!</h2>
         </div>
         <h1>SteamHubCZ</h1>
-        <span class="founder">Zakladatel: Vesmír636</span>
         <div class="features">
             <div class="card"><h3>🎮 Hry</h3><button class="card-btn" onclick="openSection('games-content')">Vstoupit</button></div>
             <div class="card"><h3>🕛 Eventy</h3><button class="card-btn" onclick="openSection('news-content')">Vstoupit</button></div>
             <div class="card"><h3>❓ FAQ</h3><button class="card-btn" onclick="openSection('faq-content')">Vstoupit</button></div>
         </div>
-        <button class="auth-btn" style="width: 250px; margin-top: 30px; background: #75b022; color:white;" onclick="window.open('https://discord.gg/DJJrpXkg8T', '_blank')">DISCORD</button>
     </div>
 
     <div id="profile-content" class="container" style="display: none;">
@@ -87,53 +99,49 @@
         <div class="settings-grid">
             <div class="settings-section">
                 <h3>👤 Profil</h3>
-                <label>Přezdívka:</label>
-                <input type="text" id="edit-name" class="auth-input">
-                <label>Avatar URL:</label>
-                <input type="text" id="edit-avatar" class="auth-input">
+                <label>Přezdívka:</label><input type="text" id="edit-name" class="auth-input">
+                <label>Avatar URL:</label><input type="text" id="edit-avatar" class="auth-input">
                 <button class="auth-btn" onclick="saveProfile()" style="background:#75b022; color:white;">ULOŽIT</button>
             </div>
             <div class="settings-section">
-                <h3>🎵 Zvuk a Účet</h3>
+                <h3>🎵 Zvuk</h3>
                 <button id="mute-btn" class="auth-btn" onclick="toggleMute()" style="background:#2a475e; color:white;">HUDBA: ZAPNUTA 🔊</button>
                 <button class="auth-btn" onclick="logout()" style="background:#e74c3c; color:white; margin-top:15px;">ODHLÁSIT SE</button>
             </div>
             <div class="settings-section mod-section">
                 <h3 style="color:#f39c12;">🛡️ Moderátorská Sekce</h3>
                 <div id="mod-lock">
-                    <input type="password" id="mod-pass" class="auth-input" placeholder="Zadej heslo moderátora">
+                    <input type="password" id="mod-pass" class="auth-input" placeholder="Heslo moderátora">
                     <button class="auth-btn" onclick="checkMod()" style="background:#f39c12; color:white;">ODEMKNOUT</button>
                 </div>
                 <div id="mod-tools" style="display: none;">
-                    <p>Vítej v admin panelu. Zde můžeš spravovat hub.</p>
-                    <button class="auth-btn" style="background:#2a475e; color:white; width: auto; padding: 10px 20px;">Vyčistit mezipaměť</button>
-                    <button class="auth-btn" style="background:#2a475e; color:white; width: auto; padding: 10px 20px;">Logy přihlášení</button>
+                    <h4>🔒 Zámek serveru</h4>
+                    <select id="lock-select" class="auth-input">
+                        <option value="Probíhá údržba systému.">Údržba</option>
+                        <option value="Server je plný (Event).">Server plný</option>
+                        <option value="Aktualizace obsahu.">Aktualizace</option>
+                        <option value="Z technických důvodů zavřeno.">Technické důvody</option>
+                    </select>
+                    <button class="auth-btn" id="lock-btn" onclick="toggleServerLock()" style="background:#e74c3c; color:white;">ZAMKNOUT SERVER</button>
+                    
+                    <h4 style="margin-top:20px;">📜 Logy přihlášení</h4>
+                    <div id="log-container">Žádné záznamy...</div>
                 </div>
             </div>
         </div>
-        <button onclick="closeSection('profile-content')" class="card-btn" style="background:#4e5d6a; color:white; margin-top: 30px; width: 200px;">ZPĚT</button>
+        <button onclick="closeSection('profile-content')" class="auth-btn" style="background:#4e5d6a; margin-top: 30px; width: 200px;">ZPĚT</button>
     </div>
 
-    <div id="faq-content" class="container" style="display: none;">
-        <h1>FAQ</h1>
-        <p>Sekce se připravuje...</p>
-        <button onclick="closeSection('faq-content')" class="card-btn">ZPĚT</button>
-    </div>
-    <div id="games-content" class="container" style="display: none;">
-        <h1>Hry</h1>
-        <p>Sekce se připravuje...</p>
-        <button onclick="closeSection('games-content')" class="card-btn">ZPĚT</button>
-    </div>
-    <div id="news-content" class="container" style="display: none;">
-        <h1>Eventy</h1>
-        <p>Sekce se připravuje...</p>
-        <button onclick="closeSection('news-content')" class="card-btn">ZPĚT</button>
-    </div>
+    <div id="faq-content" class="container" style="display: none;"><h1>FAQ</h1><button onclick="closeSection('faq-content')" class="auth-btn">ZPĚT</button></div>
+    <div id="games-content" class="container" style="display: none;"><h1>Hry</h1><button onclick="closeSection('games-content')" class="auth-btn">ZPĚT</button></div>
+    <div id="news-content" class="container" style="display: none;"><h1>Eventy</h1><button onclick="closeSection('news-content')" class="auth-btn">ZPĚT</button></div>
 
     <script>
         let correctCode = "";
+        let currentEmail = "";
 
         window.onload = function() {
+            checkServerLock();
             if (localStorage.getItem("sh_auth") === "true") {
                 loadProfile();
                 document.getElementById('auth-overlay').style.display = 'none';
@@ -141,12 +149,34 @@
             }
         };
 
-        function sendCode() {
-            const email = document.getElementById('user_email').value;
-            if (!email.includes('@')) { alert("Zadej e-mail!"); return; }
+        function checkServerLock() {
+            if (localStorage.getItem("server_locked") === "true") {
+                document.getElementById('lock-screen').style.display = 'flex';
+                document.getElementById('lock-reason').innerText = "Důvod: " + localStorage.getItem("lock_reason");
+            } else {
+                document.getElementById('lock-screen').style.display = 'none';
+            }
+        }
+
+        function toggleAuth(type) {
+            document.getElementById('login-box').style.display = type === 'login' ? 'block' : 'none';
+            document.getElementById('reg-box').style.display = type === 'reg' ? 'block' : 'none';
+        }
+
+        function sendCode(mode) {
+            const email = document.getElementById(mode + '_email').value;
+            if (!email.includes('@')) return alert("Zadej platný e-mail!");
+            
+            if (mode === 'reg') {
+                localStorage.setItem("sh_name", document.getElementById('reg_name').value || "Uživatel");
+            }
+
+            currentEmail = email;
             correctCode = Math.floor(100000 + Math.random() * 900000).toString();
+            
             emailjs.send("service_0jeaxzq", "template_6jc2oeh", { to_email: email, otp_code: correctCode })
                 .then(() => {
+                    document.getElementById('login-box').style.display = 'none';
                     document.getElementById('reg-box').style.display = 'none';
                     document.getElementById('verify-box').style.display = 'block';
                 });
@@ -155,44 +185,66 @@
         function verifyCode() {
             if (document.getElementById('entered_code').value === correctCode) {
                 localStorage.setItem("sh_auth", "true");
+                // Přidání do logu
+                addLog(currentEmail);
                 location.reload();
             } else { alert("Špatný kód!"); }
         }
 
-        // UKLÁDÁNÍ PROFILU (TRVALÉ)
-        function saveProfile() {
-            const name = document.getElementById('edit-name').value || "Uživatel";
-            const img = document.getElementById('edit-avatar').value || "https://cdn-icons-png.flaticon.com/512/149/149071.png";
-            localStorage.setItem("sh_name", name);
-            localStorage.setItem("sh_img", img);
-            loadProfile();
-            alert("Profil trvale uložen!");
-        }
-
-        function loadProfile() {
-            const name = localStorage.getItem("sh_name") || "Uživatel";
-            const img = localStorage.getItem("sh_img") || "https://cdn-icons-png.flaticon.com/512/149/149071.png";
-            document.getElementById('welcome-text').innerText = "Vítej, " + name + "!";
-            document.getElementById('main-avatar').src = img;
-            document.getElementById('edit-name').value = name;
-            document.getElementById('edit-avatar').value = img;
-            // Fallback pro nefunkční obrázky
-            document.getElementById('main-avatar').onerror = function() {
-                this.src = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
-            };
+        function addLog(email) {
+            let logs = JSON.parse(localStorage.getItem("sh_logs") || "[]");
+            logs.push(`${new Date().toLocaleString()}: Přihlášen ${email}`);
+            localStorage.setItem("sh_logs", JSON.stringify(logs));
         }
 
         function checkMod() {
-            const pass = document.getElementById('mod-pass').value;
-            if (pass === "4869") {
+            if (document.getElementById('mod-pass').value === "4869") {
                 document.getElementById('mod-lock').style.display = 'none';
                 document.getElementById('mod-tools').style.display = 'block';
-            } else {
-                alert("Špatné heslo!");
-            }
+                updateLogs();
+                updateLockButton();
+            } else { alert("Špatné heslo!"); }
         }
 
-        function logout() { localStorage.clear(); location.reload(); }
+        function updateLogs() {
+            const logs = JSON.parse(localStorage.getItem("sh_logs") || "[]");
+            document.getElementById('log-container').innerHTML = logs.reverse().join("<br>");
+        }
+
+        function toggleServerLock() {
+            const isLocked = localStorage.getItem("server_locked") === "true";
+            if (isLocked) {
+                localStorage.setItem("server_locked", "false");
+            } else {
+                localStorage.setItem("server_locked", "true");
+                localStorage.setItem("lock_reason", document.getElementById('lock-select').value);
+            }
+            updateLockButton();
+            alert("Stav serveru změněn!");
+        }
+
+        function updateLockButton() {
+            const btn = document.getElementById('lock-btn');
+            const locked = localStorage.getItem("server_locked") === "true";
+            btn.innerText = locked ? "ODEMKNOUT SERVER" : "ZAMKNOUT SERVER";
+            btn.style.background = locked ? "#75b022" : "#e74c3c";
+        }
+
+        function saveProfile() {
+            localStorage.setItem("sh_name", document.getElementById('edit-name').value);
+            localStorage.setItem("sh_img", document.getElementById('edit-avatar').value);
+            loadProfile();
+            alert("Uloženo!");
+        }
+
+        function loadProfile() {
+            document.getElementById('welcome-text').innerText = "Vítej, " + (localStorage.getItem("sh_name") || "Uživatel") + "!";
+            document.getElementById('main-avatar').src = localStorage.getItem("sh_img") || "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+            document.getElementById('edit-name').value = localStorage.getItem("sh_name");
+            document.getElementById('edit-avatar').value = localStorage.getItem("sh_img");
+        }
+
+        function logout() { localStorage.removeItem("sh_auth"); location.reload(); }
         function openSection(id) { document.querySelectorAll('.container').forEach(c => c.style.display = 'none'); document.getElementById(id).style.display = 'block'; }
         function closeSection(id) { document.getElementById(id).style.display = 'none'; document.getElementById('main-content').style.display = 'block'; }
         setInterval(() => { document.getElementById('irl-clock').innerText = new Date().toLocaleTimeString('cs-CZ'); }, 1000);
