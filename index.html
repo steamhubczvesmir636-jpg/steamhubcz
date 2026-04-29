@@ -14,9 +14,9 @@
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow-x: hidden; font-family: 'Segoe UI', Tahoma, sans-serif; color: #c7d5e0; background-color: #0b0e14; }
         .video-background { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; overflow: hidden; }
         .video-background iframe { width: 100vw; height: 56.25vw; min-height: 100vh; min-width: 177.77vh; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); border: none; }
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 9, 15, 0.75); z-index: 0; }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 9, 15, 0.8); z-index: 0; }
         
-        #global-alert { position: fixed; top: 0; left: 0; width: 100%; background: #e74c3c; color: white; padding: 10px; text-align: center; font-weight: bold; z-index: 1000; display: none; }
+        #global-alert { position: fixed; top: 0; left: 0; width: 100%; background: #e67e22; color: white; padding: 10px; text-align: center; font-weight: bold; z-index: 1000; display: none; }
 
         .container { position: relative; z-index: 1; background: rgba(42, 71, 94, 0.85); padding: 2.5rem; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.7); max-width: 950px; width: 90%; text-align: center; backdrop-filter: blur(10px); margin: 50px auto; border: 1px solid rgba(102, 192, 244, 0.3); display: none; }
         .container.active { display: block; }
@@ -41,10 +41,10 @@
         #mute-toggle { position: fixed; top: 20px; right: 20px; z-index: 100; background: rgba(0,0,0,0.6); color: white; border: 1px solid #66c0f4; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; font-size: 1.2rem; }
         #settings-trigger { position: fixed; top: 20px; left: 20px; z-index: 100; background: rgba(0,0,0,0.6); color: white; border: 1px solid #f39c12; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; display: none; align-items: center; justify-content: center; }
 
-        /* LOCK SCREEN STYLE */
+        /* ZÁMEK DISPLEJ */
         #lock-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0b0e14; z-index: 2000; display: none; align-items: center; justify-content: center; flex-direction: column; text-align: center; }
-        .lock-content { z-index: 2001; }
-        #unlock-corner-trigger { position: fixed; bottom: 20px; left: 20px; z-index: 2002; background: rgba(231, 76, 60, 0.2); color: #e74c3c; border: 1px solid #e74c3c; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-size: 0.8rem; font-weight: bold; transition: 0.3s; }
+        .lock-content { z-index: 2001; padding: 20px; }
+        #unlock-corner-trigger { position: fixed; bottom: 20px; left: 20px; z-index: 2002; background: rgba(231, 76, 60, 0.1); color: #e74c3c; border: 1px solid #e74c3c; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-size: 0.8rem; font-weight: bold; transition: 0.3s; }
         #unlock-corner-trigger:hover { background: rgba(231, 76, 60, 0.8); color: white; }
         #unlock-modal { display: none; position: fixed; bottom: 70px; left: 20px; background: #171a21; border: 2px solid #e74c3c; padding: 20px; border-radius: 10px; width: 250px; z-index: 2003; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
     </style>
@@ -55,8 +55,8 @@
     
     <div id="lock-screen">
         <div class="lock-content">
-            <h1 style="color:#e74c3c; font-size: 4rem; text-shadow: 0 0 20px rgba(231,76,60,0.5);">⚠️ SERVER UZAMČEN</h1>
-            <p id="lock-reason-text" style="font-size: 1.8rem; color: white; margin-top: 20px;"></p>
+            <h1 style="color:#e74c3c; font-size: 4rem; text-shadow: 0 0 25px rgba(231,76,60,0.6);">⚠️ SERVER UZAMČEN</h1>
+            <p id="lock-reason-text" style="font-size: 1.8rem; color: white; margin-top: 20px; font-weight: 300;"></p>
         </div>
         <div id="unlock-corner-trigger" onclick="toggleUnlockModal()">ODEMKNOUT SERVER</div>
         <div id="unlock-modal">
@@ -76,9 +76,9 @@
     <div id="auth-wrapper">
         <div id="login-box" class="auth-card">
             <h2 style="color:#66c0f4">SteamHub Login</h2>
-            <input type="email" id="login_email" class="auth-input" placeholder="E-mail">
+            <input type="email" id="login_email" class="auth-input" placeholder="Tvůj e-mail">
             <button class="auth-btn" onclick="sendAuthCode('login')">ODESLAT KÓD</button>
-            <p onclick="toggleAuth('reg')" style="cursor:pointer; text-decoration:underline; font-size:0.8rem; margin-top:10px;">Nemám účet? Registrace</p>
+            <p onclick="toggleAuth('reg')" style="cursor:pointer; text-decoration:underline; font-size:0.8rem; margin-top:10px;">Registrace</p>
         </div>
         <div id="reg-box" class="auth-card" style="display:none;">
             <h2 style="color:#66c0f4">Registrace</h2>
@@ -87,85 +87,73 @@
             <button class="auth-btn" onclick="sendAuthCode('reg')">REGISTROVAT</button>
         </div>
         <div id="verify-box" class="auth-card" style="display:none;">
-            <input type="text" id="otp_code" class="auth-input" placeholder="000000">
+            <input type="text" id="otp_code" class="auth-input" placeholder="Kód z e-mailu">
             <button class="auth-btn" onclick="verifyOTP()">VSTOUPIT</button>
         </div>
     </div>
 
     <div id="main-content" class="container">
         <div style="display:flex; align-items:center; justify-content:center; gap:15px; margin-bottom:10px;">
-            <img id="main-avatar" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" style="width:50px; height:50px; border-radius:50%; border:2px solid #66c0f4;">
-            <h2 id="welcome-text" style="font-size: 1.2rem;">Vítej!</h2>
+            <img id="main-avatar" src="" style="width:55px; height:55px; border-radius:50%; border:2px solid #66c0f4; object-fit: cover;">
+            <h2 id="welcome-text" style="font-size: 1.3rem;">Vítej!</h2>
         </div>
         <h1>SteamHubCZ</h1>
         <span class="founder">Zakladatel: Vesmír636</span>
         <div class="features">
-            <div class="card"><h3>🎮 Hry</h3><p>Knihovna simulátorů.</p><button class="card-btn" onclick="openSection('games-content')">VSTOUPIT</button></div>
-            <div class="card"><h3>🕛 Eventy</h3><p>Sleduj odpočet akcí.</p><button class="card-btn" onclick="openSection('news-content')">VSTOUPIT</button></div>
-            <div class="card"><h3>❓ FAQ</h3><p>Časté dotazy.</p><button class="card-btn" onclick="openSection('faq-content')">VSTOUPIT</button></div>
+            <div class="card"><h3>🎮 Hry</h3><button class="card-btn" onclick="openSection('games-content')">VSTOUPIT</button></div>
+            <div class="card"><h3>🕛 Eventy</h3><button class="card-btn" onclick="openSection('news-content')">VSTOUPIT</button></div>
+            <div class="card"><h3>❓ FAQ</h3><button class="card-btn" onclick="openSection('faq-content')">VSTOUPIT</button></div>
         </div>
     </div>
 
     <div id="games-content" class="container">
-        <h1>Hry ke stažení</h1>
+        <h1>Knihovna her</h1>
         <div class="features">
-            <div class="card"><h3>OMSI 2: Bus Sim</h3><span class="status-online">✅ ONLINE</span><a href="https://discord.gg/DJJrpXkg8T" target="_blank" class="card-btn download-btn">STÁHNOUT</a></div>
+            <div class="card"><h3>OMSI 2</h3><span class="status-online">✅ ONLINE</span><a href="https://discord.gg/DJJrpXkg8T" target="_blank" class="card-btn download-btn">STÁHNOUT</a></div>
             <div class="card"><h3>Buckshot Roulette</h3><span class="status-online">✅ ONLINE</span><a href="https://discord.gg/DJJrpXkg8T" target="_blank" class="card-btn download-btn">STÁHNOUT</a></div>
-            <div class="card"><h3>DrainSim</h3><span class="status-online">✅ ONLINE</span><a href="https://discord.gg/DJJrpXkg8T" target="_blank" class="card-btn download-btn">STÁHNOUT</a></div>
-            <div class="card"><h3>Poppy Playtime</h3><span class="status-online">✅ ONLINE</span><a href="https://discord.gg/DJJrpXkg8T" target="_blank" class="card-btn download-btn">STÁHNOUT</a></div>
         </div>
-        <button onclick="closeSection('games-content')" class="auth-btn" style="width:150px; margin-top:30px; background:#4e5d6a; color:white;">ZPĚT</button>
+        <button onclick="closeSection('games-content')" class="auth-btn" style="width:150px; margin-top:20px; background:#4e5d6a; color:white;">ZPĚT</button>
     </div>
 
     <div id="news-content" class="container">
-        <h1>🔥 Plánované Eventy</h1>
+        <h1>🕛 Plánované Akce</h1>
         <div class="features">
-            <div class="card"><h3>Středeční Pokec</h3><p id="wed-status">Načítám...</p><span id="wed-timer" class="timer-display">--</span></div>
-            <div class="card"><h3>Páteční Event</h3><p id="fri-status">Načítám...</p><span id="fri-timer" class="timer-display">--</span></div>
-            <div class="card"><h3>Sobotní Hlavní</h3><p id="sat-status">Načítám...</p><span id="sat-timer" class="timer-display">--</span></div>
-            <div class="card" style="border-color:#f39c12;"><h3>Nedělní Nábor</h3><p id="sun-status">Načítám...</p><span id="sun-timer" class="timer-display">--</span></div>
+            <div class="card"><h3>Středeční Pokec</h3><p id="wed-status"></p><span id="wed-timer" class="timer-display"></span></div>
+            <div class="card"><h3>Páteční Event</h3><p id="fri-status"></p><span id="fri-timer" class="timer-display"></span></div>
         </div>
         <button onclick="closeSection('news-content')" class="auth-btn" style="width:150px; margin-top:20px; background:#4e5d6a; color:white;">ZPĚT</button>
-    </div>
-
-    <div id="faq-content" class="container">
-        <h1>Často kladené otázky</h1>
-        <div id="faq-list" style="text-align:left; margin-top:20px;">
-            <div class="card" style="margin-bottom:10px; padding:15px; text-align:left;">
-                <b>Jak si můžu stáhnout hru?</b>
-                <p>Stačí kliknout na tlačítko "STÁHNOUT", které tě přesměruje na náš Discord.</p>
-            </div>
-        </div>
-        <button onclick="closeSection('faq-content')" class="auth-btn" style="width:150px; margin-top:20px; background:#4e5d6a; color:white;">ZPĚT</button>
     </div>
 
     <div id="profile-content" class="container">
         <h1>Nastavení ⚙️</h1>
         <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:20px; text-align:left;">
             <div class="card">
-                <h3>👤 Profil</h3>
-                <input type="text" id="edit-name" class="auth-input" placeholder="Nové jméno">
-                <button class="auth-btn" onclick="saveProfile()" style="background:#75b022; color:white;">ULOŽIT</button>
-                <button class="auth-btn" onclick="logout()" style="background:#e74c3c; color:white;">ODHLÁSIT</button>
+                <h3>👤 Tvůj Profil</h3>
+                <div style="text-align: center; margin-bottom: 10px;">
+                    <img id="edit-avatar-preview" src="" style="width:80px; height:80px; border-radius:50%; border:2px solid #66c0f4; object-fit: cover;">
+                </div>
+                <input type="text" id="edit-name" class="auth-input" placeholder="Jméno">
+                <input type="text" id="edit-avatar" class="auth-input" placeholder="URL obrázku (Avataru)">
+                <button class="auth-btn" onclick="saveProfile()" style="background:#75b022; color:white;">ULOŽIT ZMĚNY</button>
+                <button class="auth-btn" onclick="logout()" style="background:#e74c3c; color:white; margin-top:10px;">ODHLÁSIT</button>
             </div>
             <div class="card" style="border-color:#f39c12;">
                 <h3>🛡️ MOD PANEL</h3>
                 <div id="mod-auth">
-                    <input type="password" id="mod-pass" class="auth-input" placeholder="Zadej kód">
+                    <input type="password" id="mod-pass" class="auth-input" placeholder="Administrátorský kód">
                     <button class="auth-btn" onclick="unlockMod()" style="background:#f39c12; color:white;">VSTOUPIT</button>
                 </div>
                 <div id="mod-tools" style="display:none;">
-                    <label>Důvod uzamčení:</label>
+                    <label>Zámek webu:</label>
                     <select id="lock-reason-select" class="auth-input">
                         <option value="Probíhá plánovaná údržba systému.">🔧 Údržba</option>
                         <option value="Web se aktualizuje o nové hry.">🆙 Aktualizace</option>
                         <option value="Server je dočasně přetížen.">⚠️ Přetížení</option>
-                        <option value="Soukromý event pro moderátory.">🤫 Soukromý event</option>
                     </select>
-                    <button class="auth-btn" onclick="adminToggleLock()" style="background:#e74c3c; color:white;">ZAMKNOUT WEB</button>
+                    <button class="auth-btn" onclick="adminToggleLock()" style="background:#e74c3c; color:white;">ZAMKNOUT NYNÍ</button>
                     <hr style="border:0.5px solid #2a475e; margin:15px 0;">
-                    <input type="text" id="ann-input" class="auth-input" placeholder="Globální oznámení">
-                    <button class="auth-btn" onclick="setAnn()" style="background:#e67e22; color:white;">ODESLAT</button>
+                    <input type="text" id="ann-input" class="auth-input" placeholder="Napsat oznámení...">
+                    <button class="auth-btn" onclick="setAnn()" style="background:#e67e22; color:white;">POSLAT VŠEM</button>
                 </div>
             </div>
         </div>
@@ -177,17 +165,25 @@
         let otp = "";
 
         window.onload = function() {
+            // Kontrola zámku
             if(localStorage.getItem("sh_locked") === "true") {
                 document.getElementById('lock-screen').style.display = 'flex';
                 document.getElementById('lock-reason-text').innerText = localStorage.getItem("sh_lock_msg") || "Údržba";
             }
+            // Oznámení
             const ann = localStorage.getItem("sh_ann");
             if(ann) { document.getElementById('global-alert').innerText = ann; document.getElementById('global-alert').style.display = 'block'; }
-            if(localStorage.getItem("sh_logged") === "true") showMain();
+            
+            // Login status
+            if(localStorage.getItem("sh_logged") === "true") {
+                showMain();
+                loadProfile();
+            }
+            
             setInterval(() => { document.getElementById('irl-clock').innerText = new Date().toLocaleTimeString('cs-CZ'); }, 1000);
         };
 
-        // ZÁMEK LOGIKA
+        // --- ZÁMEK & ODEMKNUTÍ ---
         function adminToggleLock() {
             localStorage.setItem("sh_locked", "true");
             localStorage.setItem("sh_lock_msg", document.getElementById('lock-reason-select').value);
@@ -201,7 +197,7 @@
             if(document.getElementById('unlock-pass').value === ADMIN_CODE) {
                 localStorage.setItem("sh_locked", "false");
                 location.reload();
-            } else alert("Chybný kód!");
+            } else alert("Neplatný kód!");
         }
         function unlockMod() {
             if(document.getElementById('mod-pass').value === ADMIN_CODE) {
@@ -210,37 +206,27 @@
             } else alert("Přístup zamítnut!");
         }
 
-        // EVENTY TIMER
-        function handleTimer(statusId, timerId, targetDay, startH, startM, durationH) {
-            const now = new Date();
-            const statusTxt = document.getElementById(statusId);
-            const timerTxt = document.getElementById(timerId);
-            let next = new Date(now);
-            next.setDate(now.getDate() + (targetDay + 7 - now.getDay()) % 7);
-            next.setHours(startH, startM, 0, 0);
-            if (next < now && now.getDay() !== targetDay) next.setDate(next.getDate() + 7);
-            let todayStart = new Date(now); todayStart.setHours(startH, startM, 0, 0);
-            let todayEnd = new Date(todayStart.getTime() + durationH * 3600000);
-            if (now.getDay() === targetDay && now >= todayStart && now <= todayEnd) {
-                statusTxt.innerText = "PRÁVĚ PROBÍHÁ!";
-                timerTxt.innerText = "Běž na Discord!";
-                timerTxt.style.color = "#2ecc71";
-            } else {
-                const diff = (next < now ? new Date(next.getTime() + 7 * 864e5) : next) - now;
-                const d = Math.floor(diff / 864e5), h = Math.floor(diff % 864e5 / 36e5), m = Math.floor(diff % 36e5 / 6e4), s = Math.floor(diff % 6e4 / 1e3);
-                statusTxt.innerText = "Začíná za:";
-                timerTxt.innerText = `${d}d ${h}h ${m}m ${s}s`;
-                timerTxt.style.color = "#f39c12";
-            }
+        // --- PROFIL & AVATAR ---
+        function loadProfile() {
+            const name = localStorage.getItem("sh_name") || "Uživatel";
+            const img = localStorage.getItem("sh_img") || "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+            document.getElementById('welcome-text').innerText = "Vítej, " + name;
+            document.getElementById('main-avatar').src = img;
+            if(document.getElementById('edit-name')) document.getElementById('edit-name').value = name;
+            if(document.getElementById('edit-avatar')) document.getElementById('edit-avatar').value = img;
+            if(document.getElementById('edit-avatar-preview')) document.getElementById('edit-avatar-preview').src = img;
         }
-        setInterval(() => {
-            handleTimer('wed-status', 'wed-timer', 3, 15, 0, 2);
-            handleTimer('fri-status', 'fri-timer', 5, 18, 30, 2);
-            handleTimer('sat-status', 'sat-timer', 6, 17, 0, 3);
-            handleTimer('sun-status', 'sun-timer', 0, 16, 40, 1);
-        }, 1000);
 
-        // OSTATNÍ FUNKCE
+        function saveProfile() {
+            const newName = document.getElementById('edit-name').value;
+            const newImg = document.getElementById('edit-avatar').value;
+            if(newName) localStorage.setItem("sh_name", newName);
+            if(newImg) localStorage.setItem("sh_img", newImg);
+            loadProfile();
+            alert("Uloženo! ✅");
+        }
+
+        // --- AUTH LOGIKA ---
         function toggleAuth(m) { document.getElementById('login-box').style.display = m === 'login' ? 'block' : 'none'; document.getElementById('reg-box').style.display = m === 'reg' ? 'block' : 'none'; }
         function sendAuthCode(m) {
             const email = document.getElementById(m + '_email').value;
@@ -253,22 +239,36 @@
             });
         }
         function verifyOTP() {
-            if(document.getElementById('otp_code').value === otp) { localStorage.setItem("sh_logged", "true"); showMain(); }
-            else alert("Špatný kód!");
+            if(document.getElementById('otp_code').value === otp) { 
+                localStorage.setItem("sh_logged", "true"); 
+                showMain(); 
+                loadProfile();
+            } else alert("Špatný kód!");
         }
         function showMain() {
             document.getElementById('auth-wrapper').style.display = 'none';
             document.getElementById('main-content').classList.add('active');
             document.getElementById('settings-trigger').style.display = 'flex';
-            document.getElementById('welcome-text').innerText = "Vítej, " + (localStorage.getItem("sh_name") || "Uživatel");
         }
-        function saveProfile() { localStorage.setItem("sh_name", document.getElementById('edit-name').value); location.reload(); }
         function logout() { localStorage.removeItem("sh_logged"); location.reload(); }
         function openSection(id) { document.querySelectorAll('.container').forEach(c => c.classList.remove('active')); document.getElementById(id).classList.add('active'); }
         function closeSection(id) { document.getElementById(id).classList.remove('active'); document.getElementById('main-content').classList.add('active'); }
         function setAnn() { localStorage.setItem("sh_ann", document.getElementById('ann-input').value); location.reload(); }
 
-        // VIDEO BACKGROUND
+        // --- TIMER ---
+        function handleTimer(statusId, timerId, targetDay, startH, startM) {
+            const now = new Date();
+            let next = new Date(now);
+            next.setDate(now.getDate() + (targetDay + 7 - now.getDay()) % 7);
+            next.setHours(startH, startM, 0, 0);
+            const diff = next - now;
+            const h = Math.floor(diff / 36e5), m = Math.floor(diff % 36e5 / 6e4), s = Math.floor(diff % 6e4 / 1e3);
+            document.getElementById(statusId).innerText = "Začíná za:";
+            document.getElementById(timerId).innerText = `${h}h ${m}m ${s}s`;
+        }
+        setInterval(() => { handleTimer('wed-status', 'wed-timer', 3, 15, 0); handleTimer('fri-status', 'fri-timer', 5, 18, 30); }, 1000);
+
+        // --- VIDEO ---
         var tag = document.createElement('script'); tag.src = "https://www.youtube.com/iframe_api";
         var firstScriptTag = document.getElementsByTagName('script')[0]; firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
         var player;
