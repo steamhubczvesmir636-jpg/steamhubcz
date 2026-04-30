@@ -36,13 +36,20 @@
         .card-btn { background: #66c0f4; border: none; padding: 15px; border-radius: 8px; cursor: pointer; font-weight: bold; color: #171a21; font-size: 1.1rem; transition: 0.3s; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .card-btn:hover { background: white; transform: translateY(-2px); }
         
+        /* Zvýrazněné tlačítko Eventy */
+        .event-btn { background: linear-gradient(135deg, #f39c12, #e67e22); color: white; border: 1px solid #ffcc33; box-shadow: 0 0 15px rgba(243, 156, 18, 0.4); animation: pulse 2s infinite; }
+        .event-btn:hover { background: #f39c12; box-shadow: 0 0 25px rgba(243, 156, 18, 0.7); }
+
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
+
         .auth-card { background: #171a21; padding: 40px; border-radius: 15px; border: 1px solid #66c0f4; width: 350px; margin: 100px auto; text-align: center; position: relative; z-index: 10; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         .auth-input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 5px; border: 1px solid #2a475e; background: #2a475e; color: white; box-sizing: border-box; }
         .auth-btn { width: 100%; padding: 12px; background: #66c0f4; border: none; color: #171a21; font-weight: bold; border-radius: 5px; cursor: pointer; margin-top: 10px; }
 
         /* UI Prvky */
         #irl-clock { position: fixed; bottom: 20px; right: 20px; z-index: 100; background: rgba(0,0,0,0.8); color: #66c0f4; padding: 10px 20px; border-radius: 8px; font-weight: bold; border: 1px solid #66c0f4; font-size: 1.5rem; }
-        #discord-fixed { position: fixed; bottom: 20px; right: 200px; z-index: 100; background: #7289da; color: white; padding: 10px 20px; border-radius: 8px; font-weight: bold; text-decoration: none; border: 1px solid white; display: none; }
+        #discord-fixed { position: fixed; bottom: 20px; right: 200px; z-index: 100; background: #7289da; color: white; padding: 10px 20px; border-radius: 8px; font-weight: bold; text-decoration: none; border: 1px solid white; display: none; transition: 0.3s; }
+        #discord-fixed:hover { background: white; color: #7289da; }
         #settings-trigger { position: fixed; top: 20px; left: 20px; z-index: 100; background: rgba(0,0,0,0.6); color: white; border: 1px solid #f39c12; width: 55px; height: 55px; border-radius: 50%; cursor: pointer; display: none; align-items: center; justify-content: center; font-size: 1.5rem; }
         #mute-toggle { position: fixed; top: 20px; right: 20px; z-index: 100; background: rgba(0,0,0,0.6); color: white; border: 1px solid #66c0f4; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; font-size: 1.2rem; }
 
@@ -111,40 +118,35 @@
         
         <div class="button-grid">
             <button class="card-btn" style="background: white;" onclick="openSection('faq-content')">❓ FAQ</button>
-            <!-- TLAČÍTKO HRY NYNÍ SMĚRUJE NA STEAM -->
             <a href="https://store.steampowered.com" target="_blank" class="card-btn">🎮 HRY</a>
-            <a href="https://discord.gg/ps4TDE6nr" target="_blank" class="card-btn" style="background: #7289da; color: white;">💬 DISCORD</a>
+            <!-- ZVÝRAZNĚNÉ EVENTY -->
+            <button class="card-btn event-btn" onclick="openSection('news-content')">📅 EVENTY</button>
         </div>
         
-        <div class="button-grid" style="margin-top: 15px;">
-            <button class="card-btn" style="background: #4e5d6a; color: white;" onclick="openSection('news-content')">📅 EVENTY</button>
-            <button class="card-btn" style="background: #4e5d6a; color: white;" onclick="openSection('games-content')">📁 KNIHOVNA</button>
-        </div>
-        
-        <button class="card-btn" onclick="logout()" style="background:#e74c3c; color:white; width: 180px; margin: 30px auto 0;">ODHLÁSIT SE</button>
-    </div>
-
-    <div id="games-content" class="container">
-        <h1>KNIHOVNA HER</h1>
-        <div class="button-grid">
-            <div class="event-card"><h3>OMSI 2</h3><a href="https://discord.gg/ps4TDE6nr" target="_blank" class="card-btn">STÁHNOUT</a></div>
-            <div class="event-card"><h3>Buckshot</h3><a href="https://discord.gg/ps4TDE6nr" target="_blank" class="card-btn">STÁHNOUT</a></div>
-        </div>
-        <button onclick="closeSection('games-content')" class="auth-btn" style="width:150px; margin-top:30px; background:#4e5d6a; color:white;">ZPĚT</button>
+        <button class="card-btn" onclick="logout()" style="background:#e74c3c; color:white; width: 180px; margin: 40px auto 0;">ODHLÁSIT SE</button>
     </div>
 
     <div id="news-content" class="container">
-        <h1>📅 EVENTY</h1>
+        <h1>📅 PLÁNOVANÉ AKCE</h1>
         <div class="button-grid">
-            <div class="event-card"><h3>Středa</h3><p id="wed-status"></p><span id="wed-timer" class="timer-display"></span></div>
-            <div class="event-card"><h3>Pátek</h3><p id="fri-status"></p><span id="fri-timer" class="timer-display"></span></div>
+            <div class="event-card">
+                <h3>Středeční Pokec</h3>
+                <p id="wed-status">Zjišťování...</p>
+                <span id="wed-timer" class="timer-display"></span>
+            </div>
+            <div class="event-card">
+                <h3>Páteční Event</h3>
+                <p id="fri-status">Zjišťování...</p>
+                <span id="fri-timer" class="timer-display"></span>
+            </div>
         </div>
         <button onclick="closeSection('news-content')" class="auth-btn" style="width:150px; margin-top:30px; background:#4e5d6a; color:white;">ZPĚT</button>
     </div>
 
     <div id="faq-content" class="container">
         <h1>ČASTÉ DOTAZY</h1>
-        <div class="faq-item"><b>Kde najdu Discord?</b> Tlačítko je v menu nebo vpravo dole.</div>
+        <div class="faq-item"><b>Kde najdu Discord?</b> Tlačítko se nachází vpravo dole u hodin.</div>
+        <div class="faq-item"><b>Proč se přihlašovat?</b> Přihlášení ti umožní měnit si profil a vidět exkluzivní oznámení.</div>
         <button onclick="closeSection('faq-content')" class="auth-btn" style="width:150px; margin-top:20px; background:#4e5d6a; color:white;">ZPĚT</button>
     </div>
 
