@@ -5,10 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SteamHubCZ | Vesmír636</title>
     
+    <!-- Externí knihovny -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
+    <!-- Inicializace EmailJS s tvým Public Key -->
     <script type="text/javascript">
         (function() { emailjs.init("yw3YNXC58nL3Bh4fl"); })();
     </script>
@@ -46,18 +48,22 @@
 
     <div id="global-alert"></div>
 
+    <!-- LOCK SCREEN (Má absolutní prioritu při zamčení) -->
     <div id="lock-screen">
         <h1 style="color:#ff4d4d">SERVER UZAMČEN</h1>
         <p id="lock-reason-text" style="font-size: 2rem; color: #c7d5e0; margin-top: -20px;"></p>
         <button id="admin-unlock-btn" onclick="requestUnlock()" class="auth-btn" style="background:#ff4d4d; color:white; width: 220px; display:none;">ADMIN ODEMKNUTÍ</button>
     </div>
 
+    <!-- Video pozadí a Overlay -->
     <div class="video-background"><div id="player"></div></div>
     <div class="overlay"></div>
     <div id="irl-clock">00:00:00</div>
     
+    <!-- Tlačítko pro nastavení (ozubené kolečko) -->
     <button id="settings-trigger" onclick="openSection('profile-content')">⚙️</button>
 
+    <!-- SEKCE: AUTENTIZACE -->
     <div id="auth-wrapper">
         <div id="login-box" class="auth-card">
             <h2 style="color:#66c0f4">SteamHub Login</h2>
@@ -78,6 +84,7 @@
         </div>
     </div>
 
+    <!-- SEKCE: HLAVNÍ MENU -->
     <div id="main-content" class="container">
         <div style="display:flex; align-items:center; justify-content:center; gap:15px; margin-bottom:10px;">
             <img id="main-avatar" src="" style="width:55px; height:55px; border-radius:50%; border:2px solid #66c0f4; object-fit: cover;">
@@ -93,6 +100,7 @@
         <button class="card-btn" onclick="logout()" style="background:#e74c3c; color:white; width: 180px; margin: 30px auto 0;">ODHLÁSIT SE</button>
     </div>
 
+    <!-- SEKCE: FAQ -->
     <div id="faq-content" class="container">
         <h1>ČASTÉ DOTAZY</h1>
         <div id="faq-list">
@@ -101,6 +109,7 @@
         <button onclick="closeSection('faq-content')" class="auth-btn" style="width:150px; margin-top:20px; background:#4e5d6a; color:white;">ZPĚT</button>
     </div>
 
+    <!-- SEKCE: NASTAVENÍ A MODERÁTORSKÝ PANEL -->
     <div id="profile-content" class="container">
         <h1>NASTAVENÍ <span id="mod-title"></span> ⚙️</h1>
         <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px; text-align:left;">
@@ -129,13 +138,17 @@
         <button onclick="closeSection('profile-content')" class="auth-btn" style="width:150px; margin-top:20px; background:#4e5d6a; color:white;">ZAVŘÍT</button>
     </div>
 
+    <!-- LOGIKA JAVASCRIPT -->
     <script>
         const firebaseConfig = { databaseURL: "https://steamhubcz-default-rtdb.europe-west1.firebasedatabase.app/" };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
+        
+        // OWNER ÚČET
         const adminEmail = "stepanmoravec27@gmail.com";
 
         window.onload = function() {
+            // Kontrola zámku serveru
             db.ref('siteSettings/lock').on('value', snapshot => {
                 const status = snapshot.val();
                 const lockScreen = document.getElementById('lock-screen');
@@ -158,6 +171,7 @@
                 }
             });
 
+            // Kontrola oznámení (Global Alert)
             db.ref('siteSettings/announcement').on('value', snapshot => {
                 const ann = snapshot.val();
                 const alertBox = document.getElementById('global-alert');
@@ -169,11 +183,13 @@
             setInterval(() => { document.getElementById('irl-clock').innerText = new Date().toLocaleTimeString('cs-CZ'); }, 1000);
         };
 
+        // ADMIN FUNKCE
         function setAnn() { db.ref('siteSettings/announcement').set(document.getElementById('ann-input').value); }
         function deleteAnn() { db.ref('siteSettings/announcement').set(""); }
         function adminToggleLock() { db.ref('siteSettings/lock').set({ isLocked: true, reason: document.getElementById('lock-reason-select').value }); }
         function requestUnlock() { db.ref('siteSettings/lock').set({ isLocked: false, reason: "" }); }
 
+        // EMAIL SYSTÉM (EmailJS)
         let generatedOTP = "";
         let pendingEmail = "";
 
@@ -182,8 +198,8 @@
             if(!pendingEmail) return alert("Zadej e-mail!");
             generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
             
-            // DŮLEŽITÉ: Změň "SEM_NAPIS_ID_SLUZBY" na ID ze sekce Email Services ve svém EmailJS dashboardu
-            emailjs.send("SEM_NAPIS_ID_SLUZBY", "template_otp", {
+            // TVÉ SERVICE ID: service_0jeaxzq
+            emailjs.send("service_0jeaxzq", "template_otp", {
                 to_email: pendingEmail,
                 otp_code: generatedOTP
             }).then(() => {
@@ -203,6 +219,7 @@
             } else alert("Špatný kód!");
         }
 
+        // NAVIGACE
         function showMain() {
             document.getElementById('auth-wrapper').style.display = 'none';
             document.getElementById('main-content').classList.add('active');
@@ -235,6 +252,7 @@
         function toggleAuth(m) { document.getElementById('login-box').style.display = m === 'login' ? 'block' : 'none'; document.getElementById('reg-box').style.display = m === 'reg' ? 'block' : 'none'; }
     </script>
 
+    <!-- YouTube API pro video/audio na pozadí -->
     <script src="https://www.youtube.com/iframe_api"></script>
     <script>
         var player;
