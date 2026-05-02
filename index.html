@@ -15,42 +15,30 @@
 
     <style>
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow-x: hidden; font-family: 'Segoe UI', Tahoma, sans-serif; color: #c7d5e0; background-color: #0b0e14; }
-        
         .video-background { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; overflow: hidden; }
         .video-background iframe { width: 100vw; height: 56.25vw; min-height: 100vh; min-width: 177.77vh; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); border: none; }
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 9, 15, 0.8); z-index: 0; }
         
         #global-alert { position: fixed; top: 0; left: 0; width: 100%; background: #e67e22; color: white; padding: 15px; text-align: center; font-weight: bold; z-index: 1001; display: none; }
-
         .container { position: relative; z-index: 1; background: rgba(42, 71, 94, 0.85); padding: 2.5rem; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.7); max-width: 950px; width: 90%; text-align: center; backdrop-filter: blur(10px); margin: 80px auto; border: 1px solid rgba(102, 192, 244, 0.3); display: none; }
         .container.active { display: block; animation: fadeIn 0.4s ease; }
         
         h1 { color: #66c0f4; font-size: 4.5rem; margin-bottom: 0; text-transform: uppercase; letter-spacing: 4px; font-weight: 800; }
-        .founder { color: #ffffff; font-weight: bold; font-size: 1.2rem; margin-bottom: 30px; display: block; }
+        .founder { color: #ffffff; font-weight: bold; font-size: 1.2rem; margin-bottom: 30px; display: block; opacity: 0.8; }
         
         .button-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-top: 20px; }
         .card-btn { background: #66c0f4; border: none; padding: 15px; border-radius: 8px; cursor: pointer; font-weight: bold; color: #171a21; font-size: 1.1rem; transition: 0.3s; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .card-btn:hover { background: white; transform: translateY(-2px); }
         
-        .event-btn { background: linear-gradient(135deg, #f39c12, #e67e22); color: white; border: 1px solid #ffcc33; animation: pulse 2s infinite; }
-
-        .event-title-highlight { color: #f39c12; font-size: 1.5rem; font-weight: 900; text-transform: uppercase; margin-bottom: 10px; display: block; }
-        .timer-highlight { background: #1b2838; border: 2px solid #66c0f4; color: #66c0f4; padding: 10px; border-radius: 5px; font-size: 1.4rem; font-weight: bold; display: inline-block; margin-top: 10px; }
-
         .auth-card { background: #171a21; padding: 40px; border-radius: 15px; border: 1px solid #66c0f4; width: 350px; margin: 100px auto; text-align: center; position: relative; z-index: 10; }
         .auth-input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 5px; border: 1px solid #2a475e; background: #2a475e; color: white; box-sizing: border-box; }
         .auth-btn { width: 100%; padding: 12px; background: #66c0f4; border: none; color: #171a21; font-weight: bold; border-radius: 5px; cursor: pointer; margin-top: 10px; }
 
         #irl-clock { position: fixed; bottom: 20px; right: 20px; z-index: 100; background: rgba(0,0,0,0.8); color: #66c0f4; padding: 10px 20px; border-radius: 8px; font-weight: bold; border: 1px solid #66c0f4; font-size: 1.5rem; }
-        #discord-fixed { position: fixed; bottom: 20px; right: 200px; z-index: 100; background: #7289da; color: white; padding: 10px 20px; border-radius: 8px; font-weight: bold; text-decoration: none; border: 1px solid white; display: none; }
         #settings-trigger { position: fixed; top: 20px; left: 20px; z-index: 100; background: rgba(0,0,0,0.6); color: white; border: 1px solid #f39c12; width: 55px; height: 55px; border-radius: 50%; cursor: pointer; display: none; align-items: center; justify-content: center; font-size: 1.5rem; }
 
-        .faq-box { text-align: left; background: rgba(23, 26, 33, 0.5); padding: 15px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid #66c0f4; }
-
         #lock-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #05070a; z-index: 9999; display: none; align-items: center; justify-content: center; flex-direction: column; text-align: center; }
-        #lock-screen h1 { font-size: 8vw; color: #ff4d4d; }
 
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
@@ -59,17 +47,15 @@
     <div id="global-alert"></div>
 
     <div id="lock-screen">
-        <h1>SERVER UZAMČEN</h1>
+        <h1 style="color:#ff4d4d">SERVER UZAMČEN</h1>
         <p id="lock-reason-text" style="font-size: 2rem; color: #c7d5e0; margin-top: -20px;"></p>
-        <div class="admin-unlock-zone">
-            <button onclick="requestUnlock()" class="auth-btn" style="background:#ff4d4d; color:white; width: 200px;">ODEMKNOUT SYSTÉM</button>
-        </div>
+        <!-- Tlačítko odemknutí uvidíš jen ty, až se přihlásíš jako admin -->
+        <button id="admin-unlock-btn" onclick="requestUnlock()" class="auth-btn" style="background:#ff4d4d; color:white; width: 220px; display:none;">ADMIN ODEMKNUTÍ</button>
     </div>
 
     <div class="video-background"><div id="player"></div></div>
     <div class="overlay"></div>
     <div id="irl-clock">00:00:00</div>
-    <a href="https://discord.gg/ps4TDE6nr" target="_blank" id="discord-fixed">DISCORD SERVER 💬</a>
     
     <button id="settings-trigger" onclick="openSection('profile-content')">⚙️</button>
 
@@ -103,64 +89,43 @@
         <div class="button-grid">
             <button class="card-btn" style="background: white;" onclick="openSection('faq-content')">❓ FAQ</button>
             <a href="https://store.steampowered.com" target="_blank" class="card-btn">🎮 HRY</a>
-            <button class="card-btn event-btn" onclick="openSection('news-content')">📅 EVENTY</button>
+            <button class="card-btn" style="background:#f39c12; color:white;" onclick="openSection('news-content')">📅 EVENTY</button>
         </div>
         <button class="card-btn" onclick="logout()" style="background:#e74c3c; color:white; width: 180px; margin: 30px auto 0;">ODHLÁSIT SE</button>
     </div>
 
-    <!-- FAQ -->
     <div id="faq-content" class="container">
         <h1>ČASTÉ DOTAZY</h1>
-        <div id="faq-list"></div>
+        <div id="faq-list">
+            <p style="opacity:0.5;">Sekce FAQ je momentálně prázdná.</p>
+        </div>
         <button onclick="closeSection('faq-content')" class="auth-btn" style="width:150px; margin-top:20px; background:#4e5d6a; color:white;">ZPĚT</button>
     </div>
 
-    <!-- EVENTY -->
-    <div id="news-content" class="container">
-        <h1>📅 PLÁNOVANÉ AKCE</h1>
-        <div class="button-grid">
-            <div class="event-card">
-                <span class="event-title-highlight">Čtvrtek: Nábor</span>
-                <div id="thu-timer" class="timer-highlight">00h 00m 00s</div>
-            </div>
-            <div class="event-card">
-                <span class="event-title-highlight">Pátek: Event</span>
-                <div id="fri-timer" class="timer-highlight">00h 00m 00s</div>
-            </div>
-        </div>
-        <button onclick="closeSection('news-content')" class="auth-btn" style="width:150px; margin-top:30px; background:#4e5d6a; color:white;">ZPĚT</button>
-    </div>
-
-    <!-- ADMIN & PROFIL -->
     <div id="profile-content" class="container">
-        <h1>NASTAVENÍ & MOD PANEL ⚙️</h1>
+        <h1>NASTAVENÍ <span id="mod-title"></span> ⚙️</h1>
         <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px; text-align:left;">
-            <div class="event-card">
+            <div class="event-card" style="background:rgba(0,0,0,0.2); padding:15px; border-radius:10px;">
                 <h3>👤 Tvůj Profil</h3>
                 <input type="text" id="edit-name" class="auth-input" placeholder="Jméno">
-                <input type="text" id="edit-avatar" class="auth-input" placeholder="URL Avataru">
-                <button class="auth-btn" onclick="saveProfile()" style="background:#75b022; color:white;">ULOŽIT PROFIL</button>
-                <button id="music-btn" class="auth-btn" onclick="toggleMute()" style="background:#66c0f4; color:#171a21; margin-top:10px;">🔊 ZAPNOUT HUDBU</button>
+                <input type="text" id="edit-avatar" class="auth-input" placeholder="URL obrázku">
+                <button class="auth-btn" onclick="saveProfile()" style="background:#75b022; color:white;">ULOŽIT</button>
             </div>
             
-            <div class="event-card" style="border-color:#f39c12;">
+            <!-- MODERÁTORSKÝ PANEL - Viditelný jen pro admina -->
+            <div id="admin-panel-card" class="event-card" style="border: 1px solid #f39c12; background:rgba(0,0,0,0.2); padding:15px; border-radius:10px; display:none;">
                 <h3>🛡️ MODERÁTORSKÝ PANEL</h3>
-                <div id="mod-tools">
-                    <p style="margin:5px 0; font-weight:bold;">Oznámení:</p>
-                    <input type="text" id="ann-input" class="auth-input" placeholder="Text zprávy...">
-                    <div style="display:flex; gap:5px;">
-                        <button class="auth-btn" onclick="setAnn()" style="background:#e67e22; color:white; flex:2;">POSLAT</button>
-                        <button class="auth-btn" onclick="deleteAnn()" style="background:#c0392b; color:white; flex:1;">SMAZAT</button>
-                    </div>
-
-                    <p style="margin:15px 0 5px; font-weight:bold;">Zámek webu:</p>
-                    <select id="lock-reason-select" class="auth-input">
-                        <option value="Probíhá plánovaná údržba">Údržba</option>
-                        <option value="Aktualizace systému">Aktualizace</option>
-                        <option value="Soukromá akce">Soukromá akce</option>
-                    </select>
-                    <button class="auth-btn" onclick="adminToggleLock()" style="background:#e74c3c; color:white;">ZAMKNOUT</button>
-                </div>
+                <p>Oznámení:</p>
+                <input type="text" id="ann-input" class="auth-input" placeholder="Text zprávy...">
+                <button class="auth-btn" onclick="setAnn()" style="background:#e67e22; color:white;">POSLAT</button>
+                <button class="auth-btn" onclick="deleteAnn()" style="background:#c0392b; color:white;">SMAZAT</button>
+                <hr style="margin:15px 0; border:0; border-top:1px solid #444;">
+                <p>Zámek webu:</p>
+                <select id="lock-reason-select" class="auth-input">
+                    <option value="Údržba systému">Údržba</option>
+                    <option value="Soukromá akce">Soukromá akce</option>
+                </select>
+                <button class="auth-btn" onclick="adminToggleLock()" style="background:#e74c3c; color:white;">ZAMKNOUT WEB</button>
             </div>
         </div>
         <button onclick="closeSection('profile-content')" class="auth-btn" style="width:150px; margin-top:20px; background:#4e5d6a; color:white;">ZAVŘÍT</button>
@@ -170,129 +135,93 @@
         const firebaseConfig = { databaseURL: "https://steamhubcz-default-rtdb.europe-west1.firebasedatabase.app/" };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
+        const adminEmail = "stepanmoravec27@gmail.com";
 
         window.onload = function() {
             // Sledování zámku
             db.ref('siteSettings/lock').on('value', snapshot => {
                 const status = snapshot.val();
                 const lockScreen = document.getElementById('lock-screen');
+                const mainContent = document.getElementById('main-content');
+                const authWrapper = document.getElementById('auth-wrapper');
+
                 if (status && status.isLocked) {
                     lockScreen.style.display = 'flex';
                     document.getElementById('lock-reason-text').innerText = status.reason;
+                    mainContent.style.display = 'none';
+                    authWrapper.style.display = 'none';
+                    document.getElementById('settings-trigger').style.display = 'none';
+                    // Pokud jsi přihlášen jako admin, ukaž tlačítko pro odemčení i na lock screenu
+                    if(localStorage.getItem("sh_user_email") === adminEmail) {
+                        document.getElementById('admin-unlock-btn').style.display = 'block';
+                    }
                 } else {
                     lockScreen.style.display = 'none';
+                    if(localStorage.getItem("sh_logged") === "true") { showMain(); }
+                    else { authWrapper.style.display = 'block'; }
                 }
             });
 
-            // Sledování oznámení (OPRAVENO PROBLIKÁVÁNÍ)
+            // Oznámení
             db.ref('siteSettings/announcement').on('value', snapshot => {
                 const ann = snapshot.val();
                 const alertBox = document.getElementById('global-alert');
-                if(ann && ann.trim() !== "") { 
-                    alertBox.innerText = ann; 
-                    alertBox.style.display = 'block'; 
-                } else { 
-                    alertBox.style.display = 'none'; 
-                }
+                if(ann && ann.trim() !== "") { alertBox.innerText = ann; alertBox.style.display = 'block'; }
+                else alertBox.style.display = 'none';
             });
 
-            // Sledování FAQ
-            db.ref('faq').on('value', snapshot => {
-                const faqs = snapshot.val();
-                const list = document.getElementById('faq-list');
-                list.innerHTML = "";
-                for(let id in faqs) {
-                    list.innerHTML += `<div class="faq-box"><b>${faqs[id].q}</b><br>${faqs[id].a}</div>`;
-                }
-            });
-
-            if(localStorage.getItem("sh_logged") === "true") { showMain(); loadProfile(); }
+            if(localStorage.getItem("sh_logged") === "true") { loadProfile(); }
             setInterval(() => { document.getElementById('irl-clock').innerText = new Date().toLocaleTimeString('cs-CZ'); }, 1000);
-            updateEventTimers();
-            setInterval(updateEventTimers, 1000);
         };
 
-        // ADMIN FUNKCE (BEZ HESLA)
-        function setAnn() { 
-            const val = document.getElementById('ann-input').value;
-            if(val) db.ref('siteSettings/announcement').set(val); 
-        }
-        
-        function deleteAnn() { 
-            db.ref('siteSettings/announcement').set(""); 
-        }
+        // ADMIN FUNKCE
+        function setAnn() { db.ref('siteSettings/announcement').set(document.getElementById('ann-input').value); }
+        function deleteAnn() { db.ref('siteSettings/announcement').set(""); }
+        function adminToggleLock() { db.ref('siteSettings/lock').set({ isLocked: true, reason: document.getElementById('lock-reason-select').value }); }
+        function requestUnlock() { db.ref('siteSettings/lock').set({ isLocked: false, reason: "" }); }
 
-        function adminToggleLock() {
-            const reason = document.getElementById('lock-reason-select').value;
-            db.ref('siteSettings/lock').set({ isLocked: true, reason: reason });
-        }
-
-        function requestUnlock() {
-            db.ref('siteSettings/lock').set({ isLocked: false, reason: "" });
-        }
-
-        // EMAIL SYSTÉM (ZACHOVÁN)
+        // EMAIL SYSTÉM
         let generatedOTP = "";
+        let pendingEmail = "";
+
         function sendAuthCode(type) {
-            const email = type === 'login' ? document.getElementById('login_email').value : document.getElementById('reg_email').value;
-            if(!email) return alert("Zadej email!");
+            pendingEmail = type === 'login' ? document.getElementById('login_email').value : document.getElementById('reg_email').value;
+            if(!pendingEmail) return alert("Zadej e-mail!");
             generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
             
             emailjs.send("service_default", "template_otp", {
-                to_email: email,
+                to_email: pendingEmail,
                 otp_code: generatedOTP
             }).then(() => {
+                alert("Kód odeslán!");
                 document.getElementById('login-box').style.display = 'none';
                 document.getElementById('reg-box').style.display = 'none';
                 document.getElementById('verify-box').style.display = 'block';
-            });
+            }).catch(err => alert("Chyba: " + JSON.stringify(err)));
         }
 
         function verifyOTP() {
             if(document.getElementById('otp_code').value === generatedOTP) {
+                localStorage.setItem("sh_user_email", pendingEmail);
                 localStorage.setItem("sh_logged", "true");
                 showMain();
-            } else {
-                alert("Špatný kód!");
-            }
+                loadProfile();
+            } else alert("Špatný kód!");
         }
 
-        // POMOCNÉ FUNKCE
-        function updateEventTimers() {
-            const now = new Date();
-            const calculate = (targetDay, hour, min, timerId) => {
-                let target = new Date();
-                target.setDate(now.getDate() + (targetDay + 7 - now.getDay()) % 7);
-                target.setHours(hour, min, 0, 0);
-                if (now > target) target.setDate(target.getDate() + 7);
-                const diff = target - now;
-                const h = Math.floor(diff / 3600000), m = Math.floor((diff % 3600000) / 60000), s = Math.floor((diff % 60000) / 1000);
-                document.getElementById(timerId).innerText = `${h}h ${m}m ${s}s`;
-            };
-            calculate(4, 16, 0, 'thu-timer'); 
-            calculate(5, 17, 30, 'fri-timer');
-        }
-
-        var player;
-        function onYouTubeIframeAPIReady() {
-            player = new YT.Player('player', { videoId: '0BFw93N4ZJw', playerVars: { 'autoplay': 1, 'controls': 0, 'mute': 1, 'loop': 1, 'playlist': '0BFw93N4ZJw' } });
-        }
-        function toggleMute() {
-            const btn = document.getElementById('music-btn');
-            if(player.isMuted()) { player.unMute(); btn.innerText = '🔇 VYPNOUT HUDBU'; btn.style.background = '#e74c3c'; btn.style.color = 'white'; }
-            else { player.mute(); btn.innerText = '🔊 ZAPNOUT HUDBU'; btn.style.background = '#66c0f4'; btn.style.color = '#171a21'; }
-        }
-
+        // NAVIGACE A PROFIL
         function showMain() {
             document.getElementById('auth-wrapper').style.display = 'none';
             document.getElementById('main-content').classList.add('active');
             document.getElementById('settings-trigger').style.display = 'flex';
-            document.getElementById('discord-fixed').style.display = 'block';
+
+            const userEmail = localStorage.getItem("sh_user_email");
+            if (userEmail === adminEmail) {
+                document.getElementById('admin-panel-card').style.display = 'block';
+                document.getElementById('mod-title').innerText = "& MOD PANEL";
+            }
         }
-        function logout() { localStorage.clear(); location.reload(); }
-        function openSection(id) { document.querySelectorAll('.container').forEach(c => c.classList.remove('active')); document.getElementById(id).classList.add('active'); }
-        function closeSection(id) { document.getElementById(id).classList.remove('active'); document.getElementById('main-content').classList.add('active'); }
-        function toggleAuth(m) { document.getElementById('login-box').style.display = m === 'login' ? 'block' : 'none'; document.getElementById('reg-box').style.display = m === 'reg' ? 'block' : 'none'; }
+
         function loadProfile() {
             const name = localStorage.getItem("sh_name") || "Uživatel", img = localStorage.getItem("sh_img") || "https://cdn-icons-png.flaticon.com/512/149/149071.png";
             document.getElementById('welcome-text').innerText = "Vítej, " + name;
@@ -300,12 +229,25 @@
             document.getElementById('edit-name').value = name;
             document.getElementById('edit-avatar').value = img;
         }
+
         function saveProfile() {
             localStorage.setItem("sh_name", document.getElementById('edit-name').value);
             localStorage.setItem("sh_img", document.getElementById('edit-avatar').value);
-            loadProfile(); alert("Uloženo!");
+            loadProfile(); alert("Profil uložen!");
+        }
+
+        function logout() { localStorage.clear(); location.reload(); }
+        function openSection(id) { document.querySelectorAll('.container').forEach(c => c.classList.remove('active')); document.getElementById(id).classList.add('active'); }
+        function closeSection(id) { document.getElementById(id).classList.remove('active'); document.getElementById('main-content').classList.add('active'); }
+        function toggleAuth(m) { document.getElementById('login-box').style.display = m === 'login' ? 'block' : 'none'; document.getElementById('reg-box').style.display = m === 'reg' ? 'block' : 'none'; }
+    </script>
+
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <script>
+        var player;
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('player', { videoId: '0BFw93N4ZJw', playerVars: { 'autoplay': 1, 'controls': 0, 'mute': 1, 'loop': 1, 'playlist': '0BFw93N4ZJw' } });
         }
     </script>
-    <script src="https://www.youtube.com/iframe_api"></script>
 </body>
 </html>
