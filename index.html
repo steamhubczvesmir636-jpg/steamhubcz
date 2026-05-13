@@ -5,15 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SteamHubCZ | Dashboard</title>
     
-    <!-- FIREBASE KNIHOVNY -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-    
-    <!-- EMAILJS -->
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-    <script>
-        (function() { emailjs.init("yw3YNXC58nL3Bh4fl"); })();
-    </script>
+    <script>(function() { emailjs.init("yw3YNXC58nL3Bh4fl"); })();</script>
 
     <style>
         :root {
@@ -33,24 +28,31 @@
             overflow: hidden;
         }
 
-        /* --- SYSTÉMOVÝ ZÁMEK --- */
+        /* --- VIDEO POZADÍ (Zabezpečené proti klikání) --- */
+        .video-bg { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            z-index: -1; background: #000; pointer-events: none; /* Toto znemožní manipulaci */
+        }
+        .video-bg iframe { 
+            width: 100vw; height: 56.25vw; min-height: 100vh; min-width: 177.77vh; 
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+            filter: brightness(0.3); pointer-events: none; 
+        }
+
+        /* --- ZÁMEK SYSTÉMU --- */
         #system-lock-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #000; color: white; z-index: 10000;
             display: none; flex-direction: column; align-items: center; justify-content: center;
-            text-align: center;
         }
 
-        /* --- LOGIN OBRAZOVKA --- */
+        /* --- LOGIN --- */
         #login-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             display: flex; align-items: center; justify-content: center; z-index: 1000;
         }
-        .video-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: #000; }
-        .video-bg iframe { width: 100vw; height: 56.25vw; min-height: 100vh; min-width: 177.77vh; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); filter: brightness(0.4); pointer-events: none; }
-        
         .auth-card {
-            background: rgba(23, 26, 33, 0.95); padding: 40px; border-radius: 15px; width: 380px;
+            background: rgba(23, 26, 33, 0.9); padding: 40px; border-radius: 15px; width: 380px;
             box-shadow: 0 15px 35px rgba(0,0,0,0.5); text-align: center; color: white;
             backdrop-filter: blur(10px); border: 1px solid var(--primary-blue);
         }
@@ -65,94 +67,78 @@
             color: #171a21; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; text-transform: uppercase;
         }
 
-        /* --- DASHBOARD STRUKTURA --- */
+        /* --- APP STRUKTURA --- */
         .app-container { display: flex; height: 100vh; overflow: hidden; }
         .sidebar { width: 260px; background-color: var(--sidebar-color); color: white; display: flex; flex-direction: column; z-index: 10; }
-        .sidebar-header { padding: 25px; font-size: 1.4rem; font-weight: 900; color: var(--primary-blue); border-bottom: 1px solid #2a475e; letter-spacing: 1px; }
-        .nav-item { padding: 15px 25px; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 12px; border-left: 4px solid transparent; font-weight: 500; color: #c7d5e0; }
-        .nav-item:hover, .nav-item.active { background: #2a475e; border-left-color: var(--primary-blue); color: white; }
-        .main-content { flex: 1; overflow-y: auto; background: #ebf0f5; display: flex; flex-direction: column; }
-        .top-bar { background: #171a21; padding: 12px 30px; display: flex; justify-content: space-between; align-items: center; color: white; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
-        .content-area { padding: 30px; max-width: 1200px; }
-        .card { background: var(--card-bg); border-radius: 8px; padding: 25px; box-shadow: 0 2px 4px rgba(0,0,0,0.08); margin-bottom: 25px; }
-        .card-title { font-size: 1.1rem; font-weight: bold; margin-bottom: 20px; color: #1b2838; border-bottom: 1px solid #eee; padding-bottom: 10px; }
-        .user-pill { background: #2a475e; padding: 5px 15px; border-radius: 20px; display: flex; align-items: center; gap: 10px; font-size: 0.9rem; }
-        .avatar-circle { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary-blue); }
+        .sidebar-header { padding: 25px; font-size: 1.4rem; font-weight: 900; color: var(--primary-blue); border-bottom: 1px solid #2a475e; }
+        .nav-item { padding: 15px 25px; cursor: pointer; display: flex; align-items: center; gap: 12px; color: #c7d5e0; }
+        .nav-item:hover, .nav-item.active { background: #2a475e; color: white; border-left: 4px solid var(--primary-blue); }
+        .main-content { flex: 1; overflow-y: auto; background: rgba(235, 240, 245, 0.8); display: flex; flex-direction: column; }
+        .top-bar { background: #171a21; padding: 12px 30px; display: flex; justify-content: space-between; align-items: center; color: white; }
+        .content-area { padding: 30px; }
+        .card { background: white; border-radius: 8px; padding: 25px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 25px; }
         .hidden { display: none !important; }
+        .avatar-circle { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary-blue); }
     </style>
 </head>
 <body>
 
-    <!-- SYSTEM LOCK -->
     <div id="system-lock-screen">
-        <h1 style="color: #e74c3c; font-size: 3rem;">⚠️ SYSTEM LOCKED</h1>
-        <p id="lock-message" style="font-size: 1.2rem; opacity: 0.8;"></p>
+        <h1 style="color: #e74c3c;">⚠️ SYSTEM LOCKED</h1>
+        <p id="lock-message"></p>
     </div>
 
-    <!-- LOGIN SCREEN -->
+    <div class="video-bg"><div id="player"></div></div>
+
     <div id="login-screen">
-        <div class="video-bg"><div id="player"></div></div>
         <div class="auth-card">
-            <h1 style="margin-top:0; color: var(--primary-blue);">STEAMHUBCZ</h1>
-            <p>Přihlášení do systému</p>
+            <h1 style="color: var(--primary-blue);">STEAMHUBCZ</h1>
             <div id="auth-step-1">
                 <input type="email" id="auth_email" class="auth-input" placeholder="E-mail">
                 <input type="password" id="auth_pass" class="auth-input" placeholder="Heslo">
                 <button class="btn-steam" onclick="handleLogin()">Vstoupit</button>
             </div>
             <div id="auth-step-otp" class="hidden">
-                <p style="color: var(--accent-orange)">Kód byl odeslán.</p>
-                <input type="text" id="otp_input" class="auth-input" maxlength="6" style="text-align:center; letter-spacing: 5px;">
+                <input type="text" id="otp_input" class="auth-input" placeholder="Kód z emailu" maxlength="6" style="text-align:center;">
                 <button class="btn-steam" style="background: #2ecc71;" onclick="verifyOTP()">Potvrdit</button>
             </div>
         </div>
     </div>
 
-    <!-- HLAVNÍ APLIKACE -->
     <div id="app" class="app-container hidden">
         <div class="sidebar">
             <div class="sidebar-header">STEAMHUBCZ</div>
             <div class="nav-item active" onclick="showPage('dashboard')">📊 Dashboard</div>
             <div class="nav-item" onclick="showPage('faq')">❓ FAQ</div>
-            <div class="nav-item" onclick="showPage('events')">📅 Akce</div>
             <div class="nav-item" onclick="showPage('settings')">⚙️ Nastavení</div>
-            <div style="margin-top: auto; padding: 20px; font-size: 0.7rem; opacity: 0.5;">Dev: Vesmír636</div>
         </div>
 
         <div class="main-content">
             <div class="top-bar">
-                <div id="page-title" style="font-weight: bold;">DASHBOARD</div>
-                <div class="user-pill">
-                    <img id="user-avatar" class="avatar-circle" src="https://cdn-icons-png.flaticon.com/512/149/149071.png">
-                    <span id="user-name">Uživatel</span>
-                    <button onclick="logout()" style="background: #e74c3c; border: none; color: white; padding: 4px 8px; border-radius: 4px; cursor: pointer; margin-left:10px;">Odhlásit</button>
+                <div id="page-title">DASHBOARD</div>
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <img id="user-avatar" class="avatar-circle" src="">
+                    <span id="user-name"></span>
+                    <button onclick="logout()" style="background:#e74c3c; border:none; color:white; padding:5px; border-radius:4px; cursor:pointer;">Odhlásit</button>
                 </div>
             </div>
 
             <div class="content-area">
                 <div id="page-dashboard" class="page">
-                    <div class="card">
-                        <div class="card-title">Vítejte zpět!</div>
-                        <p>Systém běží na verzi 2.1 (Cloud Synchronized).</p>
-                    </div>
+                    <div class="card"><h2>Vítejte!</h2><p>Všechny systémy jsou online.</p></div>
                 </div>
-
                 <div id="page-faq" class="page hidden">
-                    <div class="card">
-                        <div class="card-title">Časté dotazy (Live)</div>
-                        <div id="fb-faq-list">Načítám data z databáze...</div>
-                    </div>
+                    <div class="card"><h2>FAQ</h2><div id="fb-faq-list"></div></div>
                 </div>
-
-                <div id="page-events" class="page hidden">
-                    <div class="card"><div class="card-title">Akce</div><p>Aktuálně nejsou žádné akce.</p></div>
-                </div>
-
                 <div id="page-settings" class="page hidden">
                     <div class="card">
-                        <div class="card-title">Profil</div>
-                        <input type="text" id="set-name" class="auth-input" style="background:white; color:black; border:1px solid #ddd;" placeholder="Přezdívka">
+                        <h2>Nastavení</h2>
+                        <label>Jméno:</label><input type="text" id="set-name" class="auth-input" style="color:black; background:#eee;">
+                        <label>Avatar URL:</label><input type="text" id="set-img" class="auth-input" style="color:black; background:#eee;">
                         <button onclick="saveProfile()" class="btn-steam">Uložit</button>
+                        <hr>
+                        <button onclick="muteMusic()" class="btn-steam" style="background:#95a5a6; width:48%;">MUTE</button>
+                        <button onclick="unmuteMusic()" class="btn-steam" style="background:#2ecc71; width:48%;">PLAY</button>
                     </div>
                 </div>
             </div>
@@ -160,49 +146,41 @@
     </div>
 
     <script>
-        // --- FIREBASE KONFIGURACE ---
-        const firebaseConfig = {
-            databaseURL: "https://steamhubcz-default-rtdb.europe-west1.firebasedatabase.app/"
-        };
+        const firebaseConfig = { databaseURL: "https://steamhubcz-default-rtdb.europe-west1.firebasedatabase.app/" };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        let generatedOTP = null;
-        let player;
+        let generatedOTP, player;
 
-        // --- 1. LIVE ZÁMEK ---
-        db.ref('siteSettings/lock').on('value', (snap) => {
-            const data = snap.val();
-            const lockScreen = document.getElementById('system-lock-screen');
-            if (data && data.isLocked === true) {
-                lockScreen.style.display = 'flex';
-                document.getElementById('lock-message').innerText = data.reason || "Údržba systému.";
-            } else {
-                lockScreen.style.display = 'none';
-            }
-        });
-
-        // --- 2. LIVE FAQ (Oprava "undefined") ---
-        db.ref('faq').on('value', (snap) => {
-            const container = document.getElementById('fb-faq-list');
-            container.innerHTML = "";
-            snap.forEach((child) => {
-                const item = child.val();
-                // Ochrana: Pokud klíč neexistuje, použij náhradní text
-                const q = item.question || "Otázka nenalezena";
-                const a = item.answer || "Odpověď není k dispozici";
-                container.innerHTML += `<div style="margin-bottom:15px;"><b>${q}</b><br><span style="color:#555;">${a}</span></div><hr style="opacity:0.1;">`;
-            });
-        });
-
-        // --- OSTATNÍ FUNKCE ---
+        // --- YOUTUBE API (Steam Deck Video) ---
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('player', {
-                videoId: '0BFw93N4ZJw',
-                playerVars: { 'autoplay': 1, 'controls': 0, 'mute': 1, 'loop': 1, 'playlist': '0BFw93N4ZJw' }
+                videoId: '9vntypeV5QU',
+                playerVars: { 'autoplay': 1, 'controls': 0, 'mute': 1, 'loop': 1, 'playlist': '9vntypeV5QU', 'rel': 0, 'showinfo': 0, 'iv_load_policy': 3 },
+                events: { 'onReady': (e) => e.target.playVideo() }
             });
         }
 
+        function muteMusic() { player.mute(); }
+        function unmuteMusic() { player.unMute(); }
+
+        // --- FIREBASE SYNC ---
+        db.ref('siteSettings/lock').on('value', (snap) => {
+            const data = snap.val();
+            document.getElementById('system-lock-screen').style.display = (data && data.isLocked) ? 'flex' : 'none';
+            document.getElementById('lock-message').innerText = data?.reason || "";
+        });
+
+        db.ref('faq').on('value', (snap) => {
+            const list = document.getElementById('fb-faq-list');
+            list.innerHTML = "";
+            snap.forEach(c => {
+                const i = c.val();
+                list.innerHTML += `<b>${i.question || ""}</b><p>${i.answer || ""}</p><hr>`;
+            });
+        });
+
+        // --- LOGIC ---
         function handleLogin() {
             const email = document.getElementById('auth_email').value;
             if(!email.includes("@")) return alert("Zadej email!");
@@ -218,7 +196,7 @@
             if(document.getElementById('otp_input').value === generatedOTP) {
                 localStorage.setItem("sh_logged", "true");
                 loginSuccess();
-            } else { alert("Špatný kód!"); }
+            } else alert("Chyba!");
         }
 
         function loginSuccess() {
@@ -227,24 +205,25 @@
             loadUserData();
         }
 
-        function showPage(id) {
-            document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
-            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-            document.getElementById('page-' + id).classList.remove('hidden');
-            document.getElementById('page-title').innerText = id.toUpperCase();
-            event.currentTarget.classList.add('active');
-        }
-
         function saveProfile() {
             localStorage.setItem("sh_name", document.getElementById('set-name').value);
+            localStorage.setItem("sh_img", document.getElementById('set-img').value);
             loadUserData();
             alert("Uloženo!");
         }
 
         function loadUserData() {
-            const name = localStorage.getItem("sh_name") || "Uživatel";
-            document.getElementById('user-name').innerText = name;
-            document.getElementById('set-name').value = name;
+            const n = localStorage.getItem("sh_name") || "Uživatel";
+            const i = localStorage.getItem("sh_img") || "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+            document.getElementById('user-name').innerText = n;
+            document.getElementById('user-avatar').src = i;
+            document.getElementById('set-name').value = n;
+            document.getElementById('set-img').value = i;
+        }
+
+        function showPage(p) {
+            document.querySelectorAll('.page').forEach(x => x.classList.add('hidden'));
+            document.getElementById('page-'+p).classList.remove('hidden');
         }
 
         function logout() { localStorage.setItem("sh_logged", "false"); location.reload(); }
