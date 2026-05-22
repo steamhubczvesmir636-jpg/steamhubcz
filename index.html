@@ -27,7 +27,7 @@
         .video-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: #000; pointer-events: none; }
         .video-bg iframe { width: 100vw; height: 56.25vw; min-height: 100vh; min-width: 177.77vh; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); filter: brightness(0.3); pointer-events: none; }
 
-        #system-lock-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; color: white; z-index: 10000; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+        #system-lock-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; color: white; z-index: 10000; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; box-sizing: border-box; }
 
         #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 20px; box-sizing: border-box; }
         .auth-card { background: rgba(23, 26, 33, 0.95); padding: 35px; border-radius: 15px; width: 100%; max-width: 550px; max-height: 90vh; overflow-y: auto; box-shadow: 0 15px 35px rgba(0,0,0,0.5); text-align: center; color: white; backdrop-filter: blur(10px); border: 1px solid var(--primary-blue); }
@@ -86,7 +86,7 @@
                     <div class="rules-title">Pravidla serveru SteamHub CZ (Zkráceno)</div>
                     <div class="rule-item"><strong>1. Základní chování:</strong> Buďte slušní a respektujte ostatní. Nadávky, toxicita, rasismus a diskriminace jsou zakázány.</div>
                     <div class="rule-item"><strong>2. Komunikace:</strong> Mluvte česky/slovensky. Žádný spam, flood, CAPS LOCK ani neoprávněná reklama.</div>
-                    <div class="rule-item"><strong>3. Legální obsah:</strong> Server je pouze pro legální Steam hry. Sdílení cracků, torrentů, warezu nebo obcházení DRM se trestá okamžitým permanentním banem. Zákaz NSFW a podvodných odkazů.</div>
+                    <div class="rule-item"><strong>3. Legální obsah:</strong> Server je pouze pro legální Steam hry. Zdílení cracků, torrentů, warezu nebo obcházení DRM se trestá okamžitým permanentním banem. Zákaz NSFW a podvodných odkazů.</div>
                     <div class="rule-item"><strong>4. Hlas a chat:</strong> Nerušte ostatní (křik, soundboard), nenahrávejte nikoho bez souhlasu a poslouchejte moderátory.</div>
                     <div class="rule-item"><strong>5. Hraní:</strong> Zákaz cheatování, zneužívání chyb a vydávání se za admina. Za svůj účet si ručíte sami.</div>
                     <div class="rule-item"><strong>6. Administrativa:</strong> Slovo adminů je konečné. Obcházení trestů (alt účty) vede k permanentnímu banu.</div>
@@ -99,7 +99,7 @@
                 <button class="btn-steam" style="background: #2ecc71; margin-top: 20px;" onclick="acceptRules()">SOUHLASÍM A CHCI POKRAČOVAT</button>
             </div>
 
-            <!-- KROK 2: UVÍTÁNÍ A FORMULÁŘE (ZOBRAZÍ SE PO ODSOUHLASENÍ) -->
+            <!-- KROK 2: UVÍTÁNÍ A FORMULÁŘE (SKRYTÉ, DOKUD NEODSOUHLASÍ PRAVIDLA) -->
             <div id="step-form" class="hidden">
                 <h1 style="color: var(--primary-blue); margin-bottom: 5px;">Vítejte na stránce Steamhub</h1>
                 <p style="color: #888; font-size: 1rem; margin-top: 0; margin-bottom: 20px;">Přihlásit se nebo registrace</p>
@@ -244,7 +244,7 @@
             }
         }
 
-        // --- REGISTRACE ÚČTU S TIMESTAMPOVOU A CESTNÍ OCHRANOU PROTI DUPLICITÁM ---
+        // --- REGISTRACE ÚČTU S OCHRANOU PROTI DUPLICITÁM ---
         function handleRegister() {
             const name = document.getElementById('reg_name').value.trim();
             const email = document.getElementById('reg_email').value.trim().toLowerCase();
@@ -252,15 +252,15 @@
 
             if(!name || !email || !pass) { alert("Vyplň všechna pole!"); return; }
 
-            // Zabezpečení pro e-mailovou cestu ve Firebase (tečky nahrazeny čárkami)
+            // Vyčištění emailu pro klíč Firebase (náhrada teček za čárky)
             const safeEmailKey = email.replace(/\./g, ',');
 
-            // Kontrola existence registrace na daný e-mail
+            // Striktní kontrola na 1 jedinou registraci na e-mail
             db.ref('users/' + safeEmailKey).once('value', (snapshot) => {
                 if (snapshot.exists()) {
                     alert("Chyba: Na tento e-mail již existuje registrovaný účet!");
                 } else {
-                    // E-mail je unikátní -> provedeme registraci
+                    // E-mail je volný -> Zapíšeme data
                     db.ref('users/' + safeEmailKey).set({
                         username: name,
                         email: email,
@@ -270,7 +270,7 @@
                         alert("Registrace byla úspěšná! Nyní se můžete přihlásit.");
                         switchAuthTab('login');
                         document.getElementById('auth_email').value = email;
-                    }).catch(err => alert("Chyba při registraci: " + err.message));
+                    }).catch(err => alert("Chyba při zápisu: " + err.message));
                 }
             });
         }
@@ -287,7 +287,7 @@
                 if(snapshot.exists()) {
                     const userData = snapshot.val();
                     if(userData.password === pass) {
-                        // Údaje jsou v pořádku -> Vygenerujeme OTP a odešleme na e-mail
+                        // Údaje sedí -> Vygenerujeme a pošleme OTP
                         localStorage.setItem("tmp_name", userData.username);
                         localStorage.setItem("tmp_img", userData.avatar);
                         localStorage.setItem("tmp_email", userData.email);
@@ -315,11 +315,27 @@
             } else alert("Špatný kód!");
         }
 
-        // --- AUTOMATICKÉ ZAMYKÁNÍ WEBU Z FIREBASE ---
-        db.ref('siteSettings/maintenance').on('value', (snap) => {
+        // --- AUTOMATICKÉ ZAMYKÁNÍ WEBU S DŮVODEM (OPRAVENÁ STRUKTURA) ---
+        db.ref('siteSettings/lock').on('value', (snap) => {
             const lockScreen = document.getElementById('system-lock-screen');
-            if (snap.exists() && snap.val() === true) {
-                lockScreen.style.display = 'flex';
+            const lockMessage = document.getElementById('lock-message');
+            
+            if (snap.exists()) {
+                const lockData = snap.val();
+                
+                // Kontrola, zda je zapnutá údržba (maintenance: true)
+                if (lockData.maintenance === true) {
+                    lockScreen.style.display = 'flex';
+                    
+                    // Pokud existuje vyplněný důvod (reason), vypíšeme ho
+                    if (lockData.reason && lockData.reason !== "") {
+                        lockMessage.innerText = lockData.reason;
+                    } else {
+                        lockMessage.innerText = "Probíhá plánovaná údržba portálu SteamHubCZ. Zkuste to prosím později.";
+                    }
+                } else {
+                    lockScreen.style.display = 'none';
+                }
             } else {
                 lockScreen.style.display = 'none';
             }
@@ -347,11 +363,11 @@
             });
         });
 
-        // --- EVENTY A ODPOČET ---
+        // --- EVENTY A ODPOČET (OPRAVENO NA MALÁ PÍSMENA) ---
         db.ref('siteSettings/event').on('value', (snap) => {
             const list = document.getElementById('fb-events-list');
             list.innerHTML = "";
-            if(!snap.exists()) { list.innerHTML = "Žádné akce."; return; }
+            if(!snap.exists()) { list.innerHTML = "Momentálně nejsou naplánované žádné akce."; return; }
             snap.forEach(child => {
                 const ev = child.val();
                 const id = child.key;
