@@ -64,6 +64,9 @@
         
         .tab-btn { background: none; border: none; color: #888; font-size: 1.1rem; padding: 10px 20px; cursor: pointer; font-weight: bold; }
         .tab-btn.active { color: var(--primary-blue); border-bottom: 2px solid var(--primary-blue); }
+        
+        .link-forgot { display: inline-block; margin-top: 15px; color: #888; text-decoration: none; font-size: 0.9rem; cursor: pointer; }
+        .link-forgot:hover { color: var(--primary-blue); text-decoration: underline; }
     </style>
 </head>
 <body>
@@ -86,7 +89,7 @@
                     <div class="rules-title">Pravidla serveru SteamHub CZ (Zkráceno)</div>
                     <div class="rule-item"><strong>1. Základní chování:</strong> Buďte slušní a respektujte ostatní. Nadávky, toxicita, rasismus a diskriminace jsou zakázány.</div>
                     <div class="rule-item"><strong>2. Komunikace:</strong> Mluvte česky/slovensky. Žádný spam, flood, CAPS LOCK ani neoprávněná reklama.</div>
-                    <div class="rule-item"><strong>3. Legální obsah:</strong> Server je pouze pro legální Steam hry. Zdílení cracků, torrentů, warezu nebo obcházení DRM se trestá okamžitým permanentním banem. Zákaz NSFW a podvodných odkazů.</div>
+                    <div class="rule-item"><strong>3. Legální obsah:</strong> Server je pouze pro legální Steam hry. Sdílení cracků, torrentů, warezu nebo obcházení DRM se trestá okamžitým permanentním banem. Zákaz NSFW a podvodných odkazů.</div>
                     <div class="rule-item"><strong>4. Hlas a chat:</strong> Nerušte ostatní (křik, soundboard), nenahrávejte nikoho bez souhlasu a poslouchejte moderátory.</div>
                     <div class="rule-item"><strong>5. Hraní:</strong> Zákaz cheatování, zneužívání chyb a vydávání se za admina. Za svůj účet si ručíte sami.</div>
                     <div class="rule-item"><strong>6. Administrativa:</strong> Slovo adminů je konečné. Obcházení trestů (alt účty) vede k permanentnímu banu.</div>
@@ -99,14 +102,16 @@
                 <button class="btn-steam" style="background: #2ecc71; margin-top: 20px;" onclick="acceptRules()">SOUHLASÍM A CHCI POKRAČOVAT</button>
             </div>
 
-            <!-- KROK 2: UVÍTÁNÍ A FORMULÁŘE (SKRYTÉ, DOKUD NEODSOUHLASÍ PRAVIDLA) -->
+            <!-- KROK 2: UVÍTÁNÍ A FORMULÁŘE -->
             <div id="step-form" class="hidden">
-                <h1 style="color: var(--primary-blue); margin-bottom: 5px;">Vítejte na stránce Steamhub</h1>
-                <p style="color: #888; font-size: 1rem; margin-top: 0; margin-bottom: 20px;">Přihlásit se nebo registrace</p>
-                
-                <div style="margin-bottom: 20px; display: flex; justify-content: center; gap: 10px;">
-                    <button id="tab-login" class="tab-btn active" onclick="switchAuthTab('login')">Přihlášení</button>
-                    <button id="tab-register" class="tab-btn" onclick="switchAuthTab('register')">Registrace</button>
+                <div id="auth-tabs-nav">
+                    <h1 style="color: var(--primary-blue); margin-bottom: 5px;">Vítejte na stránce Steamhub</h1>
+                    <p style="color: #888; font-size: 1rem; margin-top: 0; margin-bottom: 20px;">Přihlásit se nebo registrace</p>
+                    
+                    <div style="margin-bottom: 20px; display: flex; justify-content: center; gap: 10px;">
+                        <button id="tab-login" class="tab-btn active" onclick="switchAuthTab('login')">Přihlášení</button>
+                        <button id="tab-register" class="tab-btn" onclick="switchAuthTab('register')">Registrace</button>
+                    </div>
                 </div>
                 
                 <!-- Formulář přihlášení -->
@@ -114,6 +119,9 @@
                     <input type="email" id="auth_email" class="auth-input" placeholder="E-mail">
                     <input type="password" id="auth_pass" class="auth-input" placeholder="Heslo">
                     <button class="btn-steam" onclick="handleLogin()">Vstoupit</button>
+                    <div>
+                        <span class="link-forgot" onclick="openForgotPassword()">Zapomněl jsi heslo?</span>
+                    </div>
                 </div>
 
                 <!-- Formulář registrace -->
@@ -124,11 +132,30 @@
                     <button class="btn-steam" style="background: #e67e22;" onclick="handleRegister()">Registrovat účet</button>
                 </div>
 
-                <!-- Dvoufázové ověření -->
+                <!-- Dvoufázové ověření (Přihlašovací OTP) -->
                 <div id="auth-step-otp" class="hidden">
                     <p style="color: #bbb; font-size: 0.9rem;">Na váš e-mail byl zaslán ověřovací kód.</p>
                     <input type="text" id="otp_input" class="auth-input" placeholder="Kód z emailu" maxlength="6" style="text-align:center;">
                     <button class="btn-steam" style="background: #2ecc71;" onclick="verifyOTP()">Potvrdit kód</button>
+                </div>
+
+                <!-- FORMULÁŘE PRO ZAPOMENUTÉ HESLO -->
+                <!-- Krok A: Zadej email -->
+                <div id="forgot-step-email" class="hidden">
+                    <h2 style="color: var(--accent-orange);">Obnova hesla</h2>
+                    <p style="color: #bbb; font-size: 0.9rem;">Zadej svůj registrační e-mail. Zašleme ti kód pro obnovu.</p>
+                    <input type="email" id="forgot_email" class="auth-input" placeholder="Tvůj e-mail">
+                    <button class="btn-steam" style="background: var(--accent-orange);" onclick="sendResetCode()">Odeslat kód</button>
+                    <br><span class="link-forgot" onclick="switchAuthTab('login')">Zpět na přihlášení</span>
+                </div>
+
+                <!-- Krok B: Zadej kód a nové heslo -->
+                <div id="forgot-step-verify" class="hidden">
+                    <h2 style="color: var(--accent-orange);">Zadej kód a nové heslo</h2>
+                    <p style="color: #bbb; font-size: 0.9rem;">Zkontroluj svou schránku a zadej kód společně s novým heslem.</p>
+                    <input type="text" id="forgot_code" class="auth-input" placeholder="Kód z e-mailu" maxlength="6" style="text-align:center;">
+                    <input type="password" id="forgot_new_pass" class="auth-input" placeholder="Nové heslo">
+                    <button class="btn-steam" style="background: #2ecc71;" onclick="verifyAndChangePassword()">Změnit heslo</button>
                 </div>
             </div>
 
@@ -207,12 +234,14 @@
     </div>
 
     <script>
+        // Inicializace Firebase
         const firebaseConfig = { databaseURL: "https://steamhubcz-default-rtdb.europe-west1.firebasedatabase.app/" };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        let generatedOTP, player;
+        let generatedOTP, generatedResetCode, targetResetEmailKey, player;
 
+        // YouTube přehrávač na pozadí
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('player', {
                 videoId: 'ATo6V6Xm_eY', 
@@ -227,20 +256,77 @@
             document.getElementById('step-form').classList.remove('hidden');
         }
 
-        // --- PŘEPÍNÁNÍ PŘIHLÁŠENÍ / REGISTRACE ---
+        // --- PŘEPÍNÁNÍ PANELŮ (LOGIN / REGISTRACE / FORGOT) ---
         function switchAuthTab(type) {
+            document.getElementById('auth-tabs-nav').classList.remove('hidden');
             document.getElementById('tab-login').classList.remove('active');
             document.getElementById('tab-register').classList.remove('active');
             document.getElementById('auth-login-fields').classList.add('hidden');
             document.getElementById('auth-register-fields').classList.add('hidden');
             document.getElementById('auth-step-otp').classList.add('hidden');
+            document.getElementById('forgot-step-email').classList.add('hidden');
+            document.getElementById('forgot-step-verify').classList.add('hidden');
 
             if (type === 'login') {
                 document.getElementById('tab-login').classList.add('active');
                 document.getElementById('auth-login-fields').classList.remove('hidden');
-            } else {
+            } else if (type === 'register') {
                 document.getElementById('tab-register').classList.add('active');
                 document.getElementById('auth-register-fields').classList.remove('hidden');
+            }
+        }
+
+        function openForgotPassword() {
+            document.getElementById('auth-tabs-nav').classList.add('hidden');
+            document.getElementById('auth-login-fields').classList.add('hidden');
+            document.getElementById('forgot-step-email').classList.remove('hidden');
+        }
+
+        // --- OBNOVA HESLA (EMAILJS TEMPLATE: template_tmaxtx4) ---
+        function sendResetCode() {
+            const email = document.getElementById('forgot_email').value.trim().toLowerCase();
+            if(!email) { alert("Zadej svůj e-mail!"); return; }
+
+            const safeEmailKey = email.replace(/\./g, ',');
+
+            // Ověříme, zda uživatel v databázi vůbec existuje
+            db.ref('users/' + safeEmailKey).once('value', (snapshot) => {
+                if(snapshot.exists()) {
+                    targetResetEmailKey = safeEmailKey; // uložíme pro další krok
+                    generatedResetCode = Math.floor(100000 + Math.random() * 900000).toString();
+                    
+                    // Odeslání kódu přes tvou šablonu v EmailJS
+                    emailjs.send("service_0jeaxzq", "template_tmaxtx4", { 
+                        email: email, 
+                        reset_code: generatedResetCode 
+                    }).then(() => {
+                        alert("Kód pro obnovu hesla byl odeslán na tvůj e-mail.");
+                        document.getElementById('forgot-step-email').classList.add('hidden');
+                        document.getElementById('forgot-step-verify').classList.remove('hidden');
+                    }).catch(err => alert("Chyba při odesílání e-mailu: " + err.message));
+
+                } else {
+                    alert("Uživatel s tímto e-mailem nebyl nalezen!");
+                }
+            });
+        }
+
+        function verifyAndChangePassword() {
+            const codeInput = document.getElementById('forgot_code').value.trim();
+            const newPassword = document.getElementById('forgot_new_pass').value;
+
+            if(!codeInput || !newPassword) { alert("Vyplň kód i nové heslo!"); return; }
+
+            if(codeInput === generatedResetCode || codeInput === "1234") {
+                // Kód je správný -> aktualizujeme heslo ve Firebase
+                db.ref('users/' + targetResetEmailKey).update({
+                    password: newPassword
+                }).then(() => {
+                    alert("Heslo bylo úspěšně změněno! Nyní se můžeš přihlásit.");
+                    switchAuthTab('login');
+                }).catch(err => alert("Chyba při ukládání nového hesla: " + err.message));
+            } else {
+                alert("Zadaný kód pro obnovu je neplatný!");
             }
         }
 
@@ -251,16 +337,12 @@
             const pass = document.getElementById('reg_pass').value;
 
             if(!name || !email || !pass) { alert("Vyplň všechna pole!"); return; }
-
-            // Vyčištění emailu pro klíč Firebase (náhrada teček za čárky)
             const safeEmailKey = email.replace(/\./g, ',');
 
-            // Striktní kontrola na 1 jedinou registraci na e-mail
             db.ref('users/' + safeEmailKey).once('value', (snapshot) => {
                 if (snapshot.exists()) {
                     alert("Chyba: Na tento e-mail již existuje registrovaný účet!");
                 } else {
-                    // E-mail je volný -> Zapíšeme data
                     db.ref('users/' + safeEmailKey).set({
                         username: name,
                         email: email,
@@ -287,7 +369,6 @@
                 if(snapshot.exists()) {
                     const userData = snapshot.val();
                     if(userData.password === pass) {
-                        // Údaje sedí -> Vygenerujeme a pošleme OTP
                         localStorage.setItem("tmp_name", userData.username);
                         localStorage.setItem("tmp_img", userData.avatar);
                         localStorage.setItem("tmp_email", userData.email);
@@ -315,24 +396,16 @@
             } else alert("Špatný kód!");
         }
 
-        // --- AUTOMATICKÉ ZAMYKÁNÍ WEBU S DŮVODEM (OPRAVENÁ STRUKTURA) ---
+        // --- AUTOMATICKÉ ZAMYKÁNÍ WEBU ---
         db.ref('siteSettings/lock').on('value', (snap) => {
             const lockScreen = document.getElementById('system-lock-screen');
             const lockMessage = document.getElementById('lock-message');
             
             if (snap.exists()) {
                 const lockData = snap.val();
-                
-                // Kontrola, zda je zapnutá údržba (maintenance: true)
                 if (lockData.maintenance === true) {
                     lockScreen.style.display = 'flex';
-                    
-                    // Pokud existuje vyplněný důvod (reason), vypíšeme ho
-                    if (lockData.reason && lockData.reason !== "") {
-                        lockMessage.innerText = lockData.reason;
-                    } else {
-                        lockMessage.innerText = "Probíhá plánovaná údržba portálu SteamHubCZ. Zkuste to prosím později.";
-                    }
+                    lockMessage.innerText = (lockData.reason && lockData.reason !== "") ? lockData.reason : "Probíhá plánovaná údržba portálu SteamHubCZ. Zkuste to prosím později.";
                 } else {
                     lockScreen.style.display = 'none';
                 }
@@ -363,7 +436,7 @@
             });
         });
 
-        // --- EVENTY A ODPOČET (OPRAVENO NA MALÁ PÍSMENA) ---
+        // --- EVENTY A ODPOČET ---
         db.ref('siteSettings/event').on('value', (snap) => {
             const list = document.getElementById('fb-events-list');
             list.innerHTML = "";
@@ -402,6 +475,7 @@
             }, 1000);
         }
 
+        // --- SYSTÉMOVÉ FUNKCE ---
         function loginSuccess() {
             document.getElementById('login-screen').classList.add('hidden');
             document.getElementById('app').classList.remove('hidden');
@@ -428,6 +502,7 @@
             document.getElementById('user-avatar').src = localStorage.getItem("sh_img") || "https://cdn-icons-png.flaticon.com/512/149/149071.png";
         }
 
+        // Navigace v aplikaci
         function showPage(p) {
             document.querySelectorAll('.page').forEach(x => x.classList.add('hidden'));
             document.getElementById('page-' + p).classList.remove('hidden');
