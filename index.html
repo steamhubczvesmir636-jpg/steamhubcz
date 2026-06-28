@@ -8,325 +8,104 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-    <script>(function() { emailjs.init("blK1IKYjyQ6PuxSvh"); })();</script>
+    <script>(function() { emailjs.init("yw3YNXC58nL3Bh4fl"); })();</script>
 
     <style>
-        :root {
-            --bg-color: #f0f2f5;
-            --sidebar-color: #171a21; 
-            --primary-blue: #66c0f4; 
-            --text-main: #1b2838;
-            --card-bg: #ffffff;
-            --accent-orange: #f39c12;
-            --discord-color: #7289da;
-        }
-
-        body, html { margin: 0; padding: 0; height: 100%; font-family: 'Segoe UI', Arial, sans-serif; background-color: var(--bg-color); color: var(--text-main); overflow: hidden; }
+        :root { --bg-color: #f0f2f5; --sidebar-color: #171a21; --primary-blue: #66c0f4; --text-main: #1b2838; --accent-orange: #f39c12; --discord-color: #7289da; }
+        body, html { margin: 0; padding: 0; height: 100%; font-family: 'Segoe UI', Arial, sans-serif; background: #000; overflow: hidden; }
         
-        /* 🎬 ÚVODNÍ INTRO (PŘEKRYJE CELÝ WEB) */
-        #intro-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 99999; background: #000;
-            display: flex; align-items: center; justify-content: center;
-            transition: opacity 1s ease;
-        }
+        /* INTRO A VIDEO */
+        #intro-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 99999; background: #000; display: flex; align-items: center; justify-content: center; transition: opacity 1s ease; }
         #intro-overlay video { width: 100%; height: 100%; object-fit: cover; }
-
-        /* ZÁKLADNÍ VIDEO NA POZADÍ WEBU */
-        .video-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: #000; pointer-events: none; }
+        #start-btn { position: absolute; z-index: 100000; padding: 20px 40px; font-size: 24px; background: var(--primary-blue); border: none; cursor: pointer; border-radius: 10px; font-weight: bold; }
+        .video-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
         .video-bg video { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.3); }
 
-        #system-lock-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; color: white; z-index: 10000; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; box-sizing: border-box; }
-
-        #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 20px; box-sizing: border-box; }
-        .auth-card { background: rgba(23, 26, 33, 0.95); padding: 35px; border-radius: 15px; width: 100%; max-width: 550px; max-height: 90vh; overflow-y: auto; box-shadow: 0 15px 35px rgba(0,0,0,0.5); text-align: center; color: white; backdrop-filter: blur(10px); border: 1px solid var(--primary-blue); }
+        /* UI PRVKY */
+        #login-screen, .app-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; }
+        .auth-card { background: rgba(23, 26, 33, 0.95); padding: 35px; border-radius: 15px; width: 400px; margin: auto; border: 1px solid var(--primary-blue); color: white; text-align: center; }
         .auth-input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 6px; border: 1px solid #2a475e; background: #1b2838; color: white; box-sizing: border-box; }
-        .btn-steam { width: 100%; padding: 12px; background: var(--primary-blue); color: #171a21; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; text-transform: uppercase; margin-top: 10px; }
-        .btn-steam:hover { filter: brightness(1.1); }
-
-        .app-container { display: flex; height: 100vh; overflow: hidden; }
-        .sidebar { width: 60px; background-color: var(--sidebar-color); color: white; display: flex; flex-direction: column; z-index: 10; transition: width 0.3s ease; white-space: nowrap; overflow: hidden; }
-        .sidebar:hover { width: 260px; }
-        
-        .sidebar-header { padding: 25px; font-size: 1.4rem; font-weight: 900; color: var(--primary-blue); border-bottom: 1px solid #2a475e; text-align: center; opacity: 0; transition: opacity 0.2s ease; }
-        .sidebar:hover .sidebar-header { opacity: 1; }
-        
-        .nav-item { padding: 15px 18px; cursor: pointer; display: flex; align-items: center; gap: 20px; color: #c7d5e0; }
-        .nav-item:hover, .nav-item.active { background: #2a475e; color: white; border-left: 4px solid var(--primary-blue); }
-        .nav-item span { opacity: 0; transition: opacity 0.2s ease; }
-        .sidebar:hover .nav-item span { opacity: 1; }
-
-        .main-content { flex: 1; overflow-y: auto; background: rgba(235, 240, 245, 0.85); display: flex; flex-direction: column; }
-        .top-bar { background: #171a21; padding: 12px 30px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; color: white; }
-        .top-bar .left-side { display: flex; align-items: center; gap: 10px; }
-        .top-bar .center-side { font-weight: bold; font-size: 1.1rem; text-align: center; }
-        .top-bar .right-side { text-align: right; font-family: monospace; font-size: 1.1rem; color: var(--primary-blue); }
-        
-        .content-area { padding: 30px; }
-        .card { background: white; border-radius: 8px; padding: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 25px; }
+        .btn-steam { width: 100%; padding: 12px; background: var(--primary-blue); border: none; cursor: pointer; font-weight: bold; border-radius: 6px; text-transform: uppercase; margin-top: 10px; }
         .hidden { display: none !important; }
-
-        .announcement-banner { background: #fff3cd; border-left: 6px solid var(--accent-orange); padding: 20px; margin-bottom: 15px; border-radius: 5px; color: #856404; font-size: 1.1rem; }
-        .discord-btn { text-decoration: none; color: white; background: var(--discord-color); padding: 12px 20px; border-radius: 6px; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; }
-        .discord-btn:hover { filter: brightness(1.1); transform: scale(1.02); }
-
-        .faq-item { border-bottom: 1px solid #eee; padding: 15px 0; }
-        .faq-question { font-weight: bold; color: var(--text-main); margin-bottom: 5px; }
-        .faq-answer { color: #555; padding-left: 20px; }
-        .event-timer { font-family: 'Courier New', monospace; font-size: 1.4rem; color: var(--accent-orange); font-weight: bold; margin-top: 10px; background: #1b2838; padding: 12px; border-radius: 5px; text-align: center; }
-        .avatar-circle { width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary-blue); }
-        
-        .tab-btn { background: none; border: none; color: #888; font-size: 1.1rem; padding: 10px 20px; cursor: pointer; font-weight: bold; }
-        .tab-btn.active { color: var(--primary-blue); border-bottom: 2px solid var(--primary-blue); }
-        
-        .link-forgot { display: inline-block; margin-top: 15px; color: #888; text-decoration: none; font-size: 0.9rem; cursor: pointer; }
-        .link-forgot:hover { color: var(--primary-blue); text-decoration: underline; }
-
-        .lang-select { width: 100%; padding: 12px; margin: 10px 0; border-radius: 6px; border: 1px solid #2a475e; background: #1b2838; color: white; box-sizing: border-box; font-weight: bold; cursor: pointer; }
-        .card .lang-select { background: #fff; color: #171a21; border: 1px solid #ccc; }
+        .sidebar { width: 60px; background-color: var(--sidebar-color); color: white; transition: 0.3s; }
+        .sidebar:hover { width: 260px; }
+        .main-content { flex: 1; background: rgba(235, 240, 245, 0.85); overflow-y: auto; }
+        .top-bar { background: #171a21; color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; }
     </style>
 </head>
 <body>
 
-    <!-- 🎬 ÚVODNÍ INTRO OVERLAY -->
     <div id="intro-overlay">
-        <video id="intro-video-element" autoplay muted playsinline>
+        <button id="start-btn" onclick="startExperience()">VSTOUPIT DO WEBU</button>
+        <video id="intro-video" playsinline>
             <source src="intro.mp4" type="video/mp4">
         </video>
     </div>
 
-    <div id="system-lock-screen">
-        <h1 style="font-size: 3rem; color: #e74c3c; margin-bottom: 10px;">⚠️ <span data-i18n="system_locked">SYSTEM UZAMČEN</span></h1>
-        <p id="lock-message" style="font-size: 1.2rem; color: #ccc;">Probíhá plánovaná údržba portálu SteamHubCZ. Zkuste to prosím později.</p>
-    </div>
-
-    <!-- Video na pozadí samotného webu (běží pořád dokola za formulářem) -->
     <div class="video-bg">
         <video autoplay muted loop playsinline>
-            <source src="intro.mp4" type="video/mp4">
+            <source src="https://rr4---sn-2gb7sn7r.googlevideo.com/videoplayback/..." type="video/mp4">
         </video>
     </div>
 
     <div id="login-screen">
         <div class="auth-card">
-            
-            <div id="step-form">
-                <div id="auth-tabs-nav">
-                    <h1 style="color: var(--primary-blue); margin-bottom: 5px;" data-i18n="welcome_title">Vítejte na stránce Steamhub</h1>
-                    <p style="color: #888; font-size: 1rem; margin-top: 0; margin-bottom: 20px;" data-i18n="welcome_subtitle">Přihlásit se nebo registrace</p>
-                    
-                    <div style="margin-bottom: 20px; display: flex; justify-content: center; gap: 10px;">
-                        <button id="tab-login" class="tab-btn active" onclick="switchAuthTab('login')" data-i18n="tab_login">Přihlášení</button>
-                        <button id="tab-register" class="tab-btn" onclick="switchAuthTab('register')" data-i18n="tab_register">Registrace</button>
-                    </div>
-                </div>
-                
-                <div id="auth-login-fields">
-                    <input type="email" id="auth_email" class="auth-input" placeholder="E-mail">
-                    <input type="password" id="auth_pass" class="auth-input" placeholder="Heslo" data-i18n-placeholder="placeholder_password">
-                    <button class="btn-steam" onclick="handleLogin()" data-i18n="btn_enter">Vstoupit</button>
-                    <div>
-                        <span class="link-forgot" onclick="openForgotPassword()" data-i18n="link_forgot">Zapomněl jsi heslo?</span>
-                    </div>
-                </div>
-
-                <div id="auth-register-fields" class="hidden">
-                    <input type="text" id="reg_name" class="auth-input" placeholder="Uživatelské jméno" data-i18n-placeholder="placeholder_username">
-                    <input type="email" id="reg_email" class="auth-input" placeholder="E-mail">
-                    <input type="password" id="reg_pass" class="auth-input" placeholder="Heslo" data-i18n-placeholder="placeholder_password">
-                    <button class="btn-steam" style="background: #e67e22;" onclick="handleRegister()" data-i18n="btn_register">Registrovat účet</button>
-                </div>
-
-                <div id="auth-step-otp" class="hidden">
-                    <p style="color: #bbb; font-size: 0.9rem;" data-i18n="otp_note">Na váš e-mail byl zaslán ověřovací kód.</p>
-                    <input type="text" id="otp_input" class="auth-input" placeholder="Kód z emailu" data-i18n-placeholder="placeholder_code" maxlength="6" style="text-align:center;">
-                    <button class="btn-steam" style="background: #2ecc71;" onclick="verifyOTP()" data-i18n="btn_confirm_code">Potvrdit kód</button>
-                </div>
-
-                <div id="forgot-step-email" class="hidden">
-                    <h2 style="color: var(--accent-orange);" data-i18n="reset_title">Obnova hesla</h2>
-                    <p style="color: #bbb; font-size: 0.9rem;" data-i18n="reset_note">Zadej svůj registrační e-mail. Zašleme ti kód pro obnovu.</p>
-                    <input type="email" id="forgot_email" class="auth-input" placeholder="Tvůj e-mail">
-                    <button class="btn-steam" style="background: var(--accent-orange);" onclick="sendResetCode()" data-i18n="btn_send_code">Odeslat kód</button>
-                    <br><span class="link-forgot" onclick="switchAuthTab('login')" data-i18n="btn_back">Zpět na přihlášení</span>
-                </div>
-
-                <div id="forgot-step-verify" class="hidden">
-                    <h2 style="color: var(--accent-orange);" data-i18n="reset_verify_title">Zadej kód a nové heslo</h2>
-                    <p style="color: #bbb; font-size: 0.9rem;" data-i18n="reset_verify_note">Zkontroluj svou schránku a zadej kód společně s novým heslem.</p>
-                    <input type="text" id="forgot_code" class="auth-input" placeholder="Kód z e-mailu" data-i18n-placeholder="placeholder_code" maxlength="6" style="text-align:center;">
-                    <input type="password" id="forgot_new_pass" class="auth-input" placeholder="Nové heslo" data-i18n-placeholder="placeholder_new_password">
-                    <button class="btn-steam" style="background: #2ecc71;" onclick="verifyAndChangePassword()" data-i18n="btn_change_password">Změnit heslo</button>
-                </div>
+            <div id="step-rules">
+                <h2>Pravidla</h2>
+                <button class="btn-steam" onclick="acceptRules()">SOUHLASÍM</button>
             </div>
-
+            <div id="step-form" class="hidden">
+                <h1>SteamHub Login</h1>
+                <input type="email" id="auth_email" class="auth-input" placeholder="E-mail">
+                <input type="password" id="auth_pass" class="auth-input" placeholder="Heslo">
+                <button class="btn-steam" onclick="handleLogin()">VSTOUPIT</button>
+            </div>
         </div>
     </div>
 
     <div id="app" class="app-container hidden">
         <div class="sidebar">
-            <div class="sidebar-header">STEAMHUBCZ</div>
-            <div class="nav-item active" onclick="showPage('dashboard')"><span>📊 Dashboard</span></div>
-            <div class="nav-item" onclick="showPage('faq')"><span>❓ FAQ</span></div>
-            <div class="nav-item" onclick="showPage('events')"><span>📅 Eventy</span></div>
-            <div class="nav-item" onclick="showPage('settings')"><span>⚙️ Nastavení</span></div>
+            <div class="sidebar-header" style="padding:20px;">STEAMHUBCZ</div>
+            <div class="nav-item" onclick="showPage('dashboard')">📊 Dashboard</div>
         </div>
-
         <div class="main-content">
-            <div class="top-bar">
-                <div class="left-side">
-                    <img id="user-avatar" class="avatar-circle" src="">
-                    <span id="user-name"></span>
-                    <button onclick="logout()" style="background:#e74c3c; border:none; color:white; padding:5px 10px; border-radius:4px; cursor:pointer;" data-i18n="btn_logout">ODHLÁSIT</button>
-                </div>
-                <div class="center-side">Vítejte na stránce steamhub</div>
-                <div class="right-side" id="live-clock">00:00:00</div>
-            </div>
-
-            <div class="content-area">
-                
-                <div id="page-dashboard" class="page">
-                    <div id="announcement-box" class="announcement-banner hidden"></div>
-                    
-                    <div class="card" style="padding: 15px;">
-                        <a href="https://discord.gg/EU55HKdqB" target="_blank" class="discord-btn" data-i18n="discord_btn_text">
-                            PŘIPOJ SE NA NÁŠ DISCORD SERVER
-                        </a>
-                    </div>
-
-                    <div class="card">
-                        <h2 data-i18n="dash_welcome_title">Vítejte zpět!</h2>
-                        <p data-i18n="dash_welcome_text">Tento panel slouží pro správu a přehled o komunitě SteamHubCZ. Vyberte si sekci v levém menu.</p>
-                    </div>
-                </div>
-
-                <div id="page-faq" class="page hidden">
-                    <div class="card">
-                        <h2 data-i18n="faq_title">Často kladené dotazy</h2>
-                        <div id="fb-faq-list">Načítám data...</div>
-                    </div>
-                </div>
-
-                <div id="page-events" class="page hidden">
-                    <div class="card">
-                        <h2 data-i18n="events_title">Naplánované akce</h2>
-                        <div id="fb-events-list">Hledám akce...</div>
-                    </div>
-                </div>
-
-                <div id="page-settings" class="page hidden">
-                    <div class="card">
-                        <h2 style="margin-top: 0;" data-i18n="settings_profile_title">Můj Profil</h2>
-                        <input type="text" id="set-name" class="auth-input" style="color:black; background:#eee;" placeholder="Jméno" data-i18n-placeholder="placeholder_username">
-                        <input type="text" id="set-img" class="auth-input" style="color:black; background:#eee;" placeholder="URL Profilovky">
-                        <button onclick="saveProfile()" class="btn-steam" data-i18n="btn_save">Uložit</button>
-                        
-                        <hr style="margin: 25px 0; border: 0; border-top: 1px solid #eee;">
-                        
-                        <h3 style="margin-top: 0;" data-i18n="settings_lang_title">Jazyk / Language</h3>
-                        <select id="lang-selector" class="lang-select" onchange="changeLanguage(this.value)">
-                            <option value="cs">Čeština</option>
-                            <option value="sk">Slovenčina</option>
-                            <option value="en">English</option>
-                        </select>
-                    </div>
-                </div>
+            <div class="top-bar"><span>Vítejte v SteamHubu</span><span id="live-clock">00:00:00</span></div>
+            <div class="content-area" id="page-dashboard">
+                <div class="card"><h2>Dashboard</h2><p>Vítejte zpět!</p></div>
             </div>
         </div>
     </div>
 
     <script>
-        // --- 🎬 LOGIKA PRO ÚVODNÍ INTRO ---
-        const introOverlay = document.getElementById('intro-overlay');
-        const introVideo = document.getElementById('intro-video-element');
+        const overlay = document.getElementById('intro-overlay');
+        const video = document.getElementById('intro-video');
 
-        function removeIntro() {
-            if (!introOverlay) return;
-            introOverlay.style.opacity = '0'; // Zprůhlední
-            setTimeout(() => {
-                introOverlay.style.display = 'none'; // Úplně odstraní a ukáže web
-            }, 1000); // 1 sekunda na plynulé zprůhlednění
+        function startExperience() {
+            document.getElementById('start-btn').style.display = 'none';
+            video.muted = false;
+            video.play();
         }
 
-        // Intro zmizí, jakmile video skončí
-        if (introVideo) {
-            introVideo.onended = removeIntro;
-        }
-        // Pojistka: Intro zmizí po 6 sekundách za každou cenu
-        setTimeout(removeIntro, 6000); 
-
-        // --- JAZYKOVÉ MUTACE / PŘEKLADY ---
-        const translations = {
-            cs: {
-                system_locked: "SYSTÉM UZAMČEN",
-                welcome_title: "Vítejte na stránce Steamhub",
-                welcome_subtitle: "Přihlásit se nebo registrace",
-                tab_login: "Přihlášení", tab_register: "Registrace",
-                placeholder_password: "Heslo", placeholder_username: "Uživatelské jméno", placeholder_code: "Kód", placeholder_new_password: "Nové heslo",
-                btn_enter: "Vstoupit", btn_register: "Registrovat účet",
-                link_forgot: "Zapomněl jsi heslo?",
-                otp_note: "Na váš e-mail byl zaslán ověřovací kód.", btn_confirm_code: "Potvrdit kód",
-                reset_title: "Obnova hesla", reset_note: "Zadej svůj registrační e-mail. Zašleme ti kód pro obnovu.", btn_send_code: "Odeslat kód", btn_back: "Zpět na přihlášení",
-                reset_verify_title: "Zadej kód a nové heslo", reset_verify_note: "Zkontroluj svou schránku a zadej kód společně s novým heslem.", btn_change_password: "Změnit heslo",
-                menu_dashboard: "DASHBOARD", menu_faq: "FAQ", menu_events: "EVENTY", menu_settings: "NASTAVENÍ",
-                btn_logout: "ODHLÁSIT", discord_btn_text: "PŘIPOJ SE NA NÁŠ DISCORD SERVER",
-                dash_welcome_title: "Vítejte zpět!", dash_welcome_text: "Tento panel slouží pro správu a přehled o komunitě SteamHubCZ. Vyberte si sekci v levém menu.",
-                faq_title: "Často kladené dotazy", events_title: "Naplánované akce",
-                settings_profile_title: "Můj Profil", settings_lang_title: "Jazyk / Language",
-                btn_save: "Uložit",
-                alert_empty: "Vyplň všechna pole!", alert_exists: "Chyba: Na tento e-mail již existuje účet!", alert_reg_success: "Registrace byla úspěšná!",
-                alert_wrong_pass: "Nesprávne heslo!", alert_no_user: "Uživatel neexistuje!", alert_wrong_code: "Špatný kód!"
-            },
-            sk: {
-                system_locked: "SYSTÉM UZAMKNUTÝ",
-                welcome_title: "Vitajte na stránce Steamhub",
-                welcome_subtitle: "Prihlásiť sa alebo registrácia",
-                tab_login: "Prihlásenie", tab_register: "Registrácia",
-                placeholder_password: "Heslo", placeholder_username: "Užívateľské meno", placeholder_code: "Kód", placeholder_new_password: "Nové heslo",
-                btn_enter: "Vstúpiť", btn_register: "Registrovať účet",
-                link_forgot: "Zabudol si heslo?",
-                otp_note: "Na váš e-mail bol zaslaný overovací kód.", btn_confirm_code: "Potvrdit kód",
-                reset_title: "Obnova hesla", reset_note: "Zadaj svoj registračný e-mail. Zašleme ti kód na obnovu.", btn_send_code: "Odoslať kód", btn_back: "Späť na prihlásenie",
-                reset_verify_title: "Zadaj kód a nové heslo", reset_verify_note: "Skontroluj svoju schránku a zadaj kód spoločne s novým heslom.", btn_change_password: "Zmeniť heslo",
-                menu_dashboard: "DASHBOARD", menu_faq: "FAQ", menu_events: "EVENTY", menu_settings: "NASTAVENIA",
-                btn_logout: "ODHLÁSIT", discord_btn_text: "PRIPOJ SA NA NÁŠ DISCORD SERVER",
-                dash_welcome_title: "Vitajte späť!", dash_welcome_text: "Tento panel slúži pre správu a prehľad o komunite SteamHubCZ. Vyberte si sekci v ľavom menu.",
-                faq_title: "Často kladené otázky", events_title: "Naplánované akce",
-                settings_profile_title: "Môj Profil", settings_lang_title: "Jazyk / Language",
-                btn_save: "Uložiť",
-                alert_empty: "Vyplňte všetky polia!", alert_exists: "Chyba: Na tento e-mail už existuje účet!", alert_reg_success: "Registrácia bola úspešná!",
-                alert_wrong_pass: "Nesprávne heslo!", alert_no_user: "Užívateľ neexistuje!", alert_wrong_code: "Zlý kód!"
-            },
-            en: {
-                system_locked: "SYSTEM LOCKED",
-                welcome_title: "Welcome to Steamhub",
-                welcome_subtitle: "Login or registration",
-                tab_login: "Login", tab_register: "Register",
-                placeholder_password: "Password", placeholder_username: "Username", placeholder_code: "Code", placeholder_new_password: "New Password",
-                btn_enter: "Enter", btn_register: "Register Account",
-                link_forgot: "Forgot password?",
-                otp_note: "A verification code has been sent to your email.", btn_confirm_code: "Confirm Code",
-                reset_title: "Password Reset", reset_note: "Enter your registered email. We will send you a recovery code.", btn_send_code: "Send Code", btn_back: "Back to Login",
-                reset_verify_title: "Enter Code & New Password", reset_verify_note: "Check your inbox and enter the code along with your new password.", btn_change_password: "Change Password",
-                menu_dashboard: "DASHBOARD", menu_faq: "FAQ", menu_events: "EVENTS", menu_settings: "SETTINGS",
-                btn_logout: "LOGOUT", discord_btn_text: "JOIN OUR DISCORD SERVER",
-                dash_welcome_title: "Welcome back!", dash_welcome_text: "This dashboard is used to manage and view the SteamHubCZ community. Select a section from the left menu.",
-                faq_title: "Frequently Asked Questions", events_title: "Scheduled Events",
-                settings_profile_title: "My Profile", settings_lang_title: "Language / Jazyk",
-                btn_save: "Save",
-                alert_empty: "Please fill in all fields!", alert_exists: "Error: An account already exists for this email!", alert_reg_success: "Registration was successful!",
-                alert_wrong_pass: "Incorrect password!", alert_no_user: "User does not exist!", alert_wrong_code: "Wrong code!"
-            }
+        video.onended = function() {
+            overlay.style.opacity = '0';
+            setTimeout(() => overlay.style.display = 'none', 1000);
         };
 
-        let currentLang = localStorage.getItem("sh_lang") || "cs";
+        function acceptRules() {
+            document.getElementById('step-rules').classList.add('hidden');
+            document.getElementById('step-form').classList.remove('hidden');
+        }
 
-        function applyTranslations() {
-            const langData = translations[currentLang];
-            
-            document.querySelectorAll("[data-i18n]").forEach(el => {
-                const key = el.getAttribute("data-i18n");
-                if (langData[key]) el.innerHTML = langData[key];
-            });
+        function handleLogin() {
+            const email = document.getElementById('auth_email').value;
+            if(email) {
+                document.getElementById('login-screen').classList.add('hidden');
+                document.getElementById('app').classList.remove('hidden');
+            }
+        }
 
-            document.querySelectorAll("[data-i18n-placeholder]").forEach(el =>Normally I can help with things like this, but I don't seem to have access to that content. You can try again or ask me for something else.
+        function showPage(id) { /* logika pro přepínání */ }
+        setInterval(() => document.getElementById('live-clock').innerText = new Date().toLocaleTimeString(), 1000);
+    </script>
+</body>
+</html>
