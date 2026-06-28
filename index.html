@@ -23,9 +23,9 @@
 
         body, html { margin: 0; padding: 0; height: 100%; font-family: 'Segoe UI', Arial, sans-serif; background-color: var(--bg-color); color: var(--text-main); overflow: hidden; }
         
-        /* Styl pro video pozadí přizpůsobený pro HTML5 video prvek */
+        /* Video na pozadí upravené pro MP4 odkaz */
         .video-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: #000; pointer-events: none; }
-        .video-bg video { width: 100vw; height: 56.25vw; min-height: 100vh; min-width: 177.77vh; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); filter: brightness(0.3); pointer-events: none; object-fit: cover; }
+        .video-bg video { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.3); }
 
         #system-lock-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; color: white; z-index: 10000; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; box-sizing: border-box; }
 
@@ -40,14 +40,29 @@
         .rule-item { margin-bottom: 10px; color: #c7d5e0; }
         .rule-item strong { color: white; }
 
+        /* Animované otevírání menu při najetí (hover) */
         .app-container { display: flex; height: 100vh; overflow: hidden; }
-        .sidebar { width: 260px; background-color: var(--sidebar-color); color: white; display: flex; flex-direction: column; z-index: 10; }
-        .sidebar-header { padding: 25px; font-size: 1.4rem; font-weight: 900; color: var(--primary-blue); border-bottom: 1px solid #2a475e; text-align: center; }
-        .nav-item { padding: 15px 25px; cursor: pointer; display: flex; align-items: center; gap: 12px; color: #c7d5e0; }
+        .sidebar { width: 60px; background-color: var(--sidebar-color); color: white; display: flex; flex-direction: column; z-index: 10; transition: width 0.3s ease; white-space: nowrap; overflow: hidden; }
+        .sidebar:hover { width: 260px; }
+        
+        .sidebar-header { padding: 25px; font-size: 1.4rem; font-weight: 900; color: var(--primary-blue); border-bottom: 1px solid #2a475e; text-align: center; opacity: 0; transition: opacity 0.2s ease; }
+        .sidebar:hover .sidebar-header { opacity: 1; }
+        
+        .nav-item { padding: 15px 18px; cursor: pointer; display: flex; align-items: center; gap: 20px; color: #c7d5e0; }
         .nav-item:hover, .nav-item.active { background: #2a475e; color: white; border-left: 4px solid var(--primary-blue); }
         
+        /* Skrytí/Zobrazení textu v menu s animací */
+        .nav-item span { opacity: 0; transition: opacity 0.2s ease; }
+        .sidebar:hover .nav-item span { opacity: 1; }
+
         .main-content { flex: 1; overflow-y: auto; background: rgba(235, 240, 245, 0.85); display: flex; flex-direction: column; }
-        .top-bar { background: #171a21; padding: 12px 30px; display: flex; justify-content: space-between; align-items: center; color: white; }
+        
+        /* Horní lišta rozvržená na: Menu vlevo (ikona/sidebar), Název uprostřed, Čas vpravo */
+        .top-bar { background: #171a21; padding: 12px 30px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; color: white; }
+        .top-bar .left-side { display: flex; align-items: center; gap: 10px; }
+        .top-bar .center-side { font-weight: bold; font-size: 1.1rem; text-align: center; }
+        .top-bar .right-side { text-align: right; font-family: monospace; font-size: 1.1rem; color: var(--primary-blue); }
+        
         .content-area { padding: 30px; }
         .card { background: white; border-radius: 8px; padding: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 25px; }
         .hidden { display: none !important; }
@@ -68,7 +83,6 @@
         .link-forgot { display: inline-block; margin-top: 15px; color: #888; text-decoration: none; font-size: 0.9rem; cursor: pointer; }
         .link-forgot:hover { color: var(--primary-blue); text-decoration: underline; }
 
-        /* Jazykový select */
         .lang-select { width: 100%; padding: 12px; margin: 10px 0; border-radius: 6px; border: 1px solid #2a475e; background: #1b2838; color: white; box-sizing: border-box; font-weight: bold; cursor: pointer; }
         .card .lang-select { background: #fff; color: #171a21; border: 1px solid #ccc; }
     </style>
@@ -81,8 +95,8 @@
     </div>
 
     <div class="video-bg">
-        <video id="bg-video" autoplay muted playsinline>
-            <source id="video-source" src="https://rr4---sn-2gb7sn7r.googlevideo.com/videoplayback/expire/1782673213/ei/3RpBavfINdn5xN8Pn-XBgAg/ip/172.70.248.168/id/o-ADwNiMX2uTnRkZIzeP4PquekrLXwUSUht2Zy6KwCtxYg/source/youtube/requiressl/yes/xpc/EgVo2aDSNQ%3D%3D/rms/au,au/ctier/A/pfa/5/hightc/yes/siu/1/bui/ARmQxEXgwe1PRG-vD8BADLFMIQprxed88Wj7szF2xKSbGKJVkFUYOmZDn-THJXCpWq_KbYYK8w/spc/SQ-umjJ_EiytRmnOKkDMupylmm6RKb3yYTbVAHhZRu4Da6H6ZNf0dCoiKA/vprv/1/svpuc/1/mime/video%2Fmp4/rqh/1/gir/yes/clen/744488/dur/5.950/lmt/1744328149641463/itag/299/keepalive/yes/fexp/51565115,51565681/txp/5309224/sparams/expire,ei,ip,id,itag,source,requiressl,xpc,ctier,pfa,hightc,siu,bui,spc,vprv,svpuc,mime,rqh,gir,clen,dur,lmt/sig/AHEqNM4wRQIhANeoRSnjw5U4jVR6sEHqCIiWvBNj3_yITFV5Vmh2lsSOAiBsc7t4ud7Pb_htRaL-Vl30RXOnzEdwf54hJ7fQd2gmHA%3D%3D/redirect_counter/1/rm/sn-4g5yyy7e/rrc/104/req_id/354cb27fb68ba3ee/cms_redirect/yes/cmsv/e/cps/100/ipbypass/yes/met/1782651626,/mh/Ab/mip/2001:1aef:a1:a286:dd09:10c0:9d:397b/mm/31/mn/sn-2gb7sn7r/ms/au/mt/1782651225/mv/m/mvi/4/pl/30/lsparams/cps,ipbypass,met,mh,mip,mm,mn,ms,mv,mvi,pl,rms/lsig/APaTxxMwRQIhAIOuLxwZAEC19AqoR-6hIknA08MiMO98W__80tp18nukAiAOBc5_p3_zbA28mCK9jNygRQaXNB5iEYYcFAJfDiI0Gw%3D%3D" type="video/mp4">
+        <video autoplay muted loop playsinline>
+            <source src="https://rr4---sn-2gb7sn7r.googlevideo.com/videoplayback/expire/1782673213/ei/3RpBavfINdn5xN8Pn-XBgAg/ip/172.70.248.168/id/o-ADwNiMX2uTnRkZIzeP4PquekrLXwUSUht2Zy6KwCtxYg/source/youtube/requiressl/yes/xpc/EgVo2aDSNQ%3D%3D/rms/au,au/ctier/A/pfa/5/hightc/yes/siu/1/bui/ARmQxEXgwe1PRG-vD8BADLFMIQprxed88Wj7szF2xKSbGKJVkFUYOmZDn-THJXCpWq_KbYYK8w/spc/SQ-umjJ_EiytRmnOKkDMupylmm6RKb3yYTbVAHhZRu4Da6H6ZNf0dCoiKA/vprv/1/svpuc/1/mime/video%2Fmp4/rqh/1/gir/yes/clen/744488/dur/5.950/lmt/1744328149641463/itag/299/keepalive/yes/fexp/51565115,51565681/txp/5309224/sparams/expire,ei,ip,id,itag,source,requiressl,xpc,ctier,pfa,hightc,siu,bui,spc,vprv,svpuc,mime,rqh,gir,clen,dur,lmt/sig/AHEqNM4wRQIhANeoRSnjw5U4jVR6sEHqCIiWvBNj3_yITFV5Vmh2lsSOAiBsc7t4ud7Pb_htRaL-Vl30RXOnzEdwf54hJ7fQd2gmHA%3D%3D/redirect_counter/1/rm/sn-4g5yyy7e/rrc/104/req_id/354cb27fb68ba3ee/cms_redirect/yes/cmsv/e/cps/100/ipbypass/yes/met/1782651626,/mh/Ab/mip/2001:1aef:a1:a286:dd09:10c0:9d:397b/mm/31/mn/sn-2gb7sn7r/ms/au/mt/1782651225/mv/m/mvi/4/pl/30/lsparams/cps,ipbypass,met,mh,mip,mm,mn,ms,mv,mvi,pl,rms/lsig/APaTxxMwRQIhAIOuLxwZAEC19AqoR-6hIknA08MiMO98W__80tp18nukAiAOBc5_p3_zbA28mCK9jNygRQaXNB5iEYYcFAJfDiI0Gw%3D%3D" type="video/mp4">
         </video>
     </div>
 
@@ -163,20 +177,21 @@
     <div id="app" class="app-container hidden">
         <div class="sidebar">
             <div class="sidebar-header">STEAMHUBCZ</div>
-            <div class="nav-item active" onclick="showPage('dashboard')"><span data-i18n="menu_dashboard">📊 Dashboard</span></div>
-            <div class="nav-item" onclick="showPage('faq')"><span data-i18n="menu_faq">❓ FAQ</span></div>
-            <div class="nav-item" onclick="showPage('events')"><span data-i18n="menu_events">📅 Eventy</span></div>
-            <div class="nav-item" onclick="showPage('settings')"><span data-i18n="menu_settings">⚙️ Nastavení</span></div>
+            <div class="nav-item active" onclick="showPage('dashboard')"><span>📊 Dashboard</span></div>
+            <div class="nav-item" onclick="showPage('faq')"><span>❓ FAQ</span></div>
+            <div class="nav-item" onclick="showPage('events')"><span>📅 Eventy</span></div>
+            <div class="nav-item" onclick="showPage('settings')"><span>⚙️ Nastavení</span></div>
         </div>
 
         <div class="main-content">
             <div class="top-bar">
-                <div id="page-title" data-i18n="menu_dashboard">DASHBOARD</div>
-                <div style="display:flex; align-items:center; gap:10px;">
+                <div class="left-side">
                     <img id="user-avatar" class="avatar-circle" src="">
                     <span id="user-name"></span>
                     <button onclick="logout()" style="background:#e74c3c; border:none; color:white; padding:5px 10px; border-radius:4px; cursor:pointer;" data-i18n="btn_logout">ODHLÁSIT</button>
                 </div>
+                <div class="center-side">Vítejte na stránce steamhub</div>
+                <div class="right-side" id="live-clock">00:00:00</div>
             </div>
 
             <div class="content-area">
@@ -212,24 +227,19 @@
 
                 <div id="page-settings" class="page hidden">
                     <div class="card">
-                        <h2 data-i18n="settings_profile_title">Můj Profil</h2>
+                        <h2 style="margin-top: 0;" data-i18n="settings_profile_title">Můj Profil</h2>
                         <input type="text" id="set-name" class="auth-input" style="color:black; background:#eee;" placeholder="Jméno" data-i18n-placeholder="placeholder_username">
                         <input type="text" id="set-img" class="auth-input" style="color:black; background:#eee;" placeholder="URL Profilovky">
                         <button onclick="saveProfile()" class="btn-steam" data-i18n="btn_save">Uložit</button>
                         
-                        <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
+                        <hr style="margin: 25px 0; border: 0; border-top: 1px solid #eee;">
                         
-                        <h3 data-i18n="settings_lang_title">Jazyk / Language</h3>
+                        <h3 style="margin-top: 0;" data-i18n="settings_lang_title">Jazyk / Language</h3>
                         <select id="lang-selector" class="lang-select" onchange="changeLanguage(this.value)">
                             <option value="cs">Čeština</option>
                             <option value="sk">Slovenčina</option>
                             <option value="en">English</option>
                         </select>
-
-                        <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
-                        
-                        <button onclick="muteMusic()" class="btn-steam" style="background:#95a5a6; width:48%;" data-i18n="btn_mute">Ztlumit hudbu</button>
-                        <button onclick="unmuteMusic()" class="btn-steam" style="background:#2ecc71; width:48%;" data-i18n="btn_unmute">Zapnout hudbu</button>
                     </div>
                 </div>
             </div>
@@ -266,18 +276,18 @@
                 dash_welcome_title: "Vítejte zpět!", dash_welcome_text: "Tento panel slouží pro správu a přehled o komunitě SteamHubCZ. Vyberte si sekci v levém menu.",
                 faq_title: "Často kladené dotazy", events_title: "Naplánované akce",
                 settings_profile_title: "Můj Profil", settings_lang_title: "Jazyk / Language",
-                btn_save: "Uložit", btn_mute: "Ztlumit hudbu", btn_unmute: "Zapnout hudbu",
+                btn_save: "Uložit",
                 alert_empty: "Vyplň všechna pole!", alert_exists: "Chyba: Na tento e-mail již existuje účet!", alert_reg_success: "Registrace byla úspěšná!",
-                alert_wrong_pass: "Nesprávné heslo!", alert_no_user: "Uživatel neexistuje!", alert_wrong_code: "Špatný kód!"
+                alert_wrong_pass: "Nesprávne heslo!", alert_no_user: "Uživatel neexistuje!", alert_wrong_code: "Špatný kód!"
             },
             sk: {
                 system_locked: "SYSTÉM UZAMKNUTÝ",
                 rules_title: "Pravidlá serveru SteamHub CZ (Skrátené)",
                 rule_1_title: "1. Základné správanie:", rule_1_desc: "Buďte slušní a rešpektujte ostatných. Nadávky, toxicita, rasizmus a diskriminácia sú zakázané.",
                 rule_2_title: "2. Komunikácia:", rule_2_desc: "Hovorte česky/slovensky. Žiadny spam, flood, CAPS LOCK ani neoprávnená reklama.",
-                rule_3_title: "3. Legálny obsah:", rule_3_desc: "Server je len pre legálne Steam hry. Zdieľanie crackov, torrentov, warezu alebo obchádzanie DRM sa trestá okamžitým permanentným banom. Zákaz NSFW a podvodných odkazov.",
+                rule_3_title: "3. Legálny obsah:", rule_3_desc: "Server je len pre legálne Steam hry. Zdieľanie crackov, torrentov, warezu alebo obchádzanie DRM se trestá okamžitým permanentným banom. Zákaz NSFW a podvodných odkazov.",
                 rule_4_title: "4. Hlas a chat:", rule_4_desc: "Nerušte ostatných (krik, soundboard), nenahrávajte nikoho bez súhlasu a poslúchajte moderátorov.",
-                rule_5_title: "5. Hranie:", rule_5_desc: "Zákaz cheatovania, zneužívania chýb a vydávania sa za admina. Za svoj účet si ručíte sami.",
+                rule_5_title: "5. Hranie:", rule_5_desc: "Zkaz cheatovania, zneužívania chýb a vydávania sa za admina. Za svoj účet si ručíte sami.",
                 rule_6_title: "6. Administratíva:", rule_6_desc: "Slovo adminov je konečné. Obchádzanie trestov (alt účty) vedie k permanentnému banu.",
                 rule_7_title: "7. Neaktivita:", rule_7_desc: "Dlhodobá neaktivita bez ospravedlnenia môže viesť k permanentnému banu (posudzuje sa individuálne).",
                 rule_8_title: "8. Tresty:", rule_8_desc: "Podľa závažnosti – napomenutie, mute, kick, dočasný alebo permanentný ban.",
@@ -289,7 +299,7 @@
                 placeholder_password: "Heslo", placeholder_username: "Užívateľské meno", placeholder_code: "Kód", placeholder_new_password: "Nové heslo",
                 btn_enter: "Vstúpiť", btn_register: "Registrovať účet",
                 link_forgot: "Zabudol si heslo?",
-                otp_note: "Na váš e-mail bol zaslaný overovací kód.", btn_confirm_code: "Potvrdiť kód",
+                otp_note: "Na váš e-mail bol zaslaný overovací kód.", btn_confirm_code: "Potvrdit kód",
                 reset_title: "Obnova hesla", reset_note: "Zadaj svoj registračný e-mail. Zašleme ti kód na obnovu.", btn_send_code: "Odoslať kód", btn_back: "Späť na prihlásenie",
                 reset_verify_title: "Zadaj kód a nové heslo", reset_verify_note: "Skontroluj svoju schránku a zadaj kód spoločne s novým heslom.", btn_change_password: "Zmeniť heslo",
                 menu_dashboard: "DASHBOARD", menu_faq: "FAQ", menu_events: "EVENTY", menu_settings: "NASTAVENIA",
@@ -297,7 +307,7 @@
                 dash_welcome_title: "Vitajte späť!", dash_welcome_text: "Tento panel slúži pre správu a prehľad o komunite SteamHubCZ. Vyberte si sekciu v ľavom menu.",
                 faq_title: "Často kladené otázky", events_title: "Naplánované akcie",
                 settings_profile_title: "Môj Profil", settings_lang_title: "Jazyk / Language",
-                btn_save: "Uložit", btn_mute: "Stlmiť hudbu", btn_unmute: "Zapnúť hudbu",
+                btn_save: "Uložiť",
                 alert_empty: "Vyplňte všetky polia!", alert_exists: "Chyba: Na tento e-mail už existuje účet!", alert_reg_success: "Registrácia bola úspešná!",
                 alert_wrong_pass: "Nesprávne heslo!", alert_no_user: "Užívateľ neexistuje!", alert_wrong_code: "Zlý kód!"
             },
@@ -328,7 +338,7 @@
                 dash_welcome_title: "Welcome back!", dash_welcome_text: "This dashboard is used to manage and view the SteamHubCZ community. Select a section from the left menu.",
                 faq_title: "Frequently Asked Questions", events_title: "Scheduled Events",
                 settings_profile_title: "My Profile", settings_lang_title: "Language / Jazyk",
-                btn_save: "Save", btn_mute: "Mute Music", btn_unmute: "Unmute Music",
+                btn_save: "Save",
                 alert_empty: "Please fill in all fields!", alert_exists: "Error: An account already exists for this email!", alert_reg_success: "Registration was successful!",
                 alert_wrong_pass: "Incorrect password!", alert_no_user: "User does not exist!", alert_wrong_code: "Wrong code!"
             }
@@ -336,38 +346,20 @@
 
         let currentLang = localStorage.getItem("sh_lang") || "cs";
 
-        // --- NASTAVENÍ A LOGIKA AUTOMATICKÉHO PŘEHRÁVÁNÍ VIDEÍ ---
-        const backgroundVideoUrl = "https://rr2---sn-2gb7snez.googlevideo.com/videoplayback/expire/1782673135/ei/jxpBau2fC-3Ii9oPqsuZuAk/ip/162.158.110.30/id/o-ANm5g7_kzGwiAkNSXfWW1uoIiZBcQ6TVGpTj6GP16F4Y/source/youtube/requiressl/yes/xpc/EgVo2aDSNQ%3D%3D/rms/au,au/ctier/A/pfa/5/hightc/yes/siu/1/bui/ARmQxEX5xaN5vVPDYbjjd6rn5QbHgAWAQRAEvtQMdFpkUWPfQkH3wr-M0YNcCoR0-IWoDpmv0w/spc/SQ-umqTeV1APpHmz1Iw6B1EhTA56RuGPlvMU1GVunKZ9gO6WW3pgNraPqQ/vprv/1/svpuc/1/mime/video%2Fmp4/rqh/1/gir/yes/clen/8855428043/dur/37250.099/lmt/1766912497891914/itag/298/keepalive/yes/fexp/51565115,51565682,52017146/txp/5532534/sparams/expire,ei,ip,id,itag,source,requiressl,xpc,ctier,pfa,hightc,siu,bui,spc,vprv,svpuc,mime,rqh,gir,clen,dur,lmt/sig/AHEqNM4wRAIgJegbrHapX5qlgiWuiUvv6j53LnNmMpESaiIipQDCpMACIHjH-GTGI2llVvGAo2q7ySmV3l6q6BlLufB7c6ImQ8SC/redirect_counter/1/rm/sn-4g5eye7z/rrc/104/req_id/7550b4a95f0ea3ee/cms_redirect/yes/cmsv/e/cps/907/ipbypass/yes/met/1782651549,/mh/bB/mip/2001:1aef:a1:a286:dd09:10c0:9d:397b/mm/31/mn/sn-2gb7snez/ms/au/mt/1782651225/mv/m/mvi/2/pl/30/lsparams/cps,ipbypass,met,mh,mip,mm,mn,ms,mv,mvi,pl,rms/lsig/APaTxxMwRgIhAI4Z0eNF8yvNdp7TAWC3giUZ1L6MYCV2IdiVq4eYjOJJAiEArh4ZvZHOEhyvTGE5_x-GnFj5bqO030iBYkxtNIjlX60%3D";
-
-        window.addEventListener('DOMContentLoaded', () => {
-            applyTranslations();
-            
-            const videoElement = document.getElementById('bg-video');
-            
-            // Jakmile intro skončí, přepne se zdroj na hlavní smyčkované video na pozadí
-            videoElement.addEventListener('ended', () => {
-                videoElement.src = backgroundVideoUrl;
-                videoElement.loop = true; // Hlavní video poběží pořád dokola
-                videoElement.play().catch(err => console.log("Automatické spuštění videa po intru selhalo:", err));
-            });
-        });
-
         function applyTranslations() {
             const langData = translations[currentLang];
             
-            // Překlad textů
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if (langData[key]) el.textContent = langData[key];
+            document.querySelectorAll("[data-i18n]").forEach(el => {
+                const key = el.getAttribute("data-i18n");
+                if (langData[key]) el.innerHTML = langData[key];
             });
 
-            // Překlad placeholderů
-            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
-                const key = el.getAttribute('data-i18n-placeholder');
-                if (langData[key]) el.setAttribute('placeholder', langData[langData[key] ? key : '']);
+            document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
+                const key = el.getAttribute("data-i18n-placeholder");
+                if (langData[key]) el.placeholder = langData[key];
             });
-            
-            const selector = document.getElementById('lang-selector');
+
+            const selector = document.getElementById("lang-selector");
             if(selector) selector.value = currentLang;
         }
 
@@ -377,80 +369,358 @@
             applyTranslations();
         }
 
-        // --- POMOCNÉ FUNKCE PRO ZOBRAZOVÁNÍ STRÁNEK / REGISTRACI ---
+        // Inicializace Firebase
+        const firebaseConfig = { databaseURL: "https://steamhubcz-default-rtdb.europe-west1.firebasedatabase.app/" };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        let generatedOTP, generatedResetCode, targetResetEmailKey;
+
+        // --- KONTROLA PRAVIDEL ---
         function acceptRules() {
             document.getElementById('step-rules').classList.add('hidden');
             document.getElementById('step-form').classList.remove('hidden');
         }
 
-        function switchAuthTab(tab) {
-            if (tab === 'login') {
-                document.getElementById('tab-login').classList.add('active');
-                document.getElementById('tab-register').classList.remove('active');
-                document.getElementById('auth-login-fields').classList.remove('hidden');
-                document.getElementById('auth-register-fields').classList.add('hidden');
-            } else {
-                document.getElementById('tab-login').classList.remove('active');
-                document.getElementById('tab-register').classList.add('active');
-                document.getElementById('auth-login-fields').classList.add('hidden');
-                document.getElementById('auth-register-fields').classList.remove('hidden');
-            }
+        // --- PŘEPÍNÁNÍ PANELŮ (LOGIN / REGISTRACE / FORGOT) ---
+        function switchAuthTab(type) {
+            document.getElementById('auth-tabs-nav').classList.remove('hidden');
+            document.getElementById('tab-login').classList.remove('active');
+            document.getElementById('tab-register').classList.remove('active');
+            document.getElementById('auth-login-fields').classList.add('hidden');
+            document.getElementById('auth-register-fields').classList.add('hidden');
+            document.getElementById('auth-step-otp').classList.add('hidden');
             document.getElementById('forgot-step-email').classList.add('hidden');
             document.getElementById('forgot-step-verify').classList.add('hidden');
+
+            if (type === 'login') {
+                document.getElementById('tab-login').classList.add('active');
+                document.getElementById('auth-login-fields').classList.remove('hidden');
+            } else if (type === 'register') {
+                document.getElementById('tab-register').classList.add('active');
+                document.getElementById('auth-register-fields').classList.remove('hidden');
+            }
         }
 
         function openForgotPassword() {
+            document.getElementById('auth-tabs-nav').classList.add('hidden');
             document.getElementById('auth-login-fields').classList.add('hidden');
             document.getElementById('forgot-step-email').classList.remove('hidden');
         }
 
-        function handleLogin() {
-            // Zde by byla tvoje Firebase autentizační logika. Pro ukázku rovnou pustíme uživatele dál.
-            document.getElementById('login-screen').classList.add('hidden');
-            document.getElementById('app').classList.remove('hidden');
-            document.getElementById('user-name').textContent = document.getElementById('auth_email').value || "Uživatel";
+        function escapeEmailKey(email) {
+            return email.toLowerCase().replace(/\./g, ',').replace(/@/g, '_at_');
         }
 
+        // --- REGISTRACE A OTP ---
+        let tempRegData = null;
+
         function handleRegister() {
-            alert(translations[currentLang].alert_reg_success);
-            switchAuthTab('login');
+            const name = document.getElementById('reg_name').value.trim();
+            const email = document.getElementById('reg_email').value.trim();
+            const pass = document.getElementById('reg_pass').value;
+            const lang = translations[currentLang];
+
+            if (!name || !email || !pass) {
+                alert(lang.alert_empty);
+                return;
+            }
+
+            const emailKey = escapeEmailKey(email);
+
+            db.ref('users/' + emailKey).once('value').then(snapshot => {
+                if (snapshot.exists()) {
+                    alert(lang.alert_exists);
+                } else {
+                    generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
+                    tempRegData = { name, email, pass, emailKey };
+
+                    emailjs.send("default_service", "template_otp", {
+                        to_email: email,
+                        to_name: name,
+                        otp_code: generatedOTP
+                    }).then(() => {
+                        document.getElementById('auth-register-fields').classList.add('hidden');
+                        document.getElementById('auth-step-otp').classList.remove('hidden');
+                    }).catch(err => {
+                        alert("Chyba při odesílání e-mailu.");
+                    });
+                }
+            });
+        }
+
+        function verifyOTP() {
+            const enteredCode = document.getElementById('otp_input').value.trim();
+            const lang = translations[currentLang];
+
+            if (enteredCode === generatedOTP && tempRegData) {
+                db.ref('users/' + tempRegData.emailKey).set({
+                    username: tempRegData.name,
+                    email: tempRegData.email,
+                    password: tempRegData.pass,
+                    avatar: "https://avatars.akamai.steamstatic.com/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb_full.jpg"
+                }).then(() => {
+                    alert(lang.alert_reg_success);
+                    switchAuthTab('login');
+                });
+            } else {
+                alert(lang.alert_wrong_code);
+            }
+        }
+
+        // --- PŘIHLÁŠENÍ ---
+        function handleLogin() {
+            const email = document.getElementById('auth_email').value.trim();
+            const pass = document.getElementById('auth_pass').value;
+            const lang = translations[currentLang];
+
+            if (!email || !pass) {
+                alert(lang.alert_empty);
+                return;
+            }
+
+            const emailKey = escapeEmailKey(email);
+
+            db.ref('users/' + emailKey).once('value').then(snapshot => {
+                if (snapshot.exists()) {
+                    const userData = snapshot.val();
+                    if (userData.password === pass) {
+                        initUserSession(userData);
+                    } else {
+                        alert(lang.alert_wrong_pass);
+                    }
+                } else {
+                    alert(lang.alert_no_user);
+                }
+            });
+        }
+
+        function initUserSession(userData) {
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('app').classList.remove('hidden');
+
+            document.getElementById('user-name').innerText = userData.username;
+            document.getElementById('user-avatar').src = userData.avatar;
+
+            document.getElementById('set-name').value = userData.username;
+            document.getElementById('set-img').value = userData.avatar;
+
+            localStorage.setItem("sh_logged_user", JSON.stringify(userData));
+            showPage('dashboard');
         }
 
         function logout() {
+            localStorage.removeItem("sh_logged_user");
             document.getElementById('app').classList.add('hidden');
             document.getElementById('login-screen').classList.remove('hidden');
             switchAuthTab('login');
         }
 
+        // --- OBNOVA HESLA ---
+        function sendResetCode() {
+            const email = document.getElementById('forgot_email').value.trim();
+            const lang = translations[currentLang];
+
+            if (!email) {
+                alert(lang.alert_empty);
+                return;
+            }
+
+            targetResetEmailKey = escapeEmailKey(email);
+
+            db.ref('users/' + targetResetEmailKey).once('value').then(snapshot => {
+                if (snapshot.exists()) {
+                    generatedResetCode = Math.floor(100000 + Math.random() * 900000).toString();
+                    
+                    emailjs.send("default_service", "template_reset", {
+                        to_email: email,
+                        reset_code: generatedResetCode
+                    }).then(() => {
+                        document.getElementById('forgot-step-email').classList.add('hidden');
+                        document.getElementById('forgot-step-verify').classList.remove('hidden');
+                    });
+                } else {
+                    alert(lang.alert_no_user);
+                }
+            });
+        }
+
+        // --- HORNÍ LIŠTA: HODINY ---
+        function startLiveClock() {
+            setInterval(() => {
+                const now = new Date();
+                const hours = String(now.getHours()).padStart(2, '0');
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                const seconds = String(now.getSeconds()).padStart(2, '0');
+                document.getElementById('live-clock').innerText = `${hours}:${minutes}:${seconds}`;
+            }, 1000);
+        }
+
+        function verifyAndChangePassword() {
+            const code = document.getElementById('forgot_code').value.trim();
+            const newPass = document.getElementById('forgot_new_pass').value;
+            const lang = translations[currentLang];
+
+            if (!code || !newPass) {
+                alert(lang.alert_empty);
+                return;
+            }
+
+            if (code === generatedResetCode && targetResetEmailKey) {
+                db.ref('users/' + targetResetEmailKey).update({
+                    password: newPass
+                }).then(() => {
+                    alert("Heslo bylo úspěšně změněno!");
+                    switchAuthTab('login');
+                });
+            } else {
+                alert(lang.alert_wrong_code);
+            }
+        }
+
+        // --- ZOBRAZOVÁNÍ STRÁNEK ---
         function showPage(pageId) {
             document.querySelectorAll('.page').forEach(page => page.classList.add('hidden'));
-            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
             
-            document.getElementById(`page-${pageId}`).classList.remove('hidden');
-            document.getElementById('page-title').textContent = pageId.toUpperCase();
-            
-            // Nastavení aktivní třídy v menu
-            event.currentTarget.classList.add('active');
+            const targetPage = document.getElementById('page-' + pageId);
+            if (targetPage) targetPage.classList.remove('hidden');
+
+            if (pageId === 'dashboard') loadDashboardData();
+            if (pageId === 'faq') loadFAQData();
+            if (pageId === 'events') loadEventsData();
         }
 
-        function muteMusic() {
-            document.getElementById('bg-video').muted = true;
+        function loadDashboardData() {
+            db.ref('announcements').once('value').then(snapshot => {
+                const box = document.getElementById('announcement-box');
+                if (snapshot.exists() && snapshot.val().text) {
+                    box.innerText = snapshot.val().text;
+                    box.classList.remove('hidden');
+                } else {
+                    box.classList.add('hidden');
+                }
+            });
         }
 
-        function unmuteMusic() {
-            document.getElementById('bg-video').muted = false;
+        function loadFAQData() {
+            const list = document.getElementById('fb-faq-list');
+            db.ref('faq').once('value').then(snapshot => {
+                if (snapshot.exists()) {
+                    list.innerHTML = '';
+                    snapshot.forEach(child => {
+                        const data = child.val();
+                        list.innerHTML += `
+                            <div class="faq-item">
+                                <div class="faq-question">💡 ${data.question}</div>
+                                <div class="faq-answer">${data.answer}</div>
+                            </div>
+                        `;
+                    });
+                } else {
+                    list.innerText = 'Žádné FAQ položky nebyly nalezeny.';
+                }
+            });
         }
 
-        // Zbývající prázdné funkce pro zachování kompatibility s tvými onclicky
-        function saveProfile() { alert("Profil uložen!"); }
-        function sendResetCode() { 
-            document.getElementById('forgot-step-email').classList.add('hidden');
-            document.getElementById('forgot-step-verify').classList.remove('hidden');
+        function loadEventsData() {
+            const list = document.getElementById('fb-events-list');
+            db.ref('events').once('value').then(snapshot => {
+                if (snapshot.exists()) {
+                    list.innerHTML = '';
+                    snapshot.forEach(child => {
+                        const data = child.val();
+                        const eventId = child.key;
+                        list.innerHTML += `
+                            <div class="card" style="border-left: 5px solid var(--primary-blue);">
+                                <h3>🎮 ${data.title}</h3>
+                                <p>${data.description}</p>
+                                <div class="event-timer" id="timer-${eventId}">--:--:--</div>
+                            </div>
+                        `;
+                        startEventCountdown(eventId, data.timestamp);
+                    });
+                } else {
+                    list.innerText = 'Momentálně nejsou naplánované žádné akce.';
+                }
+            });
         }
-        function verifyAndChangePassword() {
-            alert("Heslo změněno!");
-            switchAuthTab('login');
+
+        function startEventCountdown(id, targetTimestamp) {
+            function updateTimer() {
+                const el = document.getElementById('timer-' + id);
+                if (!el) return;
+
+                const now = new Date().getTime();
+                const distance = targetTimestamp - now;
+
+                if (distance < 0) {
+                    el.innerText = "AKCE PRÁVĚ PROBÍHÁ / SKONČILA";
+                    return;
+                }
+
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                el.innerText = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+            }
+            setInterval(updateTimer, 1000);
+            updateTimer();
         }
+
+        function saveProfile() {
+            const localUser = localStorage.getItem("sh_logged_user");
+            if (!localUser) return;
+
+            const current = JSON.parse(localUser);
+            const newName = document.getElementById('set-name').value.trim();
+            const newImg = document.getElementById('set-img').value.trim();
+            const emailKey = escapeEmailKey(current.email);
+
+            if (!newName || !newImg) {
+                alert(translations[currentLang].alert_empty);
+                return;
+            }
+
+            db.ref('users/' + emailKey).update({
+                username: newName,
+                avatar: newImg
+            }).then(() => {
+                current.username = newName;
+                current.avatar = newImg;
+                localStorage.setItem("sh_logged_user", JSON.stringify(current));
+                
+                document.getElementById('user-name').innerText = newName;
+                document.getElementById('user-avatar').src = newImg;
+                alert("Profil byl úspěšně aktualizován!");
+            });
+        }
+
+        function checkSystemLock() {
+            db.ref('system_status').on('value', snapshot => {
+                if (snapshot.exists() && snapshot.val().locked === true) {
+                    document.getElementById('system-lock-screen').style.display = 'flex';
+                    if(snapshot.val().message) {
+                        document.getElementById('lock-message').innerText = snapshot.val().message;
+                    }
+                } else {
+                    document.getElementById('system-lock-screen').style.display = 'none';
+                }
+            });
+        }
+
+        // --- INICIALIZACE PŘI NAČTENÍ ---
+        window.onload = function() {
+            applyTranslations();
+            checkSystemLock();
+            startLiveClock();
+
+            const cachedUser = localStorage.getItem("sh_logged_user");
+            if (cachedUser) {
+                initUserSession(JSON.parse(cachedUser));
+            }
+        };
     </script>
 </body>
 </html>
