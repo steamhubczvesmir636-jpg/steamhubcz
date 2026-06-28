@@ -23,7 +23,7 @@
 
         body, html { margin: 0; padding: 0; height: 100%; font-family: 'Segoe UI', Arial, sans-serif; background-color: var(--bg-color); color: var(--text-main); overflow: hidden; }
         
-        /* Video na pozadí upravené pro MP4 odkaz */
+        /* Video na pozadí */
         .video-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: #000; pointer-events: none; }
         .video-bg video { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.3); }
 
@@ -34,11 +34,6 @@
         .auth-input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 6px; border: 1px solid #2a475e; background: #1b2838; color: white; box-sizing: border-box; }
         .btn-steam { width: 100%; padding: 12px; background: var(--primary-blue); color: #171a21; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; text-transform: uppercase; margin-top: 10px; }
         .btn-steam:hover { filter: brightness(1.1); }
-        
-        .rules-container { text-align: left; background: rgba(27, 40, 56, 0.8); padding: 20px; border-radius: 8px; margin-top: 15px; border: 1px solid #2a475e; font-size: 0.9rem; line-height: 1.5; }
-        .rules-title { color: var(--accent-orange); font-weight: bold; font-size: 1.2rem; border-bottom: 1px solid #2a475e; padding-bottom: 8px; margin-bottom: 12px; text-align: center; }
-        .rule-item { margin-bottom: 10px; color: #c7d5e0; }
-        .rule-item strong { color: white; }
 
         /* Animované otevírání menu při najetí (hover) */
         .app-container { display: flex; height: 100vh; overflow: hidden; }
@@ -57,7 +52,7 @@
 
         .main-content { flex: 1; overflow-y: auto; background: rgba(235, 240, 245, 0.85); display: flex; flex-direction: column; }
         
-        /* Horní lišta rozvržená na: Menu vlevo (ikona/sidebar), Název uprostřed, Čas vpravo */
+        /* Horní lišta rozvržená na: Menu vlevo, Název uprostřed, Čas vpravo */
         .top-bar { background: #171a21; padding: 12px 30px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; color: white; }
         .top-bar .left-side { display: flex; align-items: center; gap: 10px; }
         .top-bar .center-side { font-weight: bold; font-size: 1.1rem; text-align: center; }
@@ -94,35 +89,18 @@
         <p id="lock-message" style="font-size: 1.2rem; color: #ccc;">Probíhá plánovaná údržba portálu SteamHubCZ. Zkuste to prosím později.</p>
     </div>
 
-    <!-- HTML5 Video přehrávač přehrávající zadanou MP4 adresu -->
+    <!-- Intro video na pozadí -->
     <div class="video-bg">
         <video autoplay muted loop playsinline>
-            <source src="https://rr4---sn-2gb7sn7r.googlevideo.com/videoplayback/expire/1782673213/ei/3RpBavfINdn5xN8Pn-XBgAg/ip/172.70.248.168/id/o-ADwNiMX2uTnRkZIzeP4PquekrLXwUSUht2Zy6KwCtxYg/source/youtube/requiressl/yes/xpc/EgVo2aDSNQ%3D%3D/rms/au,au/ctier/A/pfa/5/hightc/yes/siu/1/bui/ARmQxEXgwe1PRG-vD8BADLFMIQprxed88Wj7szF2xKSbGKJVkFUYOmZDn-THJXCpWq_KbYYK8w/spc/SQ-umjJ_EiytRmnOKkDMupylmm6RKb3yYTbVAHhZRu4Da6H6ZNf0dCoiKA/vprv/1/svpuc/1/mime/video%2Fmp4/rqh/1/gir/yes/clen/744488/dur/5.950/lmt/1744328149641463/itag/299/keepalive/yes/fexp/51565115,51565681/txp/5309224/sparams/expire,ei,ip,id,itag,source,requiressl,xpc,ctier,pfa,hightc,siu,bui,spc,vprv,svpuc,mime,rqh,gir,clen,dur,lmt/sig/AHEqNM4wRQIhANeoRSnjw5U4jVR6sEHqCIiWvBNj3_yITFV5Vmh2lsSOAiBsc7t4ud7Pb_htRaL-Vl30RXOnzEdwf54hJ7fQd2gmHA%3D%3D/redirect_counter/1/rm/sn-4g5yyy7e/rrc/104/req_id/354cb27fb68ba3ee/cms_redirect/yes/cmsv/e/cps/100/ipbypass/yes/met/1782651626,/mh/Ab/mip/2001:1aef:a1:a286:dd09:10c0:9d:397b/mm/31/mn/sn-2gb7sn7r/ms/au/mt/1782651225/mv/m/mvi/4/pl/30/lsparams/cps,ipbypass,met,mh,mip,mm,mn,ms,mv,mvi,pl,rms/lsig/APaTxxMwRQIhAIOuLxwZAEC19AqoR-6hIknA08MiMO98W__80tp18nukAiAOBc5_p3_zbA28mCK9jNygRQaXNB5iEYYcFAJfDiI0Gw%3D%3D" type="video/mp4">
+            <source src="intro.mp4" type="video/mp4">
         </video>
     </div>
 
     <div id="login-screen">
         <div class="auth-card">
             
-            <div id="step-rules">
-                <div class="rules-container">
-                    <div class="rules-title" data-i18n="rules_title">Pravidla serveru SteamHub CZ (Zkráceno)</div>
-                    <div class="rule-item"><strong data-i18n="rule_1_title">1. Základní chování:</strong> <span data-i18n="rule_1_desc">Buďte slušní a respektujte ostatní. Nadávky, toxicita, rasismus a diskriminace jsou zakázány.</span></div>
-                    <div class="rule-item"><strong data-i18n="rule_2_title">2. Komunikace:</strong> <span data-i18n="rule_2_desc">Mluvte česky/slovensky. Žádný spam, flood, CAPS LOCK ani neoprávněná reklama.</span></div>
-                    <div class="rule-item"><strong data-i18n="rule_3_title">3. Legální obsah:</strong> <span data-i18n="rule_3_desc">Server je pouze pro legální Steam hry. Sdílení cracků, torrentů, warezu nebo obcházení DRM se trestá okamžitým permanentním banem. Zákaz NSFW a podvodných odkazů.</span></div>
-                    <div class="rule-item"><strong data-i18n="rule_4_title">4. Hlas a chat:</strong> <span data-i18n="rule_4_desc">Nerušte ostatní (křik, soundboard), nenahrávejte nikoho bez souhlasu a poslouchejte moderátory.</span></div>
-                    <div class="rule-item"><strong data-i18n="rule_5_title">5. Hraní:</strong> <span data-i18n="rule_5_desc">Zákaz cheatování, zneužívání chyb a vydávání se za admina. Za svůj účet si ručíte sami.</span></div>
-                    <div class="rule-item"><strong data-i18n="rule_6_title">6. Administrativa:</strong> <span data-i18n="rule_6_desc">Slovo adminů je konečné. Obcházení trestů (alt účty) vede k permanentnímu banu.</span></div>
-                    <div class="rule-item"><strong data-i18n="rule_7_title">7. Neaktivita:</strong> <span data-i18n="rule_7_desc">Dlouhodobá neaktivita bez omluvy může vést k permanentnímu banu (posuzuje se individuálně).</span></div>
-                    <div class="rule-item"><strong data-i18n="rule_8_title">8. Tresty:</strong> <span data-i18n="rule_8_desc">Podle závažnosti – napomenutí, mute, kick, dočasný nebo permanentní ban.</span></div>
-                    <div class="rule-item" style="margin-top: 15px; border-top: 1px dashed #2a475e; padding-top: 10px; text-align: center; color: var(--primary-blue); font-style: italic;" data-i18n="rules_agree_note">
-                        Připojením na server vyjadřujete s pravidly souhlas. Vedení si vyhrazuje právo pravidla kdykoliv upravit.
-                    </div>
-                </div>
-                <button class="btn-steam" style="background: #2ecc71; margin-top: 20px;" onclick="acceptRules()" data-i18n="btn_agree">SOUHLASÍM A CHCI POKRAČOVAT</button>
-            </div>
-
-            <div id="step-form" class="hidden">
+            <!-- Formulář se zobrazuje ihned bez předchozího kroku s pravidly -->
+            <div id="step-form">
                 <div id="auth-tabs-nav">
                     <h1 style="color: var(--primary-blue); margin-bottom: 5px;" data-i18n="welcome_title">Vítejte na stránce Steamhub</h1>
                     <p style="color: #888; font-size: 1rem; margin-top: 0; margin-bottom: 20px;" data-i18n="welcome_subtitle">Přihlásit se nebo registrace</p>
@@ -185,7 +163,6 @@
         </div>
 
         <div class="main-content">
-            <!-- Horní lišta: vlevo profil s tlačítkem, uprostřed statický nápis, vpravo reálný čas -->
             <div class="top-bar">
                 <div class="left-side">
                     <img id="user-avatar" class="avatar-circle" src="">
@@ -253,17 +230,6 @@
         const translations = {
             cs: {
                 system_locked: "SYSTÉM UZAMČEN",
-                rules_title: "Pravidla serveru SteamHub CZ (Zkráceno)",
-                rule_1_title: "1. Základní chování:", rule_1_desc: "Buďte slušní a respektujte ostatní. Nadávky, toxicita, rasismus a diskriminace jsou zakázány.",
-                rule_2_title: "2. Komunikace:", rule_2_desc: "Mluvte česky/slovensky. Žádný spam, flood, CAPS LOCK ani neoprávněná reklama.",
-                rule_3_title: "3. Legální obsah:", rule_3_desc: "Server je pouze pro legální Steam hry. Zdálení cracků, torrentů, warezu nebo obcházení DRM se trestá okamžitým permanentním banem. Zákaz NSFW a podvodných odkazů.",
-                rule_4_title: "4. Hlas a chat:", rule_4_desc: "Nerušte ostatní (křik, soundboard), nenahrávejte nikoho bez souhlasu a poslouchejte moderátory.",
-                rule_5_title: "5. Hraní:", rule_5_desc: "Zákaz cheatování, zneužívání chyb a vydávání se za admina. Za svůj účet si ručíte sami.",
-                rule_6_title: "6. Administrativa:", rule_6_desc: "Slovo adminů je konečné. Obcházení trestů (alt účty) vede k permanentnímu banu.",
-                rule_7_title: "7. Neaktivita:", rule_7_desc: "Dlouhodobá neaktivita bez omluvy může vést k permanentnímu banu (posuzuje se individuálně).",
-                rule_8_title: "8. Tresty:", rule_8_desc: "Podle závažnosti – napomenutí, mute, kick, dočasný nebo permanentní ban.",
-                rules_agree_note: "Připojením na server vyjadřujete s pravidly souhlas. Vedení si vyhrazuje právo pravidla kdykoliv upravit.",
-                btn_agree: "SOUHLASÍM A CHCI POKRAČOVAT",
                 welcome_title: "Vítejte na stránce Steamhub",
                 welcome_subtitle: "Přihlásit se nebo registrace",
                 tab_login: "Přihlášení", tab_register: "Registrace",
@@ -284,17 +250,6 @@
             },
             sk: {
                 system_locked: "SYSTÉM UZAMKNUTÝ",
-                rules_title: "Pravidlá serveru SteamHub CZ (Skrátené)",
-                rule_1_title: "1. Základné správanie:", rule_1_desc: "Buďte slušní a rešpektujte ostatných. Nadávky, toxicita, rasizmus a diskriminácia sú zakázané.",
-                rule_2_title: "2. Komunikácia:", rule_2_desc: "Hovorte česky/slovensky. Žiadny spam, flood, CAPS LOCK ani neoprávnená reklama.",
-                rule_3_title: "3. Legálny obsah:", rule_3_desc: "Server je len pre legálne Steam hry. Zdieľanie crackov, torrentov, warezu alebo obchádzanie DRM se trestá okamžitým permanentným banom. Zákaz NSFW a podvodných odkazov.",
-                rule_4_title: "4. Hlas a chat:", rule_4_desc: "Nerušte ostatných (krik, soundboard), nenahrávajte nikoho bez súhlasu a poslúchajte moderátorov.",
-                rule_5_title: "5. Hranie:", rule_5_desc: "Zkaz cheatovania, zneužívania chýb a vydávania sa za admina. Za svoj účet si ručíte sami.",
-                rule_6_title: "6. Administratíva:", rule_6_desc: "Slovo adminov je konečné. Obchádzanie trestov (alt účty) vedie k permanentnému banu.",
-                rule_7_title: "7. Neaktivita:", rule_7_desc: "Dlhodobá neaktivita bez ospravedlnenia môže viesť k permanentnému banu (posudzuje sa individuálne).",
-                rule_8_title: "8. Tresty:", rule_8_desc: "Podľa závažnosti – napomenutie, mute, kick, dočasný alebo permanentný ban.",
-                rules_agree_note: "Pripojením na server vyjadrujete s pravidlami súhlas. Vedení si vyhradzuje právo pravidlá kedykoľvek upraviť.",
-                btn_agree: "SÚHLASÍM A CHCEM POKRAČOVAŤ",
                 welcome_title: "Vitajte na stránce Steamhub",
                 welcome_subtitle: "Prihlásiť sa alebo registrácia",
                 tab_login: "Prihlásenie", tab_register: "Registrácia",
@@ -306,8 +261,8 @@
                 reset_verify_title: "Zadaj kód a nové heslo", reset_verify_note: "Skontroluj svoju schránku a zadaj kód spoločne s novým heslom.", btn_change_password: "Zmeniť heslo",
                 menu_dashboard: "DASHBOARD", menu_faq: "FAQ", menu_events: "EVENTY", menu_settings: "NASTAVENIA",
                 btn_logout: "ODHLÁSIT", discord_btn_text: "PRIPOJ SA NA NÁŠ DISCORD SERVER",
-                dash_welcome_title: "Vitajte späť!", dash_welcome_text: "Tento panel slúži pre správu a prehľad o komunite SteamHubCZ. Vyberte si sekciu v ľavom menu.",
-                faq_title: "Často kladené otázky", events_title: "Naplánované akcie",
+                dash_welcome_title: "Vitajte späť!", dash_welcome_text: "Tento panel slúži pre správu a prehľad o komunite SteamHubCZ. Vyberte si sekci v ľavom menu.",
+                faq_title: "Často kladené otázky", events_title: "Naplánované akce",
                 settings_profile_title: "Môj Profil", settings_lang_title: "Jazyk / Language",
                 btn_save: "Uložiť",
                 alert_empty: "Vyplňte všetky polia!", alert_exists: "Chyba: Na tento e-mail už existuje účet!", alert_reg_success: "Registrácia bola úspešná!",
@@ -315,17 +270,6 @@
             },
             en: {
                 system_locked: "SYSTEM LOCKED",
-                rules_title: "SteamHub CZ Server Rules (Shortened)",
-                rule_1_title: "1. Basic Behavior:", rule_1_desc: "Be polite and respect others. Insults, toxicity, racism, and discrimination are strictly prohibited.",
-                rule_2_title: "2. Communication:", rule_2_desc: "Speak Czech/Slovak. No spam, flood, CAPS LOCK, or unauthorized advertising.",
-                rule_3_title: "3. Legal Content:", rule_3_desc: "The server is only for legal Steam games. Sharing cracks, torrents, warez, or bypassing DRM is punished with an immediate permanent ban. No NSFW or scam links.",
-                rule_4_title: "4. Voice & Chat:", rule_4_desc: "Do not disturb others (screaming, soundboard), do not record anyone without consent, and listen to moderators.",
-                rule_5_title: "5. Gaming:", rule_5_desc: "Cheating, exploiting bugs, and impersonating admins are forbidden. You are responsible for your own account.",
-                rule_6_title: "6. Administration:", rule_6_desc: "The admins' decision is final. Bypassing punishments (alt accounts) leads to a permanent ban.",
-                rule_7_title: "7. Inactivity:", rule_7_desc: "Long-term inactivity without an excuse can lead to a permanent ban (evaluated individually).",
-                rule_8_title: "8. Punishments:", rule_8_desc: "Depending on severity – warning, mute, kick, temporary or permanent ban.",
-                rules_agree_note: "By joining the server, you agree to these rules. Management reserves the right to modify rules at any time.",
-                btn_agree: "I AGREE AND WANT TO CONTINUE",
                 welcome_title: "Welcome to Steamhub",
                 welcome_subtitle: "Login or registration",
                 tab_login: "Login", tab_register: "Register",
@@ -378,13 +322,7 @@
 
         let generatedOTP, generatedResetCode, targetResetEmailKey;
 
-        // --- KONTROLA PRAVIDEL ---
-        function acceptRules() {
-            document.getElementById('step-rules').classList.add('hidden');
-            document.getElementById('step-form').classList.remove('hidden');
-        }
-
-        // --- PŘEPÍNÁNÍ PANELŮ (LOGIN / REGISTRACE / FORGOT) ---
+        // --- PŘEPÍNÁNÍ PANELŮ ---
         function switchAuthTab(type) {
             document.getElementById('auth-tabs-nav').classList.remove('hidden');
             document.getElementById('tab-login').classList.remove('active');
@@ -414,7 +352,7 @@
             return email.toLowerCase().replace(/\./g, ',').replace(/@/g, '_at_');
         }
 
-        // --- REGISTRACE A OTP ---
+        // --- REGISTRACE A OTP (Změněno na tvé reálné EmailJS ID) ---
         let tempRegData = null;
 
         function handleRegister() {
@@ -437,7 +375,7 @@
                     generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
                     tempRegData = { name, email, pass, emailKey };
 
-                    emailjs.send("default_service", "template_otp", {
+                    emailjs.send("service_0jeaxzq", "template_6jc20eh", {
                         to_email: email,
                         to_name: name,
                         otp_code: generatedOTP
@@ -518,7 +456,7 @@
             switchAuthTab('login');
         }
 
-        // --- OBNOVA HESLA ---
+        // --- OBNOVA HESLA (Změněno na tvé reálné EmailJS ID) ---
         function sendResetCode() {
             const email = document.getElementById('forgot_email').value.trim();
             const lang = translations[currentLang];
@@ -534,7 +472,7 @@
                 if (snapshot.exists()) {
                     generatedResetCode = Math.floor(100000 + Math.random() * 900000).toString();
                     
-                    emailjs.send("default_service", "template_reset", {
+                    emailjs.send("service_0jeaxzq", "template_tmaxtx4", {
                         to_email: email,
                         reset_code: generatedResetCode
                     }).then(() => {
@@ -545,17 +483,6 @@
                     alert(lang.alert_no_user);
                 }
             });
-        }
-
-        // --- HORNÍ LIŠTA: HODINY ---
-        function startLiveClock() {
-            setInterval(() => {
-                const now = new Date();
-                const hours = String(now.getHours()).padStart(2, '0');
-                const minutes = String(now.getMinutes()).padStart(2, '0');
-                const seconds = String(now.getSeconds()).padStart(2, '0');
-                document.getElementById('live-clock').innerText = `${hours}:${minutes}:${seconds}`;
-            }, 1000);
         }
 
         function verifyAndChangePassword() {
@@ -578,6 +505,17 @@
             } else {
                 alert(lang.alert_wrong_code);
             }
+        }
+
+        // --- HORNÍ LIŠTA: HODINY ---
+        function startLiveClock() {
+            setInterval(() => {
+                const now = new Date();
+                const hours = String(now.getHours()).padStart(2, '0');
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                const seconds = String(now.getSeconds()).padStart(2, '0');
+                document.getElementById('live-clock').innerText = `${hours}:${minutes}:${seconds}`;
+            }, 1000);
         }
 
         // --- ZOBRAZOVÁNÍ STRÁNEK ---
