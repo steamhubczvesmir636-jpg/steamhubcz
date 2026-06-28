@@ -23,9 +23,9 @@
 
         body, html { margin: 0; padding: 0; height: 100%; font-family: 'Segoe UI', Arial, sans-serif; background-color: var(--bg-color); color: var(--text-main); overflow: hidden; }
         
-        /* Úprava pro nativní video na pozadí */
+        /* Styl pro video pozadí přizpůsobený pro HTML5 video prvek */
         .video-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: #000; pointer-events: none; }
-        .video-bg video { width: 100vw; height: 56.25vw; min-height: 100vh; min-width: 177.77vh; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); filter: brightness(0.3); object-fit: cover; }
+        .video-bg video { width: 100vw; height: 56.25vw; min-height: 100vh; min-width: 177.77vh; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); filter: brightness(0.3); pointer-events: none; object-fit: cover; }
 
         #system-lock-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; color: white; z-index: 10000; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; box-sizing: border-box; }
 
@@ -81,7 +81,9 @@
     </div>
 
     <div class="video-bg">
-        <video id="bgVideo" autoplay muted playsinline></video>
+        <video id="bg-video" autoplay muted playsinline>
+            <source id="video-source" src="https://rr4---sn-2gb7sn7r.googlevideo.com/videoplayback/expire/1782673213/ei/3RpBavfINdn5xN8Pn-XBgAg/ip/172.70.248.168/id/o-ADwNiMX2uTnRkZIzeP4PquekrLXwUSUht2Zy6KwCtxYg/source/youtube/requiressl/yes/xpc/EgVo2aDSNQ%3D%3D/rms/au,au/ctier/A/pfa/5/hightc/yes/siu/1/bui/ARmQxEXgwe1PRG-vD8BADLFMIQprxed88Wj7szF2xKSbGKJVkFUYOmZDn-THJXCpWq_KbYYK8w/spc/SQ-umjJ_EiytRmnOKkDMupylmm6RKb3yYTbVAHhZRu4Da6H6ZNf0dCoiKA/vprv/1/svpuc/1/mime/video%2Fmp4/rqh/1/gir/yes/clen/744488/dur/5.950/lmt/1744328149641463/itag/299/keepalive/yes/fexp/51565115,51565681/txp/5309224/sparams/expire,ei,ip,id,itag,source,requiressl,xpc,ctier,pfa,hightc,siu,bui,spc,vprv,svpuc,mime,rqh,gir,clen,dur,lmt/sig/AHEqNM4wRQIhANeoRSnjw5U4jVR6sEHqCIiWvBNj3_yITFV5Vmh2lsSOAiBsc7t4ud7Pb_htRaL-Vl30RXOnzEdwf54hJ7fQd2gmHA%3D%3D/redirect_counter/1/rm/sn-4g5yyy7e/rrc/104/req_id/354cb27fb68ba3ee/cms_redirect/yes/cmsv/e/cps/100/ipbypass/yes/met/1782651626,/mh/Ab/mip/2001:1aef:a1:a286:dd09:10c0:9d:397b/mm/31/mn/sn-2gb7sn7r/ms/au/mt/1782651225/mv/m/mvi/4/pl/30/lsparams/cps,ipbypass,met,mh,mip,mm,mn,ms,mv,mvi,pl,rms/lsig/APaTxxMwRQIhAIOuLxwZAEC19AqoR-6hIknA08MiMO98W__80tp18nukAiAOBc5_p3_zbA28mCK9jNygRQaXNB5iEYYcFAJfDiI0Gw%3D%3D" type="video/mp4">
+        </video>
     </div>
 
     <div id="login-screen">
@@ -235,39 +237,6 @@
     </div>
 
     <script>
-        // --- ADRESY VIDEÍ (Nativní linky) ---
-        const introUrl = "https://rr4---sn-2gb7sn7r.googlevideo.com/videoplayback/expire/1782673213/ei/3RpBavfINdn5xN8Pn-XBgAg/ip/172.70.248.168/id/o-ADwNiMX2uTnRkZIzeP4PquekrLXwUSUht2Zy6KwCtxYg/source/youtube/requiressl/yes/xpc/EgVo2aDSNQ%3D%3D/rms/au,au/ctier/A/pfa/5/hightc/yes/siu/1/bui/ARmQxEXgwe1PRG-vD8BADLFMIQprxed88Wj7szF2xKSbGKJVkFUYOmZDn-THJXCpWq_KbYYK8w/spc/SQ-umjJ_EiytRmnOKkDMupylmm6RKb3yYTbVAHhZRu4Da6H6ZNf0dCoiKA/vprv/1/svpuc/1/mime/video%2Fmp4/rqh/1/gir/yes/clen/744488/dur/5.950/lmt/1744328149641463/itag/299/keepalive/yes/fexp/51565115,51565681/txp/5309224/sparams/expire,ei,ip,id,itag,source,requiressl,xpc,ctier,pfa,hightc,siu,bui,spc,vprv,svpuc,mime,rqh,gir,clen,dur,lmt/sig/AHEqNM4wRQIhANeoRSnjw5U4jVR6sEHqCIiWvBNj3_yITFV5Vmh2lsSOAiBsc7t4ud7Pb_htRaL-Vl30RXOnzEdwf54hJ7fQd2gmHA%3D%3D/redirect_counter/1/rm/sn-4g5yyy7e/rrc/104/req_id/354cb27fb68ba3ee/cms_redirect/yes/cmsv/e/cps/100/ipbypass/yes/met/1782651626,/mh/Ab/mip/2001:1aef:a1:a286:dd09:10c0:9d:397b/mm/31/mn/sn-2gb7sn7r/ms/au/mt/1782651225/mv/m/mvi/4/pl/30/lsparams/cps,ipbypass,met,mh,mip,mm,mn,ms,mv,mvi,pl,rms/lsig/APaTxxMwRQIhAIOuLxwZAEC19AqoR-6hIknA08MiMO98W__80tp18nukAiAOBc5_p3_zbA28mCK9jNygRQaXNB5iEYYcFAJfDiI0Gw%3D%3D";
-        const backgroundUrl = "https://rr2---sn-2gb7snez.googlevideo.com/videoplayback/expire/1782673135/ei/jxpBau2fC-3Ii9oPqsuZuAk/ip/162.158.110.30/id/o-ANm5g7_kzGwiAkNSXfWW1uoIiZBcQ6TVGpTj6GP16F4Y/source/youtube/requiressl/yes/xpc/EgVo2aDSNQ%3D%3D/rms/au,au/ctier/A/pfa/5/hightc/yes/siu/1/bui/ARmQxEX5xaN5vVPDYbjjd6rn5QbHgAWAQRAEvtQMdFpkUWPfQkH3wr-M0YNcCoR0-IWoDpmv0w/spc/SQ-umqTeV1APpHmz1Iw6B1EhTA56RuGPlvMU1GVunKZ9gO6WW3pgNraPqQ/vprv/1/svpuc/1/mime/video%2Fmp4/rqh/1/gir/yes/clen/8855428043/dur/37250.099/lmt/1766912497891914/itag/298/keepalive/yes/fexp/51565115,51565682,52017146/txp/5532534/sparams/expire,ei,ip,id,itag,source,requiressl,xpc,ctier,pfa,hightc,siu,bui,spc,vprv,svpuc,mime,rqh,gir,clen,dur,lmt/sig/AHEqNM4wRAIgJegbrHapX5qlgiWuiUvv6j53LnNmMpESaiIipQDCpMACIHjH-GTGI2llVvGAo2q7ySmV3l6q6BlLufB7c6ImQ8SC/redirect_counter/1/rm/sn-4g5eye7z/rrc/104/req_id/7550b4a95f0ea3ee/cms_redirect/yes/cmsv/e/cps/907/ipbypass/yes/met/1782651549,/mh/bB/mip/2001:1aef:a1:a286:dd09:10c0:9d:397b/mm/31/mn/sn-2gb7snez/ms/au/mt/1782651225/mv/m/mvi/2/pl/30/lsparams/cps,ipbypass,met,mh,mip,mm,mn,ms,mv,mvi,pl,rms/lsig/APaTxxMwRgIhAI4Z0eNF8yvNdp7TAWC3giUZ1L6MYCV2IdiVq4eYjOJJAiEArh4ZvZHOEhyvTGE5_x-GnFj5bqO030iBYkxtNIjlX60%3D";
-
-        const videoElement = document.getElementById('bgVideo');
-
-        // Spuštění přehrávače s Intrem
-        function initVideoPlayer() {
-            videoElement.src = introUrl;
-            videoElement.load();
-            
-            // Jakmile intro skončí, přepne se na smyčku s pozadím
-            videoElement.addEventListener('ended', function() {
-                videoElement.src = backgroundUrl;
-                videoElement.loop = true;
-                videoElement.load();
-                videoElement.play().catch(e => console.log("Autoplay loop blocked:", e));
-            }, { once: true }); // Spustí se pouze jednou pro přechod z intra
-        }
-
-        // Kontrola hned po načtení DOMu
-        document.addEventListener("DOMContentLoaded", function() {
-            initVideoPlayer();
-        });
-
-        function muteMusic() {
-            videoElement.muted = true;
-        }
-
-        function unmuteMusic() {
-            videoElement.muted = false;
-        }
-
         // --- JAZYKOVÉ MUTACE / PŘEKLADY ---
         const translations = {
             cs: {
@@ -367,25 +336,39 @@
 
         let currentLang = localStorage.getItem("sh_lang") || "cs";
 
+        // --- NASTAVENÍ A LOGIKA AUTOMATICKÉHO PŘEHRÁVÁNÍ VIDEÍ ---
+        const backgroundVideoUrl = "https://rr2---sn-2gb7snez.googlevideo.com/videoplayback/expire/1782673135/ei/jxpBau2fC-3Ii9oPqsuZuAk/ip/162.158.110.30/id/o-ANm5g7_kzGwiAkNSXfWW1uoIiZBcQ6TVGpTj6GP16F4Y/source/youtube/requiressl/yes/xpc/EgVo2aDSNQ%3D%3D/rms/au,au/ctier/A/pfa/5/hightc/yes/siu/1/bui/ARmQxEX5xaN5vVPDYbjjd6rn5QbHgAWAQRAEvtQMdFpkUWPfQkH3wr-M0YNcCoR0-IWoDpmv0w/spc/SQ-umqTeV1APpHmz1Iw6B1EhTA56RuGPlvMU1GVunKZ9gO6WW3pgNraPqQ/vprv/1/svpuc/1/mime/video%2Fmp4/rqh/1/gir/yes/clen/8855428043/dur/37250.099/lmt/1766912497891914/itag/298/keepalive/yes/fexp/51565115,51565682,52017146/txp/5532534/sparams/expire,ei,ip,id,itag,source,requiressl,xpc,ctier,pfa,hightc,siu,bui,spc,vprv,svpuc,mime,rqh,gir,clen,dur,lmt/sig/AHEqNM4wRAIgJegbrHapX5qlgiWuiUvv6j53LnNmMpESaiIipQDCpMACIHjH-GTGI2llVvGAo2q7ySmV3l6q6BlLufB7c6ImQ8SC/redirect_counter/1/rm/sn-4g5eye7z/rrc/104/req_id/7550b4a95f0ea3ee/cms_redirect/yes/cmsv/e/cps/907/ipbypass/yes/met/1782651549,/mh/bB/mip/2001:1aef:a1:a286:dd09:10c0:9d:397b/mm/31/mn/sn-2gb7snez/ms/au/mt/1782651225/mv/m/mvi/2/pl/30/lsparams/cps,ipbypass,met,mh,mip,mm,mn,ms,mv,mvi,pl,rms/lsig/APaTxxMwRgIhAI4Z0eNF8yvNdp7TAWC3giUZ1L6MYCV2IdiVq4eYjOJJAiEArh4ZvZHOEhyvTGE5_x-GnFj5bqO030iBYkxtNIjlX60%3D";
+
+        window.addEventListener('DOMContentLoaded', () => {
+            applyTranslations();
+            
+            const videoElement = document.getElementById('bg-video');
+            
+            // Jakmile intro skončí, přepne se zdroj na hlavní smyčkované video na pozadí
+            videoElement.addEventListener('ended', () => {
+                videoElement.src = backgroundVideoUrl;
+                videoElement.loop = true; // Hlavní video poběží pořád dokola
+                videoElement.play().catch(err => console.log("Automatické spuštění videa po intru selhalo:", err));
+            });
+        });
+
         function applyTranslations() {
             const langData = translations[currentLang];
             
+            // Překlad textů
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
-                if (langData[key]) {
-                    el.innerText = langData[key];
-                }
+                if (langData[key]) el.textContent = langData[key];
             });
 
+            // Překlad placeholderů
             document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
                 const key = el.getAttribute('data-i18n-placeholder');
-                if (langData[key]) {
-                    el.setAttribute('placeholder', langData[key]);
-                }
+                if (langData[key]) el.setAttribute('placeholder', langData[langData[key] ? key : '']);
             });
-
-            const sel = document.getElementById('lang-selector');
-            if(sel) sel.value = currentLang;
+            
+            const selector = document.getElementById('lang-selector');
+            if(selector) selector.value = currentLang;
         }
 
         function changeLanguage(lang) {
@@ -394,61 +377,80 @@
             applyTranslations();
         }
 
-        // --- POMOCNÉ FUNKCE ROZHRANÍ (Placeholder Logika pro navigaci) ---
+        // --- POMOCNÉ FUNKCE PRO ZOBRAZOVÁNÍ STRÁNEK / REGISTRACI ---
         function acceptRules() {
             document.getElementById('step-rules').classList.add('hidden');
             document.getElementById('step-form').classList.remove('hidden');
-            // Pokus o vynucené spuštění videa po interakci uživatele, pokud ho prohlížeč zablokoval
-            videoElement.play().catch(e => console.log("Video play request failed:", e));
         }
 
         function switchAuthTab(tab) {
-            const loginFields = document.getElementById('auth-login-fields');
-            const registerFields = document.getElementById('auth-register-fields');
-            const tabLogin = document.getElementById('tab-login');
-            const tabRegister = document.getElementById('tab-register');
-
-            if(tab === 'login') {
-                loginFields.classList.remove('hidden');
-                registerFields.classList.add('hidden');
-                tabLogin.classList.add('active');
-                tabRegister.classList.remove('active');
+            if (tab === 'login') {
+                document.getElementById('tab-login').classList.add('active');
+                document.getElementById('tab-register').classList.remove('active');
+                document.getElementById('auth-login-fields').classList.remove('hidden');
+                document.getElementById('auth-register-fields').classList.add('hidden');
             } else {
-                loginFields.classList.add('hidden');
-                registerFields.classList.remove('hidden');
-                tabLogin.classList.remove('active');
-                tabRegister.classList.add('active');
+                document.getElementById('tab-login').classList.remove('active');
+                document.getElementById('tab-register').classList.add('active');
+                document.getElementById('auth-login-fields').classList.add('hidden');
+                document.getElementById('auth-register-fields').classList.remove('hidden');
             }
+            document.getElementById('forgot-step-email').classList.add('hidden');
+            document.getElementById('forgot-step-verify').classList.add('hidden');
         }
 
         function openForgotPassword() {
             document.getElementById('auth-login-fields').classList.add('hidden');
-            document.getElementById('auth-tabs-nav').classList.add('hidden');
             document.getElementById('forgot-step-email').classList.remove('hidden');
         }
 
-        function showPage(pageId) {
-            document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            
-            document.getElementById(`page-${pageId}`).classList.remove('hidden');
-            event.currentTarget.classList.add('active');
-            
-            const langData = translations[currentLang];
-            document.getElementById('page-title').innerText = langData[`menu_${pageId}`] || pageId.toUpperCase();
+        function handleLogin() {
+            // Zde by byla tvoje Firebase autentizační logika. Pro ukázku rovnou pustíme uživatele dál.
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('app').classList.remove('hidden');
+            document.getElementById('user-name').textContent = document.getElementById('auth_email').value || "Uživatel";
         }
 
-        // Ukázkové prázdné funkce pro kompletnost šablony
-        function handleLogin() { alert(translations[currentLang].alert_reg_success); document.getElementById('login-screen').classList.add('hidden'); document.getElementById('app').classList.remove('hidden'); }
-        function handleRegister() { alert(translations[currentLang].alert_reg_success); }
-        function verifyOTP() {}
-        function sendResetCode() {}
-        function verifyAndChangePassword() {}
-        function logout() { document.getElementById('app').classList.add('hidden'); document.getElementById('login-screen').classList.remove('hidden'); document.getElementById('step-rules').classList.remove('hidden'); document.getElementById('step-form').classList.add('hidden'); }
-        function saveProfile() {}
+        function handleRegister() {
+            alert(translations[currentLang].alert_reg_success);
+            switchAuthTab('login');
+        }
 
-        // Prvotní aplikace překladů při načtení
-        applyTranslations();
+        function logout() {
+            document.getElementById('app').classList.add('hidden');
+            document.getElementById('login-screen').classList.remove('hidden');
+            switchAuthTab('login');
+        }
+
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => page.classList.add('hidden'));
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            
+            document.getElementById(`page-${pageId}`).classList.remove('hidden');
+            document.getElementById('page-title').textContent = pageId.toUpperCase();
+            
+            // Nastavení aktivní třídy v menu
+            event.currentTarget.classList.add('active');
+        }
+
+        function muteMusic() {
+            document.getElementById('bg-video').muted = true;
+        }
+
+        function unmuteMusic() {
+            document.getElementById('bg-video').muted = false;
+        }
+
+        // Zbývající prázdné funkce pro zachování kompatibility s tvými onclicky
+        function saveProfile() { alert("Profil uložen!"); }
+        function sendResetCode() { 
+            document.getElementById('forgot-step-email').classList.add('hidden');
+            document.getElementById('forgot-step-verify').classList.remove('hidden');
+        }
+        function verifyAndChangePassword() {
+            alert("Heslo změněno!");
+            switchAuthTab('login');
+        }
     </script>
 </body>
 </html>
