@@ -1,400 +1,168 @@
 <!DOCTYPE html>
 <html lang="cs">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SteamHubCZ | Dashboard</title>
-    
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-    <script>(function() { emailjs.init("yw3YNXC58nL3Bh4fl"); })();</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SteamHubCZ | Dashboard</title>
+    
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <script>(function() { emailjs.init("yw3YNXC58nL3Bh4fl"); })();</script>
 
-    <style>
-        :root {
-            --bg-color: #f0f2f5;
-            --sidebar-color: #171a21; 
-            --primary-blue: #66c0f4; 
-            --text-main: #1b2838;
-            --card-bg: #ffffff;
-            --accent-orange: #f39c12;
-            --discord-color: #7289da;
-        }
-
-        body, html { margin: 0; padding: 0; height: 100%; font-family: 'Segoe UI', Arial, sans-serif; background-color: var(--bg-color); color: var(--text-main); overflow: hidden; }
-        
-        .video-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: #000; pointer-events: none; }
-        .video-bg iframe { width: 100vw; height: 56.25vw; min-height: 100vh; min-width: 177.77vh; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); filter: brightness(0.3); pointer-events: none; }
-
-        #system-lock-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; color: white; z-index: 10000; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; box-sizing: border-box; }
-
-        #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 20px; box-sizing: border-box; }
-        .auth-card { background: rgba(23, 26, 33, 0.95); padding: 35px; border-radius: 15px; width: 100%; max-width: 550px; max-height: 90vh; overflow-y: auto; box-shadow: 0 15px 35px rgba(0,0,0,0.5); text-align: center; color: white; backdrop-filter: blur(10px); border: 1px solid var(--primary-blue); }
-        .auth-input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 6px; border: 1px solid #2a475e; background: #1b2838; color: white; box-sizing: border-box; }
-        .btn-steam { width: 100%; padding: 12px; background: var(--primary-blue); color: #171a21; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; text-transform: uppercase; margin-top: 10px; }
-        .btn-steam:hover { filter: brightness(1.1); }
-        
-        .rules-container { text-align: left; background: rgba(27, 40, 56, 0.8); padding: 20px; border-radius: 8px; margin-top: 15px; border: 1px solid #2a475e; font-size: 0.9rem; line-height: 1.5; }
-        .rules-title { color: var(--accent-orange); font-weight: bold; font-size: 1.2rem; border-bottom: 1px solid #2a475e; padding-bottom: 8px; margin-bottom: 12px; text-align: center; }
-        .rule-item { margin-bottom: 10px; color: #c7d5e0; }
-        .rule-item strong { color: white; }
-
-        .app-container { display: flex; height: 100vh; overflow: hidden; }
-        .sidebar { width: 260px; background-color: var(--sidebar-color); color: white; display: flex; flex-direction: column; z-index: 10; }
-        .sidebar-header { padding: 25px; font-size: 1.4rem; font-weight: 900; color: var(--primary-blue); border-bottom: 1px solid #2a475e; text-align: center; }
-        .nav-item { padding: 15px 25px; cursor: pointer; display: flex; align-items: center; gap: 12px; color: #c7d5e0; }
-        .nav-item:hover, .nav-item.active { background: #2a475e; color: white; border-left: 4px solid var(--primary-blue); }
-        
-        .main-content { flex: 1; overflow-y: auto; background: rgba(235, 240, 245, 0.85); display: flex; flex-direction: column; }
-        .top-bar { background: #171a21; padding: 12px 30px; display: flex; justify-content: space-between; align-items: center; color: white; }
-        .content-area { padding: 30px; }
-        .card { background: white; border-radius: 8px; padding: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 25px; }
-        .hidden { display: none !important; }
-
-        .announcement-banner { background: #fff3cd; border-left: 6px solid var(--accent-orange); padding: 20px; margin-bottom: 15px; border-radius: 5px; color: #856404; font-size: 1.1rem; }
-        .discord-btn { text-decoration: none; color: white; background: var(--discord-color); padding: 12px 20px; border-radius: 6px; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; }
-        .discord-btn:hover { filter: brightness(1.1); transform: scale(1.02); }
-
-        .faq-item { border-bottom: 1px solid #eee; padding: 15px 0; }
-        .faq-question { font-weight: bold; color: var(--text-main); margin-bottom: 5px; }
-        .faq-answer { color: #555; padding-left: 20px; }
-        .event-timer { font-family: 'Courier New', monospace; font-size: 1.4rem; color: var(--accent-orange); font-weight: bold; margin-top: 10px; background: #1b2838; padding: 12px; border-radius: 5px; text-align: center; }
-        .avatar-circle { width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary-blue); }
-        
-        .tab-btn { background: none; border: none; color: #888; font-size: 1.1rem; padding: 10px 20px; cursor: pointer; font-weight: bold; }
-        .tab-btn.active { color: var(--primary-blue); border-bottom: 2px solid var(--primary-blue); }
-        
-        .link-forgot { display: inline-block; margin-top: 15px; color: #888; text-decoration: none; font-size: 0.9rem; cursor: pointer; }
-        .link-forgot:hover { color: var(--primary-blue); text-decoration: underline; }
-
-        .lang-select { width: 100%; padding: 12px; margin: 10px 0; border-radius: 6px; border: 1px solid #2a475e; background: #1b2838; color: white; box-sizing: border-box; font-weight: bold; cursor: pointer; }
-        .card .lang-select { background: #fff; color: #171a21; border: 1px solid #ccc; }
-    </style>
+    <style>
+        :root { --bg-color: #f0f2f5; --sidebar-color: #171a21; --primary-blue: #66c0f4; --text-main: #1b2838; --card-bg: #ffffff; --accent-orange: #f39c12; --discord-color: #7289da; }
+        body, html { margin: 0; padding: 0; height: 100%; font-family: 'Segoe UI', Arial, sans-serif; background-color: var(--bg-color); color: var(--text-main); overflow: hidden; }
+        .video-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: #000; pointer-events: none; }
+        .video-bg iframe { width: 100vw; height: 56.25vw; min-height: 100vh; min-width: 177.77vh; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); filter: brightness(0.3); pointer-events: none; }
+        #system-lock-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; color: white; z-index: 10000; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; box-sizing: border-box; }
+        #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 20px; box-sizing: border-box; }
+        .auth-card { background: rgba(23, 26, 33, 0.95); padding: 35px; border-radius: 15px; width: 100%; max-width: 550px; max-height: 90vh; overflow-y: auto; box-shadow: 0 15px 35px rgba(0,0,0,0.5); text-align: center; color: white; backdrop-filter: blur(10px); border: 1px solid var(--primary-blue); }
+        .auth-input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 6px; border: 1px solid #2a475e; background: #1b2838; color: white; box-sizing: border-box; }
+        .btn-steam { width: 100%; padding: 12px; background: var(--primary-blue); color: #171a21; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; text-transform: uppercase; margin-top: 10px; }
+        .btn-steam:hover { filter: brightness(1.1); }
+        .rules-container { text-align: left; background: rgba(27, 40, 56, 0.8); padding: 20px; border-radius: 8px; margin-top: 15px; border: 1px solid #2a475e; font-size: 0.9rem; line-height: 1.5; }
+        .rules-title { color: var(--accent-orange); font-weight: bold; font-size: 1.2rem; border-bottom: 1px solid #2a475e; padding-bottom: 8px; margin-bottom: 12px; text-align: center; }
+        .rule-item { margin-bottom: 10px; color: #c7d5e0; }
+        .rule-item strong { color: white; }
+        .app-container { display: flex; height: 100vh; overflow: hidden; }
+        .sidebar { width: 260px; background-color: var(--sidebar-color); color: white; display: flex; flex-direction: column; z-index: 10; }
+        .sidebar-header { padding: 25px; font-size: 1.4rem; font-weight: 900; color: var(--primary-blue); border-bottom: 1px solid #2a475e; text-align: center; }
+        .nav-item { padding: 15px 25px; cursor: pointer; display: flex; align-items: center; gap: 12px; color: #c7d5e0; }
+        .nav-item:hover, .nav-item.active { background: #2a475e; color: white; border-left: 4px solid var(--primary-blue); }
+        .main-content { flex: 1; overflow-y: auto; background: rgba(235, 240, 245, 0.85); display: flex; flex-direction: column; }
+        .top-bar { background: #171a21; padding: 12px 30px; display: flex; justify-content: space-between; align-items: center; color: white; }
+        .content-area { padding: 30px; }
+        .card { background: white; border-radius: 8px; padding: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 25px; }
+        .hidden { display: none !important; }
+        .announcement-banner { background: #fff3cd; border-left: 6px solid var(--accent-orange); padding: 20px; margin-bottom: 15px; border-radius: 5px; color: #856404; font-size: 1.1rem; }
+        .discord-btn { text-decoration: none; color: white; background: var(--discord-color); padding: 12px 20px; border-radius: 6px; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; }
+        .discord-btn:hover { filter: brightness(1.1); transform: scale(1.02); }
+        .faq-item { border-bottom: 1px solid #eee; padding: 15px 0; }
+        .faq-question { font-weight: bold; color: var(--text-main); margin-bottom: 5px; }
+        .faq-answer { color: #555; padding-left: 20px; }
+        .event-timer { font-family: 'Courier New', monospace; font-size: 1.4rem; color: var(--accent-orange); font-weight: bold; margin-top: 10px; background: #1b2838; padding: 12px; border-radius: 5px; text-align: center; }
+        .avatar-circle { width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary-blue); }
+        .tab-btn { background: none; border: none; color: #888; font-size: 1.1rem; padding: 10px 20px; cursor: pointer; font-weight: bold; }
+        .tab-btn.active { color: var(--primary-blue); border-bottom: 2px solid var(--primary-blue); }
+        .link-forgot { display: inline-block; margin-top: 15px; color: #888; text-decoration: none; font-size: 0.9rem; cursor: pointer; }
+        .link-forgot:hover { color: var(--primary-blue); text-decoration: underline; }
+        .lang-select { width: 100%; padding: 12px; margin: 10px 0; border-radius: 6px; border: 1px solid #2a475e; background: #1b2838; color: white; box-sizing: border-box; font-weight: bold; cursor: pointer; }
+        .card .lang-select { background: #fff; color: #171a21; border: 1px solid #ccc; }
+    </style>
 </head>
 <body>
 
-    <div id="system-lock-screen">
-        <h1 style="font-size: 3rem; color: #e74c3c; margin-bottom: 10px;">⚠️ <span data-i18n="system_locked">SYSTEM UZAMČEN</span></h1>
-        <p id="lock-message" style="font-size: 1.2rem; color: #ccc;">Probíhá plánovaná údržba portálu SteamHubCZ. Zkuste to prosím později.</p>
-    </div>
+    <div id="system-lock-screen">
+        <h1 style="font-size: 3rem; color: #e74c3c; margin-bottom: 10px;">⚠️ <span data-i18n="system_locked">SYSTEM UZAMČEN</span></h1>
+        <p id="lock-message" style="font-size: 1.2rem; color: #ccc;">Probíhá plánovaná údržba portálu SteamHubCZ. Zkuste to prosím později.</p>
+    </div>
 
-    <div class="video-bg"><div id="player"></div></div>
+    <div class="video-bg"><div id="player"></div></div>
 
-    <div id="login-screen">
-        <div class="auth-card">
-            
-            <div id="step-rules">
-                <div class="rules-container">
-                    <div class="rules-title" data-i18n="rules_title">Pravidla serveru SteamHub CZ (Zkráceno)</div>
-                    <div class="rule-item"><strong data-i18n="rule_1_title">1. Základní chování:</strong> <span data-i18n="rule_1_desc">Buďte slušní a respektujte ostatní. Nadávky, toxicita, rasismus a diskriminace jsou zakázány.</span></div>
-                    <div class="rule-item"><strong data-i18n="rule_2_title">2. Komunikace:</strong> <span data-i18n="rule_2_desc">Mluvte česky/slovensky. Žádný spam, flood, CAPS LOCK ani neoprávněná reklama.</span></div>
-                    <div class="rule-item"><strong data-i18n="rule_3_title">3. Legální obsah:</strong> <span data-i18n="rule_3_desc">Server je pouze pro legální Steam hry. Sdílení cracků, torrentů, warezu nebo obcházení DRM se trestá okamžitým permanentním banem. Zákaz NSFW a podvodných odkazů.</span></div>
-                    <div class="rule-item"><strong data-i18n="rule_4_title">4. Hlas a chat:</strong> <span data-i18n="rule_4_desc">Nerušte ostatní (křik, soundboard), nenahrávejte nikoho bez souhlasu a poslouchejte moderátory.</span></div>
-                    <div class="rule-item"><strong data-i18n="rule_5_title">5. Hraní:</strong> <span data-i18n="rule_5_desc">Zákaz cheatování, zneužívání chyb a vydávání se za admina. Za svůj účet si ručíte sami.</span></div>
-                    <div class="rule-item"><strong data-i18n="rule_6_title">6. Administrativa:</strong> <span data-i18n="rule_6_desc">Slovo adminů je konečné. Obcházení trestů (alt účty) vede k permanentnímu banu.</span></div>
-                    <div class="rule-item"><strong data-i18n="rule_7_title">7. Neaktivita:</strong> <span data-i18n="rule_7_desc">Dlouhodobá neaktivita bez omluvy může vést k permanentnímu banu (posuzuje se individuálně).</span></div>
-                    <div class="rule-item"><strong data-i18n="rule_8_title">8. Tresty:</strong> <span data-i18n="rule_8_desc">Podle závažnosti – napomenutí, mute, kick, dočasný nebo permanentní ban.</span></div>
-                    <div class="rule-item" style="margin-top: 15px; border-top: 1px dashed #2a475e; padding-top: 10px; text-align: center; color: var(--primary-blue); font-style: italic;" data-i18n="rules_agree_note">
-                        Připojením na server vyjadřujete s pravidly souhlas. Vedení si vyhrazuje právo pravidla kdykoliv upravit.
-                    </div>
-                </div>
-                <button class="btn-steam" style="background: #2ecc71; margin-top: 20px;" onclick="acceptRules()" data-i18n="btn_agree">SOUHLASÍM A CHCI POKRAČOVAT</button>
-            </div>
+    <div id="login-screen">
+        <div class="auth-card">
+            <div id="step-rules">
+                <div class="rules-container">
+                    <div class="rules-title" data-i18n="rules_title">Pravidla serveru SteamHub CZ</div>
+                    <div class="rule-item"><strong data-i18n="rule_1_title">1. Základní chování:</strong> <span data-i18n="rule_1_desc">Buďte slušní.</span></div>
+                    <button class="btn-steam" style="background: #2ecc71; margin-top: 20px;" onclick="acceptRules()" data-i18n="btn_agree">SOUHLASÍM A CHCI POKRAČOVAT</button>
+                </div>
+            </div>
 
-            <div id="step-form" class="hidden">
-                <div id="auth-tabs-nav">
-                    <h1 style="color: var(--primary-blue); margin-bottom: 5px;" data-i18n="welcome_title">Vítejte na stránce Steamhub</h1>
-                    <p style="color: #888; font-size: 1rem; margin-top: 0; margin-bottom: 20px;" data-i18n="welcome_subtitle">Přihlásit se nebo registrace</p>
-                    
-                    <div style="margin-bottom: 20px; display: flex; justify-content: center; gap: 10px;">
-                        <button id="tab-login" class="tab-btn active" onclick="switchAuthTab('login')" data-i18n="tab_login">Přihlášení</button>
-                        <button id="tab-register" class="tab-btn" onclick="switchAuthTab('register')" data-i18n="tab_register">Registrace</button>
-                    </div>
-                </div>
-                
-                <div id="auth-login-fields">
-                    <input type="email" id="auth_email" class="auth-input" placeholder="E-mail">
-                    <input type="password" id="auth_pass" class="auth-input" placeholder="Heslo" data-i18n-placeholder="placeholder_password">
-                    <button class="btn-steam" onclick="handleLogin()" data-i18n="btn_enter">Vstoupit</button>
-                    <div>
-                        <span class="link-forgot" onclick="openForgotPassword()" data-i18n="link_forgot">Zapomněl jsi heslo?</span>
-                    </div>
-                </div>
+            <div id="step-form" class="hidden">
+                <div id="auth-tabs-nav">
+                    <h1 style="color: var(--primary-blue); margin-bottom: 5px;" data-i18n="welcome_title">Vítejte</h1>
+                    <div style="margin-bottom: 20px; display: flex; justify-content: center; gap: 10px;">
+                        <button id="tab-login" class="tab-btn active" onclick="switchAuthTab('login')" data-i18n="tab_login">Přihlášení</button>
+                        <button id="tab-register" class="tab-btn" onclick="switchAuthTab('register')" data-i18n="tab_register">Registrace</button>
+                    </div>
+                </div>
+                
+                <div id="auth-login-fields">
+                    <input type="email" id="auth_email" class="auth-input" placeholder="E-mail">
+                    <input type="password" id="auth_pass" class="auth-input" placeholder="Heslo">
+                    <button class="btn-steam" onclick="handleLogin()" data-i18n="btn_enter">Vstoupit</button>
+                    <span class="link-forgot" onclick="openForgotPassword()" data-i18n="link_forgot">Zapomněl jsi heslo?</span>
+                </div>
 
-                <div id="auth-register-fields" class="hidden">
-                    <input type="text" id="reg_name" class="auth-input" placeholder="Uživatelské jméno" data-i18n-placeholder="placeholder_username">
-                    <input type="email" id="reg_email" class="auth-input" placeholder="E-mail">
-                    <input type="password" id="reg_pass" class="auth-input" placeholder="Heslo" data-i18n-placeholder="placeholder_password">
-                    <button class="btn-steam" style="background: #e67e22;" onclick="handleRegister()" data-i18n="btn_register">Registrovat účet</button>
-                </div>
+                <div id="auth-register-fields" class="hidden">
+                    <input type="text" id="reg_name" class="auth-input" placeholder="Jméno">
+                    <input type="email" id="reg_email" class="auth-input" placeholder="E-mail">
+                    <input type="password" id="reg_pass" class="auth-input" placeholder="Heslo">
+                    <button class="btn-steam" onclick="handleRegister()" data-i18n="btn_register">Registrovat</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-                <div id="auth-step-otp" class="hidden">
-                    <p style="color: #bbb; font-size: 0.9rem;" data-i18n="otp_note">Na váš e-mail byl zaslán ověřovací kód.</p>
-                    <input type="text" id="otp_input" class="auth-input" placeholder="Kód z emailu" data-i18n-placeholder="placeholder_code" maxlength="6" style="text-align:center;">
-                    <button class="btn-steam" style="background: #2ecc71;" onclick="verifyOTP()" data-i18n="btn_confirm_code">Potvrdit kód</button>
-                </div>
+    <div id="app" class="app-container hidden">
+        <div class="sidebar">
+            <div class="sidebar-header">STEAMHUBCZ</div>
+            <div class="nav-item active" onclick="showPage('dashboard')">📊 Dashboard</div>
+            <div class="nav-item" onclick="showPage('faq')">❓ FAQ</div>
+            <div class="nav-item" onclick="showPage('settings')">⚙️ Nastavení</div>
+        </div>
+        <div class="main-content">
+            <div class="top-bar">
+                <div id="page-title">DASHBOARD</div>
+                <button onclick="logout()">ODHLÁSIT</button>
+            </div>
+            <div class="content-area">
+                <div id="page-dashboard" class="page"><div class="card"><h2>Dashboard</h2></div></div>
+                <div id="page-faq" class="page hidden"><div class="card"><h2>FAQ</h2></div></div>
+                <div id="page-settings" class="page hidden"><div class="card"><h2>Nastavení</h2></div></div>
+            </div>
+        </div>
+    </div>
 
-                <div id="forgot-step-email" class="hidden">
-                    <h2 style="color: var(--accent-orange);" data-i18n="reset_title">Obnova hesla</h2>
-                    <p style="color: #bbb; font-size: 0.9rem;" data-i18n="reset_note">Zadej svůj registrační e-mail. Zašleme ti kód pro obnovu.</p>
-                    <input type="email" id="forgot_email" class="auth-input" placeholder="Tvůj e-mail">
-                    <button class="btn-steam" style="background: var(--accent-orange);" onclick="sendResetCode()" data-i18n="btn_send_code">Odeslat kód</button>
-                    <br><span class="link-forgot" onclick="switchAuthTab('login')" data-i18n="btn_back">Zpět na přihlášení</span>
-                </div>
+    <script>
+        // Inicializace YT přehrávače
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('player', {
+                videoId: 'ATo6V6Xm_eY', 
+                playerVars: { 'autoplay': 1, 'controls': 0, 'mute': 1, 'loop': 1, 'playlist': 'ATo6V6Xm_eY' },
+            });
+        }
 
-                <div id="forgot-step-verify" class="hidden">
-                    <h2 style="color: var(--accent-orange);" data-i18n="reset_verify_title">Zadej kód a nové heslo</h2>
-                    <p style="color: #bbb; font-size: 0.9rem;" data-i18n="reset_verify_note">Zkontroluj svou schránku a zadej kód společně s novým heslem.</p>
-                    <input type="text" id="forgot_code" class="auth-input" placeholder="Kód z e-mailu" data-i18n-placeholder="placeholder_code" maxlength="6" style="text-align:center;">
-                    <input type="password" id="forgot_new_pass" class="auth-input" placeholder="Nové heslo" data-i18n-placeholder="placeholder_new_password">
-                    <button class="btn-steam" style="background: #2ecc71;" onclick="verifyAndChangePassword()" data-i18n="btn_change_password">Změnit heslo</button>
-                </div>
-            </div>
+        function acceptRules() {
+            document.getElementById('step-rules').classList.add('hidden');
+            document.getElementById('step-form').classList.remove('hidden');
+        }
 
-        </div>
-    </div>
+        function switchAuthTab(type) {
+            document.getElementById('tab-login').classList.remove('active');
+            document.getElementById('tab-register').classList.remove('active');
+            document.getElementById('auth-login-fields').classList.add('hidden');
+            document.getElementById('auth-register-fields').classList.add('hidden');
+            
+            if(type === 'login') {
+                document.getElementById('tab-login').classList.add('active');
+                document.getElementById('auth-login-fields').classList.remove('hidden');
+            } else {
+                document.getElementById('tab-register').classList.add('active');
+                document.getElementById('auth-register-fields').classList.remove('hidden');
+            }
+        }
 
-    <div id="app" class="app-container hidden">
-        <div class="sidebar">
-            <div class="sidebar-header">STEAMHUBCZ</div>
-            <div class="nav-item active" onclick="showPage('dashboard')"><span data-i18n="menu_dashboard">📊 Dashboard</span></div>
-            <div class="nav-item" onclick="showPage('faq')"><span data-i18n="menu_faq">❓ FAQ</span></div>
-            <div class="nav-item" onclick="showPage('events')"><span data-i18n="menu_events">📅 Eventy</span></div>
-            <div class="nav-item" onclick="showPage('settings')"><span data-i18n="menu_settings">⚙️ Nastavení</span></div>
-        </div>
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+            document.getElementById('page-' + pageId).classList.remove('hidden');
+        }
 
-        <div class="main-content">
-            <div class="top-bar">
-                <div id="page-title" data-i18n="menu_dashboard">DASHBOARD</div>
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <img id="user-avatar" class="avatar-circle" src="">
-                    <span id="user-name"></span>
-                    <button onclick="logout()" style="background:#e74c3c; border:none; color:white; padding:5px 10px; border-radius:4px; cursor:pointer;" data-i18n="btn_logout">ODHLÁSIT</button>
-                </div>
-            </div>
+        function handleLogin() {
+            // Zde doplň Firebase Auth logiku
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('app').classList.remove('hidden');
+        }
 
-            <div class="content-area">
-                
-                <div id="page-dashboard" class="page">
-                    <div id="announcement-box" class="announcement-banner hidden"></div>
-                    
-                    <div class="card" style="padding: 15px;">
-                        <a href="https://discord.gg/EU55HKdqB" target="_blank" class="discord-btn" data-i18n="discord_btn_text">
-                            PŘIPOJ SE NA NÁŠ DISCORD SERVER
-                        </a>
-                    </div>
+        function logout() { location.reload(); }
+        function muteMusic() { player.mute(); }
+        function unmuteMusic() { player.unMute(); }
 
-                    <div class="card">
-                        <h2 data-i18n="dash_welcome_title">Vítejte zpět!</h2>
-                        <p data-i18n="dash_welcome_text">Tento panel slouží pro správu a přehled o komunitě SteamHubCZ. Vyberte si sekci v levém menu.</p>
-                    </div>
-                </div>
-
-                <div id="page-faq" class="page hidden">
-                    <div class="card">
-                        <h2 data-i18n="faq_title">Často kladené dotazy</h2>
-                        <div id="fb-faq-list">Načítám data...</div>
-                    </div>
-                </div>
-
-                <div id="page-events" class="page hidden">
-                    <div class="card">
-                        <h2 data-i18n="events_title">Naplánované akce</h2>
-                        <div id="fb-events-list">Hledám akce...</div>
-                    </div>
-                </div>
-
-                <div id="page-settings" class="page hidden">
-                    <div class="card">
-                        <h2 style="margin-top: 0;" data-i18n="settings_profile_title">Můj Profil</h2>
-                        <input type="text" id="set-name" class="auth-input" style="color:black; background:#eee;" placeholder="Jméno" data-i18n-placeholder="placeholder_username">
-                        <input type="text" id="set-img" class="auth-input" style="color:black; background:#eee;" placeholder="URL Profilovky">
-                        <button onclick="saveProfile()" class="btn-steam" data-i18n="btn_save">Uložit</button>
-                        
-                        <hr style="margin: 25px 0; border: 0; border-top: 1px solid #eee;">
-                        
-                        <h3 style="margin-top: 0;" data-i18n="settings_lang_title">Jazyk / Language</h3>
-                        <select id="lang-selector" class="lang-select" onchange="changeLanguage(this.value)">
-                            <option value="cs">Čeština</option>
-                            <option value="sk">Slovenčina</option>
-                            <option value="en">English</option>
-                        </select>
-
-                        <hr style="margin: 25px 0; border: 0; border-top: 1px solid #eee;">
-                        
-                        <button onclick="muteMusic()" class="btn-steam" style="background:#95a5a6; width:48%;" data-i18n="btn_mute">Ztlumit hudbu</button>
-                        <button onclick="unmuteMusic()" class="btn-steam" style="background:#2ecc71; width:48%;" data-i18n="btn_unmute">Zapnout hudbu</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // --- JAZYKOVÉ MUTACE / PŘEKLADY ---
-        const translations = {
-            cs: {
-                system_locked: "SYSTÉM UZAMČEN",
-                rules_title: "Pravidla serveru SteamHub CZ (Zkráceno)",
-                rule_1_title: "1. Základní chování:", rule_1_desc: "Buďte slušní a respektujte ostatní. Nadávky, toxicita, rasismus a diskriminace jsou zakázány.",
-                rule_2_title: "2. Komunikace:", rule_2_desc: "Mluvte česky/slovensky. Žádný spam, flood, CAPS LOCK ani neoprávněná reklama.",
-                rule_3_title: "3. Legální obsah:", rule_3_desc: "Server je pouze pro legální Steam hry. Sdílení cracků, torrentů, warezu nebo obcházení DRM se trestá okamžitým permanentním banem. Zákaz NSFW a podvodných odkazů.",
-                rule_4_title: "4. Hlas a chat:", rule_4_desc: "Nerušte ostatní (křik, soundboard), nenahrávejte nikoho bez souhlasu a poslouchejte moderátory.",
-                rule_5_title: "5. Hraní:", rule_5_desc: "Zákaz cheatování, zneužívání chyb a vydávání se za admina. Za svůj účet si ručíte sami.",
-                rule_6_title: "6. Administrativa:", rule_6_desc: "Slovo adminů je konečné. Obcházení trestů (alt účty) vede k permanentnímu banu.",
-                rule_7_title: "7. Neaktivita:", rule_7_desc: "Dlouhodobá neaktivita bez omluvy může vést k permanentnímu banu (posuzuje se individuálně).",
-                rule_8_title: "8. Tresty:", rule_8_desc: "Podle závažnosti – napomenutí, mute, kick, dočasný nebo permanentní ban.",
-                rules_agree_note: "Připojením na server vyjadřujete s pravidly souhlas. Vedení si vyhrazuje právo pravidla kdykoliv upravit.",
-                btn_agree: "SOUHLASÍM A CHCI POKRAČOVAT",
-                welcome_title: "Vítejte na stránce Steamhub",
-                welcome_subtitle: "Přihlásit se nebo registrace",
-                tab_login: "Přihlášení", tab_register: "Registrace",
-                placeholder_password: "Heslo", placeholder_username: "Uživatelské jméno", placeholder_code: "Kód", placeholder_new_password: "Nové heslo",
-                btn_enter: "Vstoupit", btn_register: "Registrovat účet",
-                link_forgot: "Zapomněl jsi heslo?",
-                otp_note: "Na váš e-mail byl zaslán ověřovací kód.", btn_confirm_code: "Potvrdit kód",
-                reset_title: "Obnova hesla", reset_note: "Zadej svůj registrační e-mail. Zašleme ti kód pro obnovu.", btn_send_code: "Odeslat kód", btn_back: "Zpět na přihlášení",
-                reset_verify_title: "Zadej kód a nové heslo", reset_verify_note: "Zkontroluj svou schránku a zadej kód společně s novým heslem.", btn_change_password: "Změnit heslo",
-                menu_dashboard: "DASHBOARD", menu_faq: "FAQ", menu_events: "EVENTY", menu_settings: "NASTAVENÍ",
-                btn_logout: "ODHLÁSIT", discord_btn_text: "PŘIPOJ SE NA NÁŠ DISCORD SERVER",
-                dash_welcome_title: "Vítejte zpět!", dash_welcome_text: "Tento panel slouží pro správu a přehled o komunitě SteamHubCZ. Vyberte si sekci v levém menu.",
-                faq_title: "Často kladené dotazy", events_title: "Naplánované akce",
-                settings_profile_title: "Můj Profil", settings_lang_title: "Jazyk / Language",
-                btn_save: "Uložit", btn_mute: "Ztlumit hudbu", btn_unmute: "Zapnout hudbu",
-                alert_empty: "Vyplň všechna pole!", alert_exists: "Chyba: Na tento e-mail již existuje účet!", alert_reg_success: "Registrace byla úspěšná!",
-                alert_wrong_pass: "Nesprávne heslo!", alert_no_user: "Uživatel neexistuje!", alert_wrong_code: "Špatný kód!"
-            },
-            sk: {
-                system_locked: "SYSTÉM UZAMKNUTÝ",
-                rules_title: "Pravidlá serveru SteamHub CZ (Skrátené)",
-                rule_1_title: "1. Základné správanie:", rule_1_desc: "Buďte slušní a rešpektujte ostatných. Nadávky, toxicita, rasizmus a diskriminácia sú zakázané.",
-                rule_2_title: "2. Komunikácia:", rule_2_desc: "Hovorte česky/slovensky. Žiadny spam, flood, CAPS LOCK ani neoprávnená reklama.",
-                rule_3_title: "3. Legálny obsah:", rule_3_desc: "Server je len pre legálne Steam hry. Zdieľanie crackov, torrentov, warezu alebo obchádzanie DRM sa trestá okamžitým permanentným banom. Zákaz NSFW a podvodných odkazov.",
-                rule_4_title: "4. Hlas a chat:", rule_4_desc: "Nerušte ostatných (krik, soundboard), nenahrávajte nikoho bez súhlasu a poslúchajte moderátorov.",
-                rule_5_title: "5. Hranie:", rule_5_desc: "Zákaz cheatovania, zneužívania chýb a vydávania sa za admina. Za svoj účet si ručíte sami.",
-                rule_6_title: "6. Administratíva:", rule_6_desc: "Slovo adminov je konečné. Obchádzanie trestov (alt účty) vedie k permanentnému banu.",
-                rule_7_title: "7. Neaktivita:", rule_7_desc: "Dlhodobá neaktivita bez ospravedlnenia môže viesť k permanentnému banu (posudzuje sa individuálne).",
-                rule_8_title: "8. Tresty:", rule_8_desc: "Podľa závažnosti – napomenutie, mute, kick, dočasný alebo permanentný ban.",
-                rules_agree_note: "Pripojením na server vyjadrujete s pravidlami súhlas. Vedenie si vyhradzuje právo pravidlá kedykoľvek upraviť.",
-                btn_agree: "SÚHLASÍM A CHCEM POKRAČOVAŤ",
-                welcome_title: "Vitajte na stránke Steamhub",
-                welcome_subtitle: "Prihlásiť sa alebo registrácia",
-                tab_login: "Prihlásenie", tab_register: "Registrácia",
-                placeholder_password: "Heslo", placeholder_username: "Užívateľské meno", placeholder_code: "Kód", placeholder_new_password: "Nové heslo",
-                btn_enter: "Vstúpiť", btn_register: "Registrovať účet",
-                link_forgot: "Zabudol si heslo?",
-                otp_note: "Na váš e-mail bol zaslaný overovací kód.", btn_confirm_code: "Potvrdiť kód",
-                reset_title: "Obnova hesla", reset_note: "Zadaj svoj registračný e-mail. Zašleme ti kód na obnovu.", btn_send_code: "Odoslať kód", btn_back: "Späť na prihlásenie",
-                reset_verify_title: "Zadaj kód a nové heslo", reset_verify_note: "Skontroluj svoju schránku a zadaj kód spoločne s novým heslom.", btn_change_password: "Zmeniť heslo",
-                menu_dashboard: "DASHBOARD", menu_faq: "FAQ", menu_events: "EVENTY", menu_settings: "NASTAVENIA",
-                btn_logout: "ODHLÁSIŤ", discord_btn_text: "PRIPOJ SA NA NÁŠ DISCORD SERVER",
-                dash_welcome_title: "Vitajte späť!", dash_welcome_text: "Tento panel slúži pre správu a prehľad o komunite SteamHubCZ. Vyberte si sekciu v ľavom menu.",
-                faq_title: "Často kladené otázky", events_title: "Naplánované akcie",
-                settings_profile_title: "Môj Profil", settings_lang_title: "Jazyk / Language",
-                btn_save: "Uložiť", btn_mute: "Stlmiť hudbu", btn_unmute: "Zapnúť hudbu",
-                alert_empty: "Vyplňte všetky polia!", alert_exists: "Chyba: Na tento e-mail už existuje účet!", alert_reg_success: "Registrácia bola úspešná!",
-                alert_wrong_pass: "Nesprávne heslo!", alert_no_user: "Užívateľ neexistuje!", alert_wrong_code: "Zlý kód!"
-            },
-            en: {
-                system_locked: "SYSTEM LOCKED",
-                rules_title: "SteamHub CZ Server Rules (Shortened)",
-                rule_1_title: "1. Basic Behavior:", rule_1_desc: "Be polite and respect others. Insults, toxicity, racism, and discrimination are strictly prohibited.",
-                rule_2_title: "2. Communication:", rule_2_desc: "Speak Czech/Slovak. No spam, flood, CAPS LOCK, or unauthorized advertising.",
-                rule_3_title: "3. Legal Content:", rule_3_desc: "The server is only for legal Steam games. Sharing cracks, torrents, warez, or bypassing DRM is punished with an immediate permanent ban. No NSFW or scam links.",
-                rule_4_title: "4. Voice & Chat:", rule_4_desc: "Do not disturb others (screaming, soundboard), do not record anyone without consent, and listen to moderators.",
-                rule_5_title: "5. Gaming:", rule_5_desc: "Cheating, exploiting bugs, and impersonating admins are forbidden. You are responsible for your own account.",
-                rule_6_title: "6. Administration:", rule_6_desc: "The admins' decision is final. Bypassing punishments (alt accounts) leads to a permanent ban.",
-                rule_7_title: "7. Inactivity:", rule_7_desc: "Long-term inactivity without an excuse can lead to a permanent ban (evaluated individually).",
-                rule_8_title: "8. Punishments:", rule_8_desc: "Depending on severity – warning, mute, kick, temporary or permanent ban.",
-                rules_agree_note: "By joining the server, you agree to these rules. Management reserves the right to modify rules at any time.",
-                btn_agree: "I AGREE AND WANT TO CONTINUE",
-                welcome_title: "Welcome to Steamhub",
-                welcome_subtitle: "Login or registration",
-                tab_login: "Login", tab_register: "Register",
-                placeholder_password: "Password", placeholder_username: "Username", placeholder_code: "Code", placeholder_new_password: "New Password",
-                btn_enter: "Enter", btn_register: "Register Account",
-                link_forgot: "Forgot password?",
-                otp_note: "A verification code has been sent to your email.", btn_confirm_code: "Confirm Code",
-                reset_title: "Password Reset", reset_note: "Enter your registered email. We will send you a recovery code.", btn_send_code: "Send Code", btn_back: "Back to Login",
-                reset_verify_title: "Enter Code & New Password", reset_verify_note: "Check your inbox and enter the code along with your new password.", btn_change_password: "Change Password",
-                menu_dashboard: "DASHBOARD", menu_faq: "FAQ", menu_events: "EVENTS", menu_settings: "SETTINGS",
-                btn_logout: "LOGOUT", discord_btn_text: "JOIN OUR DISCORD SERVER",
-                dash_welcome_title: "Welcome back!", dash_welcome_text: "This dashboard is used to manage and view the SteamHubCZ community. Select a section from the left menu.",
-                faq_title: "Frequently Asked Questions", events_title: "Scheduled Events",
-                settings_profile_title: "My Profile", settings_lang_title: "Language / Jazyk",
-                btn_save: "Save", btn_mute: "Mute Music", btn_unmute: "Unmute Music",
-                alert_empty: "Please fill in all fields!", alert_exists: "Error: An account already exists for this email!", alert_reg_success: "Registration was successful!",
-                alert_wrong_pass: "Incorrect password!", alert_no_user: "User does not exist!", alert_wrong_code: "Wrong code!"
-            }
-        };
-
-        let currentLang = localStorage.getItem("sh_lang") || "cs";
-
-        function applyTranslations() {
-            const langData = translations[currentLang];
-            
-            document.querySelectorAll("[data-i18n]").forEach(el => {
-                const key = el.getAttribute("data-i18n");
-                if (langData[key]) el.innerHTML = langData[key];
-            });
-
-            document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
-                const key = el.getAttribute("data-i18n-placeholder");
-                if (langData[key]) el.placeholder = langData[key];
-            });
-
-            const selector = document.getElementById("lang-selector");
-            if(selector) selector.value = currentLang;
-        }
-
-        function changeLanguage(lang) {
-            currentLang = lang;
-            localStorage.setItem("sh_lang", lang);
-            applyTranslations();
-            
-            const activePage = document.querySelector('.nav-item.active');
-            if(activePage) {
-                const text = activePage.innerText.toLowerCase();
-                if(text.includes("dashboard")) showPage('dashboard');
-                if(text.includes("faq")) showPage('faq');
-                if(text.includes("event") || text.includes("akce")) showPage('events');
-                if(text.includes("nastaven") || text.includes("setting")) showPage('settings');
-            }
-        }
-
-        // Inicializace Firebase
-        const firebaseConfig = { databaseURL: "https://steamhubcz-default-rtdb.europe-west1.firebasedatabase.app/" };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
-
-        let generatedOTP, generatedResetCode, targetResetEmailKey, player;
-
-        // YouTube přehrávač na pozadí
-        function onYouTubeIframeAPIReady() {
-            player = new YT.Player('player', {
-                videoId: 'ATo6V6Xm_eY', 
-                playerVars: { 'autoplay': 1, 'controls': 0, 'mute': 1, 'loop': 1, 'playlist': 'ATo6V6Xm_eY' },
-                events: { 'onReady': (e) => e.target.playVideo() }
-            });
-        }
-
-        // --- KONTROLA PRAVIDEL ---
-        function acceptRules() {
-            document.getElementById('step-rules').classList.add('hidden');
-            document.getElementById('step-form').classList.remove('hidden');
-        }
-
-        // --- PŘEPÍNÁNÍ PANELŮ (LOGIN / REGISTRACE / FORGOT) ---
-        function switchAuthTab(type) {
-            document.getElementById('auth-tabs-nav').classList.remove('hidden');
-            document.getElementById('tab-login').classList.remove('active');
-            document.getElementById('tab-register').classList.remove('active');
-            document.getElementById('auth-login-fields').classList.add('hidden');
-            document.getElementById('auth-register-fields').classList.add('hidden');
-            document.getElementById('auth-step-otp').classList.add('hidden');
-            document.getElementById('forgot-step-email').classList.add('hidden');
-            document.getElementById('forgot-step-verify').classList.add('hidden');
-
-            if (type === 'login') {
-                document.getElementById('tab-login').classList.add('active');
-                document.getElementById('aut
+        // Inicializace
+        firebase.initializeApp({ databaseURL: "https://steamhubcz-default-rtdb.europe-west1.firebasedatabase.app/" });
+    </script>
+</body>
+</html>
