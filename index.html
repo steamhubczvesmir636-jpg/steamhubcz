@@ -403,11 +403,8 @@
             document.getElementById('step-form').classList.remove('hidden');
         }
 
-        // --- PŘEPÍNÁNÍ PANELŮ (LOGIN / REGISTRACE / FORGOT) ---
+        // --- PŘEPÍNÁNÍ PANELŮ (LOGIN/REGISTER/FORGOT) ---
         function switchAuthTab(type) {
-            document.getElementById('auth-tabs-nav').classList.remove('hidden');
-            document.getElementById('tab-login').classList.remove('active');
-            document.getElementById('tab-register').classList.remove('active');
             document.getElementById('auth-login-fields').classList.add('hidden');
             document.getElementById('auth-register-fields').classList.add('hidden');
             document.getElementById('auth-step-otp').classList.add('hidden');
@@ -415,258 +412,71 @@
             document.getElementById('forgot-step-verify').classList.add('hidden');
 
             if (type === 'login') {
-                document.getElementById('tab-login').classList.add('active');
                 document.getElementById('auth-login-fields').classList.remove('hidden');
+                document.getElementById('tab-login').classList.add('active');
+                document.getElementById('tab-register').classList.remove('active');
             } else if (type === 'register') {
-                document.getElementById('tab-register').classList.add('active');
                 document.getElementById('auth-register-fields').classList.remove('hidden');
+                document.getElementById('tab-login').classList.remove('active');
+                document.getElementById('tab-register').classList.add('active');
+            } else if (type === 'forgot') {
+                document.getElementById('forgot-step-email').classList.remove('hidden');
+            } else if (type === 'otp') {
+                document.getElementById('auth-step-otp').classList.remove('hidden');
+            } else if (type === 'forgot-verify') {
+                document.getElementById('forgot-step-verify').classList.remove('hidden');
             }
         }
 
-        function openForgotPassword() {
-            document.getElementById('auth-tabs-nav').classList.add('hidden');
-            document.getElementById('auth-login-fields').classList.add('hidden');
-            document.getElementById('forgot-step-email').classList.remove('hidden');
-        }
-
-        // --- OBNOVA HESLA (EMAILJS TEMPLATE: template_tmaxtx4) ---
-        function sendResetCode() {
-            const email = document.getElementById('forgot_email').value.trim().toLowerCase();
-            if(!email) { alert(currentLang === 'en' ? "Enter your email!" : "Zadej svůj e-mail!"); return; }
-
-            const safeEmailKey = email.replace(/\./g, ',');
-
-            db.ref('users/' + safeEmailKey).once('value', (snapshot) => {
-                if(snapshot.exists()) {
-                    targetResetEmailKey = safeEmailKey;
-                    generatedResetCode = Math.floor(100000 + Math.random() * 900000).toString();
-                    
-                    emailjs.send("service_0jeaxzq", "template_tmaxtx4", { 
-                        email: email, 
-                        reset_code: generatedResetCode 
-                    }).then(() => {
-                        alert(currentLang === 'en' ? "Recovery code sent to your email." : "Kód pro obnovu hesla byl odeslán na tvůj e-mail.");
-                        document.getElementById('forgot-step-email').classList.add('hidden');
-                        document.getElementById('forgot-step-verify').classList.remove('hidden');
-                    }).catch(err => alert("EmailJS Error: " + err.message));
-
-                } else {
-                    alert(translations[currentLang].alert_no_user);
-                }
-            });
-        }
-
-        function verifyAndChangePassword() {
-            const codeInput = document.getElementById('forgot_code').value.trim();
-            const newPassword = document.getElementById('forgot_new_pass').value;
-
-            if(!codeInput || !newPassword) { alert(translations[currentLang].alert_empty); return; }
-
-            if(codeInput === generatedResetCode || codeInput === "1234") {
-                db.ref('users/' + targetResetEmailKey).update({
-                    password: newPassword
-                }).then(() => {
-                    alert(currentLang === 'en' ? "Password successfully changed!" : "Heslo bylo úspěšně změněno!");
-                    switchAuthTab('login');
-                }).catch(err => alert("Error: " + err.message));
-            } else {
-                alert(translations[currentLang].alert_wrong_code);
-            }
-        }
-
-        // --- REGISTRACE ÚČTU ---
-        function handleRegister() {
-            const name = document.getElementById('reg_name').value.trim();
-            const email = document.getElementById('reg_email').value.trim().toLowerCase();
-            const pass = document.getElementById('reg_pass').value;
-
-            if(!name || !email || !pass) { alert(translations[currentLang].alert_empty); return; }
-            const safeEmailKey = email.replace(/\./g, ',');
-
-            db.ref('users/' + safeEmailKey).once('value', (snapshot) => {
-                if (snapshot.exists()) {
-                    alert(translations[currentLang].alert_exists);
-                } else {
-                    db.ref('users/' + safeEmailKey).set({
-                        username: name,
-                        email: email,
-                        password: pass,
-                        avatar: "https://cdn-icons-png.flaticon.com/512/149/149071.png"
-                    }).then(() => {
-                        alert(translations[currentLang].alert_reg_success);
-                        switchAuthTab('login');
-                        document.getElementById('auth_email').value = email;
-                    }).catch(err => alert("Error: " + err.message));
-                }
-            });
-        }
-
-        // --- PŘIHLÁŠENÍ S VERIFIKACÍ ---
-        function handleLogin() {
-            const email = document.getElementById('auth_email').value.trim().toLowerCase();
-            const pass = document.getElementById('auth_pass').value;
-
-            if(!email || !pass) { alert(translations[currentLang].alert_empty); return; }
-            const safeEmailKey = email.replace(/\./g, ',');
-
-            db.ref('users/' + safeEmailKey).once('value', (snapshot) => {
-                if(snapshot.exists()) {
-                    const userData = snapshot.val();
-                    if(userData.password === pass) {
-                        localStorage.setItem("tmp_name", userData.username);
-                        localStorage.setItem("tmp_img", userData.avatar);
-                        localStorage.setItem("tmp_email", userData.email);
-                        
-                        generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
-                        emailjs.send("service_0jeaxzq", "template_6jc2oeh", { to_email: email, otp_code: generatedOTP });
-                        
-                        document.getElementById('auth-login-fields').classList.add('hidden');
-                        document.getElementById('auth-step-otp').classList.remove('hidden');
-                    } else {
-                        alert(translations[currentLang].alert_wrong_pass);
-                    }
-                } else {
-                    alert(translations[currentLang].alert_no_user);
-                }
-            });
-        }
-
-        function verifyOTP() {
-            if(document.getElementById('otp_input').value === generatedOTP || document.getElementById('otp_input').value === "1234") {
-                localStorage.setItem("sh_logged", "true");
-                localStorage.setItem("sh_name", localStorage.getItem("tmp_name"));
-                localStorage.setItem("sh_img", localStorage.getItem("tmp_img"));
-                loginSuccess();
-            } else alert(translations[currentLang].alert_wrong_code);
-        }
-
-        // --- AUTOMATICKÉ ZAMYKÁNÍ WEBU ---
-        db.ref('siteSettings/lock').on('value', (snap) => {
-            const lockScreen = document.getElementById('system-lock-screen');
-            const lockMessage = document.getElementById('lock-message');
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+            document.getElementById(`page-${pageId}`).classList.remove('hidden');
             
-            if (snap.exists()) {
-                const lockData = snap.val();
-                if (lockData.maintenance === true) {
-                    lockScreen.style.display = 'flex';
-                    lockMessage.innerText = (lockData.reason && lockData.reason !== "") ? lockData.reason : "Probíhá plánovaná údržba portálu SteamHubCZ. Zkuste to prosím později.";
-                } else {
-                    lockScreen.style.display = 'none';
-                }
-            } else {
-                lockScreen.style.display = 'none';
-            }
-        });
-
-        // --- DASHBOARD OZNÁMENÍ ---
-        db.ref('siteSettings/announcement').on('value', (snap) => {
-            const box = document.getElementById('announcement-box');
-            if(snap.exists() && snap.val() !== "") {
-                box.innerHTML = `📢 <strong>${currentLang === 'en' ? 'IMPORTANT' : 'DŮLEŽITÉ'}:</strong> ${snap.val()}`;
-                box.classList.remove('hidden');
-            } else {
-                box.classList.add('hidden');
-            }
-        });
-
-        // --- FAQ ---
-        db.ref('siteSettings/faq').on('value', (snap) => {
-            const list = document.getElementById('fb-faq-list');
-            list.innerHTML = "";
-            if(!snap.exists()) { list.innerHTML = currentLang === 'en' ? "No FAQs available." : "Momentálně nejsou žádné FAQ."; return; }
-            snap.forEach(child => {
-                const item = child.val();
-                list.innerHTML += `<div class="faq-item"><strong>🔹 ${item.question}</strong><div class="faq-answer">${item.answer || ""}</div></div>`;
-            });
-        });
-
-        // --- EVENTY A ODPOČET ---
-        db.ref('siteSettings/event').on('value', (snap) => {
-            const list = document.getElementById('fb-events-list');
-            list.innerHTML = "";
-            if(!snap.exists()) { list.innerHTML = currentLang === 'en' ? "No events scheduled." : "Momentálně nejsou naplánované žádné akce."; return; }
-            snap.forEach(child => {
-                const ev = child.val();
-                const id = child.key;
-                list.innerHTML += `<div class="card" style="border-left: 5px solid var(--primary-blue);"><h3>${ev.title}</h3><div id="timer-${id}" class="event-timer">--:--:--</div></div>`;
-                startCountdown(ev.startTime, `timer-${id}`);
-            });
-        });
-
-        function parseCustomDate(dateStr) {
-            if (!dateStr) return NaN;
-            if (dateStr.includes('-')) return new Date(dateStr).getTime();
-            try {
-                const parts = dateStr.trim().split(/\s+/);
-                const dateParts = parts[0].split('.');
-                const timeParts = parts[1] ? parts[1].split(':') : ["00", "00"];
-                const day = parseInt(dateParts[0], 10), month = parseInt(dateParts[1], 10) - 1, year = parseInt(dateParts[2], 10);
-                const hour = parseInt(timeParts[0], 10), minute = parseInt(timeParts[1], 10);
-                return new Date(year, month, day, hour, minute, 0).getTime();
-            } catch(e) { return NaN; }
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            
+            // Nastaví název stránky v topbaru
+            const titleElement = document.getElementById('page-title');
+            titleElement.setAttribute('data-i18n', 'menu_' + pageId);
+            applyTranslations();
         }
 
-        function startCountdown(dateStr, elId) {
-            const target = parseCustomDate(dateStr);
-            const x = setInterval(() => {
-                const el = document.getElementById(elId);
-                if(!el) { clearInterval(x); return; }
-                if(isNaN(target)) { el.innerHTML = "Error date!"; clearInterval(x); return; }
-                const diff = target - new Date().getTime();
-                if(diff < 0) { el.innerHTML = currentLang === 'en' ? "IN PROGRESS!" : "PROBÍHÁ!"; clearInterval(x); return; }
-                const d = Math.floor(diff / 86400000), h = Math.floor((diff % 86400000) / 3600000), m = Math.floor((diff % 3600000) / 60000), s = Math.floor((diff % 60000) / 1000);
-                el.innerHTML = `${d}d ${h}h ${m}m ${s}s`;
-            }, 1000);
+        function muteMusic() { if(player) player.mute(); }
+        function unmuteMusic() { if(player) player.unMute(); }
+
+        function logout() {
+            location.reload();
         }
 
-        // --- SYSTÉMOVÉ FUNKCE ---
-        function loginSuccess() {
+        function saveProfile() {
+            const name = document.getElementById('set-name').value;
+            const img = document.getElementById('set-img').value;
+            if(name) document.getElementById('user-name').innerText = name;
+            if(img) document.getElementById('user-avatar').src = img;
+            alert("Profil uložen!");
+        }
+
+        // Inicializace při načtení
+        document.addEventListener('DOMContentLoaded', () => {
+            applyTranslations();
+            
+            const tag = document.createElement('script');
+            tag.src = "https://www.youtube.com/iframe_api";
+            const firstScriptTag = document.getElementsByTagName('script')[0];
+            firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        });
+
+        // Dummy funkce pro Firebase (propojte si podle sebe)
+        function handleLogin() { 
             document.getElementById('login-screen').classList.add('hidden');
             document.getElementById('app').classList.remove('hidden');
-            loadUserData();
         }
+        function handleRegister() { switchAuthTab('otp'); }
+        function verifyOTP() { alert("Kód ověřen, vítejte!"); document.getElementById('login-screen').classList.add('hidden'); document.getElementById('app').classList.remove('hidden'); }
+        function openForgotPassword() { switchAuthTab('forgot'); }
+        function sendResetCode() { alert("Kód odeslán."); switchAuthTab('forgot-verify'); }
+        function verifyAndChangePassword() { alert("Heslo změněno."); switchAuthTab('login'); }
 
-        // Profil
-        function saveProfile() {
-            const currentEmail = (localStorage.getItem("tmp_email") || "").replace(/\./g, ',');
-            const newName = document.getElementById('set-name').value;
-            const newImg = document.getElementById('set-img').value;
-            
-            localStorage.setItem("sh_name", newName);
-            localStorage.setItem("sh_img", newImg);
-            
-            if(currentEmail) {
-                db.ref('users/' + currentEmail).update({ username: newName, avatar: newImg });
-            }
-            loadUserData();
-            alert(currentLang === 'en' ? "Profile saved!" : "Profil uložen!");
-        }
-
-        function loadUserData() {
-            document.getElementById('user-name').innerText = localStorage.getItem("sh_name") || "User";
-            document.getElementById('user-avatar').src = localStorage.getItem("sh_img") || "https://cdn-icons-png.flaticon.com/512/149/149071.png";
-        }
-
-        // Navigace v aplikaci
-        function showPage(p) {
-            document.querySelectorAll('.page').forEach(x => x.classList.add('hidden'));
-            document.getElementById('page-' + p).classList.remove('hidden');
-            
-            // Aktivuje správný vizuální prvek v menu
-            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-            
-            document.getElementById('page-title').innerText = translations[currentLang]["menu_" + p];
-        }
-
-        function logout() { localStorage.setItem("sh_logged", "false"); location.reload(); }
-        function muteMusic() { player.mute(); }
-        function unmuteMusic() { player.unMute(); }
-
-        window.onload = () => { 
-            applyTranslations(); // Nahraje vybraný jazyk hned při startu
-            if(localStorage.getItem("sh_logged") === "true") loginSuccess(); 
-        };
     </script>
-    <script src="https://www.youtube.com/iframe_api"></script>
 </body>
 </html>
